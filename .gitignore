@@ -1,0 +1,23 @@
+# Large assets not needed for web
+*.pdf
+*.pptx
+*.py
+pptx_images/
+chair_images/
+monday-pm-agent/
+
+# OS
+.DS_Store
+
+# Other project files not part of the academy
+discodaddy.html
+eda-campaign*.html
+eda-campaign*.pdf
+eda-concept*.html
+eda-print.html
+ethnicraft-compatibility.html
+ethnicraft-eda*.pdf
+ethnicraft-novelties*.pdf
+generate_*.py
+product_sheet_*.pdf
+product_wf_*.jpg

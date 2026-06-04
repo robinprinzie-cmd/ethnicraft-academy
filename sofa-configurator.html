@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Your Sofa — Ethnicraft</title>
+<style>
+@font-face{font-family:'PG';src:url('./fonts/PostGrotesk-Light.ttf') format('truetype');font-weight:300}
+@font-face{font-family:'PG';src:url('./fonts/PostGrotesk-Book.ttf') format('truetype');font-weight:400}
+@font-face{font-family:'PG';src:url('./fonts/PostGrotesk-Medium.ttf') format('truetype');font-weight:500}
+@font-face{font-family:'PG';src:url('./fonts/PostGrotesk-Bold.ttf') format('truetype');font-weight:700}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'PG',-apple-system,sans-serif;color:#1A1916;background:#F9F8F6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── INTRO ─────────────────────────────────── */
+#intro{position:fixed;inset:0;background:#1A1916;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s ease,transform .9s ease}
+#intro.out{opacity:0;transform:translateY(-24px);pointer-events:none}
+.i-label{font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:44px}
+.i-title{font-size:clamp(44px,7vw,88px);font-weight:300;color:#fff;text-align:center;letter-spacing:-.03em;line-height:1;margin-bottom:18px}
+.i-title em{font-style:italic;color:#B5A898}
+.i-sub{font-size:15px;font-weight:300;color:rgba(255,255,255,.5);margin-bottom:56px;letter-spacing:.02em;text-align:center;max-width:400px;line-height:1.6}
+.i-cta{display:inline-flex;align-items:center;gap:14px;padding:17px 38px;background:#fff;color:#1A1916;font-family:'PG',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border:none;transition:background .2s,gap .25s}
+.i-cta:hover{background:#B5A898;color:#fff;gap:22px}
+.i-proof{position:absolute;bottom:40px;font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.06em}
+.i-proof strong{color:rgba(255,255,255,.55)}
+.i-fade{opacity:0;transform:translateY(12px);animation:fadeUp .7s ease forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.i-fade:nth-child(1){animation-delay:.1s}
+.i-fade:nth-child(2){animation-delay:.3s}
+.i-fade:nth-child(3){animation-delay:.5s}
+.i-fade:nth-child(4){animation-delay:.7s}
+
+/* ── APP LAYOUT ─────────────────────────────── */
+#app{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;opacity:0;pointer-events:none;transition:opacity .6s ease .2s}
+#app.on{opacity:1;pointer-events:auto}
+
+/* ── LEFT — VIEWER ──────────────────────────── */
+#viewer{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;background:#F2F1EE;overflow:hidden}
+.v-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 36px;z-index:2;position:relative}
+.v-logo{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4A4845}
+.v-price-wrap{text-align:right}
+.v-price-lbl{font-size:9px;color:#908E88;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+#price-display{font-size:26px;font-weight:300;letter-spacing:-.02em;color:#1A1916;transition:transform .3s}
+#price-display.pop{animation:pricePop .4s ease}
+@keyframes pricePop{0%{transform:scale(1)}50%{transform:scale(1.1);color:#B5A898}100%{transform:scale(1)}}
+
+/* Room scene */
+.room{flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:0 40px 10px;transition:background 1s ease}
+.room-wall,.room-floor{position:absolute;left:0;right:0;opacity:0;transition:opacity .6s}
+.room-wall{top:0;bottom:50%;background:linear-gradient(180deg,#F4F2ED 0%,#EAE8E3 100%)}
+.room-floor{top:50%;bottom:0;background:linear-gradient(180deg,#DDD9D0 0%,#D3CFC6 100%)}
+.room.room-on .room-wall,.room.room-on .room-floor{opacity:1}
+
+.room-toggle{position:absolute;bottom:20px;right:36px;display:flex;align-items:center;gap:8px;font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#908E88;cursor:pointer;user-select:none;z-index:3}
+.tog{width:34px;height:19px;border-radius:10px;background:#D0CEC9;position:relative;transition:background .3s}
+.tog::after{content:'';position:absolute;left:3px;top:3px;width:13px;height:13px;border-radius:50%;background:#fff;transition:transform .3s,background .3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.room-toggle.on .tog{background:#1A1916}
+.room-toggle.on .tog::after{transform:translateX(15px)}
+
+/* Sofa wrapper */
+.sofa-wrap{position:relative;z-index:2;width:100%;max-width:540px;transition:transform .4s ease,filter .4s ease}
+.sofa-wrap:hover{transform:translateY(-4px)}
+#sofa-svg .fabric{transition:fill .5s ease}
+#sofa-svg .wood{transition:fill .4s ease}
+#sofa-svg .frame-fill{transition:fill .5s ease}
+#sofa-svg .back-frame-fill{transition:fill .5s ease}
+
+/* Viewer tags */
+.v-tags{padding:14px 36px 22px;display:flex;flex-wrap:wrap;gap:7px;z-index:2;position:relative}
+.v-tag{font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#4A4845;background:#E8E7E3;padding:5px 11px;border-radius:2px;display:flex;align-items:center;gap:6px;transition:all .35s ease}
+.v-tag.pending{opacity:.35;font-style:italic}
+.v-tag .tdot{width:7px;height:7px;border-radius:50%;background:#B5A898;flex-shrink:0;transition:background .4s}
+
+/* Progress bar */
+.v-progress{height:2px;background:#D0CEC9;margin:0 36px;border-radius:1px;overflow:hidden;position:relative;z-index:2}
+.v-progress-bar{height:100%;background:#1A1916;width:0%;transition:width .6s ease}
+
+/* ── RIGHT — CONFIG ──────────────────────────── */
+#config{background:#fff;padding:0 56px 100px;overflow-y:auto;scrollbar-width:none}
+#config::-webkit-scrollbar{display:none}
+
+.cfg-header{padding-top:72px;padding-bottom:44px;border-bottom:1px solid #F2F1EE;margin-bottom:44px}
+.cfg-eye{font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#B5A898;margin-bottom:12px}
+.cfg-title{font-size:38px;font-weight:300;letter-spacing:-.025em;line-height:1.05;margin-bottom:10px}
+.cfg-sub{font-size:13px;font-weight:300;color:#908E88;line-height:1.6}
+
+/* Step */
+.step{margin-bottom:44px;padding-bottom:44px;border-bottom:1px solid #F2F1EE;opacity:.38;transition:opacity .45s ease}
+.step.active,.step.done{opacity:1}
+.step-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+.step-n{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5A898;margin-bottom:5px}
+.step-t{font-size:19px;font-weight:400;letter-spacing:-.01em}
+.step-hd-right{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-top:4px}
+.step-check{width:21px;height:21px;border-radius:50%;border:1.5px solid #D0CEC9;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:transparent;transition:all .3s}
+.step.done .step-check{background:#1A1916;border-color:#1A1916;color:#fff}
+.step-edit{font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#B5A898;cursor:pointer;border:none;background:none;font-family:'PG',sans-serif;display:none;padding:3px 0}
+.step-edit:hover{color:#1A1916}
+.step.done .step-edit{display:block}
+
+.opts-wrap{overflow:hidden;max-height:0;opacity:0;transition:max-height .5s ease,opacity .45s ease}
+.step.active .opts-wrap,.step.done .opts-wrap{max-height:700px;opacity:1}
+
+/* Config options */
+.cfg-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.cfg-opt{border:1.5px solid #E8E7E3;padding:18px 12px;cursor:pointer;transition:all .2s;text-align:center;position:relative}
+.cfg-opt:hover{border-color:#908E88}
+.cfg-opt.sel{border-color:#1A1916;background:#1A1916;color:#fff}
+.cfg-opt-icon{margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:3px}
+.cfg-opt-icon span{display:block;background:#908E88;border-radius:1px;transition:background .2s}
+.cfg-opt.sel .cfg-opt-icon span{background:rgba(255,255,255,.55)}
+.cfg-opt-name{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
+.cfg-opt-detail{font-size:10px;color:#908E88}
+.cfg-opt.sel .cfg-opt-detail{color:rgba(255,255,255,.55)}
+.cfg-opt-price{font-size:10px;font-weight:500;margin-top:8px;color:#4A4845}
+.cfg-opt.sel .cfg-opt-price{color:rgba(255,255,255,.7)}
+
+/* Fabric swatches */
+.fab-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.fab-sw{cursor:pointer;position:relative;transition:transform .2s}
+.fab-sw:hover{transform:scale(1.06)}
+.fab-sw.sel::after{content:'✓';position:absolute;inset:0 0 22px 0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:rgba(255,255,255,.9);background:rgba(0,0,0,.12)}
+.sw-color{width:100%;aspect-ratio:1;border:1px solid rgba(0,0,0,.07)}
+.sw-name{font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#4A4845;margin-top:5px;text-align:center}
+.sw-note{font-size:8px;color:#908E88;text-align:center;margin-top:1px;font-style:italic}
+
+/* Leg options */
+.leg-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.leg-opt{border:1.5px solid #E8E7E3;padding:20px 12px;cursor:pointer;transition:all .2s;text-align:center}
+.leg-opt:hover{border-color:#908E88}
+.leg-opt.sel{border-color:#1A1916}
+.leg-sw{width:44px;height:44px;border-radius:50%;margin:0 auto 11px;border:2px solid rgba(0,0,0,.1)}
+.leg-name{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.leg-desc{font-size:9px;color:#908E88;font-style:italic}
+
+/* Cushion options */
+.cush-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cush-opt{border:1.5px solid #E8E7E3;padding:22px 18px;cursor:pointer;transition:all .2s}
+.cush-opt:hover{border-color:#908E88}
+.cush-opt.sel{border-color:#1A1916}
+.cush-name{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:7px}
+.cush-desc{font-size:11px;color:#908E88;line-height:1.5;font-weight:300}
+.cush-price{font-size:11px;font-weight:500;margin-top:10px;color:#4A4845}
+
+/* Whisper */
+.whisper{font-size:11px;color:#B5A898;font-style:italic;font-weight:300;margin-top:12px;min-height:18px;transition:opacity .4s}
+
+/* Social proof */
+.proof-row{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 13px;background:#F9F8F6}
+.proof-avatars{display:flex}
+.proof-av{width:20px;height:20px;border-radius:50%;border:1.5px solid #fff;margin-right:-5px;font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.proof-txt{font-size:10px;color:#908E88;letter-spacing:.02em}
+
+/* Popularity */
+.pop-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.pop-bar-wrap{flex:1;height:2px;background:#E8E7E3}
+.pop-bar{height:2px;background:#B5A898;transition:width .6s ease}
+.pop-lbl{font-size:9px;color:#908E88;white-space:nowrap;letter-spacing:.04em}
+
+/* CTA */
+.cfg-cta{opacity:0;transform:translateY(18px);transition:all .5s ease;pointer-events:none;margin-top:44px}
+.cfg-cta.on{opacity:1;transform:none;pointer-events:auto}
+.cta-note{font-size:11px;color:#908E88;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cta-note::before{content:'';width:18px;height:1px;background:#D0CEC9;flex-shrink:0}
+.btn-primary{display:flex;align-items:center;justify-content:space-between;width:100%;padding:19px 26px;background:#1A1916;color:#fff;font-family:'PG',sans-serif;font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;border:none;transition:background .2s;margin-bottom:10px}
+.btn-primary:hover{background:#4A4845}
+.btn-secondary{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px 26px;background:transparent;color:#4A4845;font-family:'PG',sans-serif;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1.5px solid #E8E7E3;transition:border-color .2s}
+.btn-secondary:hover{border-color:#908E88}
+
+/* ── SUMMARY ─────────────────────────────────── */
+#summary{position:fixed;inset:0;background:#F9F8F6;z-index:600;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .5s ease;overflow-y:auto}
+#summary.on{opacity:1;pointer-events:auto}
+.sum-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 56px;border-bottom:1px solid #E8E7E3;background:#fff;position:sticky;top:0;z-index:2}
+.sum-logo{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.sum-close{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#908E88;cursor:pointer;border:none;background:none;font-family:'PG',sans-serif;display:flex;align-items:center;gap:8px}
+.sum-close:hover{color:#1A1916}
+.sum-body{display:grid;grid-template-columns:1fr 1fr;flex:1}
+.sum-preview{background:#F2F1EE;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px;min-height:60vh}
+.sum-sofa{width:100%;max-width:480px}
+.sum-code{margin-top:32px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#908E88}
+.sum-details{padding:60px 56px;background:#fff}
+.sum-eye{font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#B5A898;margin-bottom:10px}
+.sum-pname{font-size:30px;font-weight:300;letter-spacing:-.02em;margin-bottom:6px}
+.sum-plabel{font-size:13px;font-weight:300;color:#908E88;margin-bottom:36px}
+.sum-specs{border-top:1px solid #F2F1EE;margin-bottom:30px}
+.sum-spec{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #F2F1EE}
+.sum-sk{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#908E88}
+.sum-sv{font-size:11px;font-weight:400;color:#1A1916}
+.sum-total{display:flex;align-items:baseline;justify-content:space-between;padding:18px 0;border-top:2px solid #1A1916;margin-bottom:28px}
+.sum-tl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.sum-tp{font-size:30px;font-weight:300;letter-spacing:-.03em}
+.sum-del{font-size:11px;color:#908E88;font-weight:300;margin-bottom:28px;display:flex;align-items:center;gap:8px}
+.sum-del::before{content:'';width:6px;height:6px;border-radius:50%;background:#7CAF7C;flex-shrink:0}
+.sum-btns{display:flex;flex-direction:column;gap:9px}
+.sum-share-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border:1.5px solid #E8E7E3;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#4A4845;cursor:pointer;background:none;font-family:'PG',sans-serif;transition:border-color .2s}
+.sum-share-btn:hover{border-color:#4A4845}
+
+/* ── TOAST ───────────────────────────────────── */
+.toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(12px);background:#1A1916;color:#fff;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.07em;opacity:0;transition:all .3s;pointer-events:none;z-index:9999;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PARTICLES ───────────────────────────────── */
+.part{position:fixed;pointer-events:none;z-index:9998;width:6px;height:6px;border-radius:2px;animation:partFall 1.6s ease-out forwards}
+@keyframes partFall{0%{transform:translateY(0) rotate(0) scale(1);opacity:1}100%{transform:translateY(280px) rotate(480deg) scale(0.4);opacity:0}}
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media(max-width:960px){
+  #app{grid-template-columns:1fr}
+  #viewer{position:relative;height:56vw;min-height:300px}
+  #config{padding:0 24px 80px}
+  .sum-body{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══════════════════════════════════════════════ -->
+<div id="intro">
+  <p class="i-label i-fade">Ethnicraft · Est. 1995</p>
+  <h1 class="i-title i-fade">Your sofa,<br><em>your story.</em></h1>
+  <p class="i-sub i-fade">Crafted from sustainable solid oak. Upholstered by hand. Designed to last a lifetime.</p>
+  <button class="i-cta i-fade" id="start-btn">Begin designing <span>→</span></button>
+  <p class="i-proof"><strong id="proof-num">47</strong> people are designing their sofa this week</p>
+</div>
+
+<!-- ═══ APP ══════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- LEFT: VIEWER -->
+  <div id="viewer">
+    <div class="v-nav">
+      <span class="v-logo">Ethnicraft</span>
+      <div class="v-price-wrap">
+        <div class="v-price-lbl">Your price</div>
+        <div id="price-display">€ —</div>
+      </div>
+    </div>
+    <div class="v-progress"><div class="v-progress-bar" id="prog-bar"></div></div>
+
+    <div class="room" id="room">
+      <div class="room-wall"></div>
+      <div class="room-floor"></div>
+
+      <div class="sofa-wrap" id="sofa-wrap">
+        <svg viewBox="0 0 600 370" fill="none" xmlns="http://www.w3.org/2000/svg" id="sofa-svg">
+          <defs>
+            <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="white" stop-opacity=".18"/>
+              <stop offset="100%" stop-color="black" stop-opacity=".08"/>
+            </linearGradient>
+            <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="white" stop-opacity=".4"/>
+              <stop offset="100%" stop-color="black" stop-opacity=".3"/>
+            </linearGradient>
+            <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="white" stop-opacity=".22"/>
+              <stop offset="100%" stop-color="black" stop-opacity=".04"/>
+            </linearGradient>
+            <linearGradient id="fg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="white" stop-opacity=".08"/>
+              <stop offset="100%" stop-color="black" stop-opacity=".06"/>
+            </linearGradient>
+          </defs>
+
+          <!-- SHADOW -->
+          <ellipse cx="300" cy="358" rx="228" ry="13" fill="rgba(0,0,0,.09)"/>
+
+          <!-- LEGS -->
+          <rect x="83" y="286" width="16" height="82" rx="3" class="wood"/>
+          <rect x="220" y="286" width="16" height="82" rx="3" class="wood"/>
+          <rect x="364" y="286" width="16" height="82" rx="3" class="wood"/>
+          <rect x="501" y="286" width="16" height="82" rx="3" class="wood"/>
+          <rect x="83" y="286" width="16" height="82" rx="3" fill="url(#wg)" opacity=".55"/>
+          <rect x="220" y="286" width="16" height="82" rx="3" fill="url(#wg)" opacity=".55"/>
+          <rect x="364" y="286" width="16" height="82" rx="3" fill="url(#wg)" opacity=".55"/>
+          <rect x="501" y="286" width="16" height="82" rx="3" fill="url(#wg)" opacity=".55"/>
+
+          <!-- SEAT BASE -->
+          <rect x="68" y="238" width="464" height="66" rx="3" class="frame-fill"/>
+
+          <!-- LEFT ARMREST -->
+          <rect x="68" y="160" width="57" height="114" rx="10 10 0 0" class="fabric"/>
+          <rect x="68" y="160" width="57" height="114" rx="10 10 0 0" fill="url(#ag)"/>
+          <rect x="70" y="162" width="53" height="13" rx="8 8 0 0" fill="white" opacity=".18"/>
+
+          <!-- RIGHT ARMREST -->
+          <rect x="475" y="160" width="57" height="114" rx="10 10 0 0" class="fabric"/>
+          <rect x="475" y="160" width="57" height="114" rx="10 10 0 0" fill="url(#ag)"/>
+          <rect x="477" y="162" width="53" height="13" rx="8 8 0 0" fill="white" opacity=".18"/>
+
+          <!-- BACK FRAME -->
+          <rect x="68" y="67" width="464" height="200" rx="5 5 0 0" class="back-frame-fill"/>
+
+          <!-- 3-SEATER CUSHIONS (default) -->
+          <g id="c3">
+            <rect x="133" y="75" width="108" height="155" rx="8 8 0 0" class="fabric back-cushion"/>
+            <rect x="133" y="75" width="108" height="155" rx="8 8 0 0" fill="url(#cg)"/>
+            <line x1="138" y1="153" x2="236" y2="153" stroke="rgba(0,0,0,.1)" stroke-width="1"/>
+            <rect x="246" y="75" width="108" height="155" rx="8 8 0 0" class="fabric back-cushion"/>
+            <rect x="246" y="75" width="108" height="155" rx="8 8 0 0" fill="url(#cg)"/>
+            <line x1="251" y1="153" x2="349" y2="153" stroke="rgba(0,0,0,.1)" stroke-width="1"/>
+            <rect x="359" y="75" width="108" height="155" rx="8 8 0 0" class="fabric back-cushion"/>
+            <rect x="359" y="75" width="108" height="155" rx="8 8 0 0" fill="url(#cg)"/>
+            <line x1="364" y1="153" x2="462" y2="153" stroke="rgba(0,0,0,.1)" stroke-width="1"/>
+            <!-- Seat cushions -->
+            <rect x="133" y="210" width="108" height="79" rx="6 6 0 0" class="fabric seat-cushion"/>
+            <rect x="133" y="210" width="108" height="79" rx="6 6 0 0" fill="url(#cg)"/>
+            <circle cx="187" cy="250" r="3.5" fill="rgba(0,0,0,.09)"/>
+            <rect x="246" y="210" width="108" height="79" rx="6 6 0 0" class="fabric seat-cushion"/>
+            <rect x="246" y="210" width="108" height="79" rx="6 6 0 0" fill="url(#cg)"/>
+            <circle cx="300" cy="250" r="3.5" fill="rgba(0,0,0,.09)"/>
+            <rect x="359" y="210" width="108" height="79" rx="6 6 0 0" class="fabric seat-cushion"/>
+            <rect x="359" y="210" width="108" height="79" rx="6 6 0 0" fill="url(#cg)"/>
+            <circle cx="413" cy="250" r="3.5" fill="rgba(0,0,0,.09)"/>
+          </g>
+
+          <!-- 2-SEATER CUSHIONS -->
+          <g id="c2" style="display:none">
+            <rect x="133" y="75" width="164" height="155" rx="8 8 0 0" class="fabric back-cushion"/>
+            <rect x="133" y="75" width="164" height="155" rx="8 8 0 0" fill="url(#cg)"/>
+            <line x1="138" y1="153" x2="292" y2="153" stroke="rgba(0,0,0,.1)" stroke-width="1"/>
+            <rect x="303" y="75" width="164" height="155" rx="8 8 0 0" class="fabric back-cushion"/>
+            <rect x="303" y="75" width="164" height="155" rx="8 8 0 0" fill="url(#cg)"/>
+            <line x1="308" y1="153" x2="462" y2="153" stroke="rgba(0,0,0,.1)" stroke-width="1"/>
+            <rect x="133" y="210" width="164" height="79" rx="6 6 0 0" class="fabric seat-cushion"/>
+            <rect x="133" y="210" width="164" height="79" rx="6 6 0 0" fill="url(#cg)"/>
+            <circle cx="215" cy="250" r="3.5" fill="rgba(0,0,0,.09)"/>
+            <rect x="303" y="210" width="164" height="79" rx="6 6 0 0" class="fabric seat-cushion"/>
+            <rect x="303" y="210" width="164" height="79" rx="6 6 0 0" fill="url(#cg)"/>
+            <circle cx="385" cy="250" r="3.5" fill="rgba(0,0,0,.09)"/>
+          </g>
+
+          <!-- L-SHAPE CHAISE MODULE -->
+          <g id="chaise" style="opacity:0;transition:opacity .5s ease">
+            <ellipse cx="588" cy="358" rx="72" ry="10" fill="rgba(0,0,0,.07)"/>
+            <rect x="532" y="238" width="110" height="66" rx="3" class="frame-fill"/>
+            <rect x="534" y="210" width="106" height="79" rx="6 6 0 0" class="fabric seat-cushion"/>
+            <rect x="534" y="210" width="106" height="79" rx="6 6 0 0" fill="url(#cg)"/>
+            <circle cx="587" cy="250" r="3.5" fill="rgba(0,0,0,.09)"/>
+            <rect x="610" y="286" width="16" height="82" rx="3" class="wood"/>
+            <rect x="610" y="286" width="16" height="82" rx="3" fill="url(#wg)" opacity=".55"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="room-toggle" id="room-toggle">
+        <div class="tog"></div>
+        <span>Room view</span>
+      </div>
+    </div>
+
+    <div class="v-tags" id="v-tags">
+      <div class="v-tag pending" id="tag-cfg"><span class="tdot"></span><span id="tc">Configuration</span></div>
+      <div class="v-tag pending" id="tag-fab"><span class="tdot" id="td-fab"></span><span id="tf">Upholstery</span></div>
+      <div class="v-tag pending" id="tag-leg"><span class="tdot" id="td-leg"></span><span id="tl">Frame</span></div>
+      <div class="v-tag pending" id="tag-cush"><span class="tdot"></span><span id="tk">Cushions</span></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CONFIG PANEL -->
+  <div id="config">
+    <div class="cfg-header">
+      <div class="cfg-eye">Solid Oak · Handcrafted in Belgium</div>
+      <h2 class="cfg-title">Design your<br>perfect sofa.</h2>
+      <p class="cfg-sub">Every choice updates your sofa in real time. Hover swatches to preview.</p>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step active" id="step-1">
+      <div class="step-hd">
+        <div><div class="step-n">01</div><div class="step-t">How will you live in it?</div></div>
+        <div class="step-hd-right">
+          <button class="step-edit" onclick="editStep(1)">Edit</button>
+          <div class="step-check">✓</div>
+        </div>
+      </div>
+      <div class="opts-wrap">
+        <div class="cfg-opts">
+          <div class="cfg-opt" data-id="2s" onclick="pickConfig('2s',this)">
+            <div class="cfg-opt-icon"><span style="width:18px;height:10px"></span><span style="width:18px;height:10px"></span></div>
+            <div class="cfg-opt-name">2-Seater</div>
+            <div class="cfg-opt-detail">Intimate · 160 cm</div>
+            <div class="cfg-opt-price">from €2,890</div>
+          </div>
+          <div class="cfg-opt" data-id="3s" onclick="pickConfig('3s',this)">
+            <div class="cfg-opt-icon"><span style="width:13px;height:10px"></span><span style="width:13px;height:10px"></span><span style="width:13px;height:10px"></span></div>
+            <div class="cfg-opt-name">3-Seater</div>
+            <div class="cfg-opt-detail">Generous · 230 cm</div>
+            <div class="cfg-opt-price">from €3,690</div>
+          </div>
+          <div class="cfg-opt" data-id="lshape" onclick="pickConfig('lshape',this)">
+            <div class="cfg-opt-icon" style="flex-direction:column;align-items:flex-start;gap:2px"><div style="display:flex;gap:3px"><span style="width:10px;height:8px"></span><span style="width:10px;height:8px"></span><span style="width:10px;height:8px"></span></div><span style="width:28px;height:8px"></span></div>
+            <div class="cfg-opt-name">L-Shape</div>
+            <div class="cfg-opt-detail">Expansive · 270 cm</div>
+            <div class="cfg-opt-price">from €4,890</div>
+          </div>
+        </div>
+        <div class="whisper" id="w1"></div>
+        <div class="proof-row">
+          <div class="proof-avatars">
+            <div class="proof-av" style="background:#C8A868">R</div>
+            <div class="proof-av" style="background:#8D9A87">A</div>
+            <div class="proof-av" style="background:#A09588">S</div>
+          </div>
+          <div class="proof-txt">Most loved this month: <strong>3-Seater in Salt</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step-2">
+      <div class="step-hd">
+        <div><div class="step-n">02</div><div class="step-t">How should it feel?</div></div>
+        <div class="step-hd-right">
+          <button class="step-edit" onclick="editStep(2)">Edit</button>
+          <div class="step-check">✓</div>
+        </div>
+      </div>
+      <div class="opts-wrap">
+        <div class="fab-grid" id="fab-grid"></div>
+        <div class="whisper" id="w2"></div>
+        <div class="pop-row">
+          <div class="pop-bar-wrap"><div class="pop-bar" id="pop-bar" style="width:0%"></div></div>
+          <div class="pop-lbl" id="pop-lbl">— % choose this</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step-3">
+      <div class="step-hd">
+        <div><div class="step-n">03</div><div class="step-t">What grounds it?</div></div>
+        <div class="step-hd-right">
+          <button class="step-edit" onclick="editStep(3)">Edit</button>
+          <div class="step-check">✓</div>
+        </div>
+      </div>
+      <div class="opts-wrap">
+        <div class="leg-opts" id="leg-opts"></div>
+        <div class="whisper" id="w3"></div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="step-4">
+      <div class="step-hd">
+        <div><div class="step-n">04</div><div class="step-t">How does it hold you?</div></div>
+        <div class="step-hd-right">
+          <button class="step-edit" onclick="editStep(4)">Edit</button>
+          <div class="step-check">✓</div>
+        </div>
+      </div>
+      <div class="opts-wrap">
+        <div class="cush-opts">
+          <div class="cush-opt" data-id="standard" onclick="pickCushion('standard',this)">
+            <div class="cush-name">Standard</div>
+            <div class="cush-desc">Firm, structured support. Keeps its shape for a decade of living.</div>
+            <div class="cush-price">Included</div>
+          </div>
+          <div class="cush-opt" data-id="feather" onclick="pickCushion('feather',this)">
+            <div class="cush-name">Feather Wrap</div>
+            <div class="cush-desc">Cloud-soft with a yielding embrace. Pure luxury in every sit.</div>
+            <div class="cush-price">+ €290</div>
+          </div>
+        </div>
+        <div class="whisper" id="w4"></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cfg-cta" id="cfg-cta">
+      <div class="cta-note">Your sofa is fully configured</div>
+      <button class="btn-primary" onclick="showSummary()">
+        <span>View your sofa</span><span>→</span>
+      </button>
+      <button class="btn-secondary" onclick="saveConfig()">
+        <span>♡</span><span>Save to wishlist</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SUMMARY ══════════════════════════════════════════════ -->
+<div id="summary">
+  <div class="sum-nav">
+    <span class="sum-logo">Ethnicraft</span>
+    <button class="sum-close" onclick="closeSummary()">← Back to configure</button>
+  </div>
+  <div class="sum-body">
+    <div class="sum-preview">
+      <div class="sum-sofa" id="sum-sofa-wrap">
+        <!-- cloned SVG injected here -->
+      </div>
+      <div class="sum-code" id="sum-code"></div>
+    </div>
+    <div class="sum-details">
+      <div class="sum-eye">Your Configuration</div>
+      <div class="sum-pname">The Oak Up Sofa</div>
+      <div class="sum-plabel" id="sum-plabel">—</div>
+      <div class="sum-specs" id="sum-specs"></div>
+      <div class="sum-total">
+        <div class="sum-tl">Total</div>
+        <div class="sum-tp" id="sum-price">€—</div>
+      </div>
+      <div class="sum-del">Ready for delivery in 8–10 weeks</div>
+      <div class="sum-btns">
+        <button class="btn-primary" onclick="requestQuote()"><span>Request a quote</span><span>→</span></button>
+        <button class="sum-share-btn" onclick="shareConfig()">⎘ Copy your configuration code</button>
+        <button class="sum-share-btn" onclick="visitShowroom()">◎ Find a showroom near you</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── DATA ─────────────────────────────────────────────────── */
+const FABRICS = [
+  {id:'salt',    name:'Salt',    note:'Effortless light',     color:'#EAE6DC', frame:'#D8D3C8', pop:82},
+  {id:'cream',   name:'Cream',   note:'Morning warmth',       color:'#F0E6D0', frame:'#DDD4C0', pop:76},
+  {id:'pebble',  name:'Pebble',  note:'Warm neutrality',      color:'#C5BAA8', frame:'#B3AA98', pop:71},
+  {id:'stone',   name:'Stone',   note:'Grounded restraint',   color:'#A09588', frame:'#907F78', pop:64},
+  {id:'coal',    name:'Coal',    note:'Quiet authority',      color:'#4E4A46', frame:'#3C3834', pop:68},
+  {id:'sage',    name:'Sage',    note:'Nature\'s palette',    color:'#8D9A87', frame:'#7C8A76', pop:55},
+  {id:'caramel', name:'Caramel', note:'Rich and grounding',   color:'#A07558', frame:'#8E6548', pop:49},
+  {id:'forest',  name:'Forest',  note:'Depth and character',  color:'#3D5040', frame:'#2D4030', pop:43},
+];
+
+const LEGS = [
+  {id:'natural', name:'Natural Oak',   desc:'Honey-toned warmth',    color:'#C8A868', dark:'#A88848'},
+  {id:'dark',    name:'Dark Tinted',   desc:'Deep, moody richness',  color:'#3D2A14', dark:'#221808'},
+  {id:'black',   name:'Black',         desc:'Minimal perfection',    color:'#1C1916', dark:'#0E0C0A'},
+];
+
+const CONFIGS = {
+  '2s':     {name:'2-Seater',     size:'160 × 88 cm', price:2890, cusn:2},
+  '3s':     {name:'3-Seater',     size:'230 × 88 cm', price:3690, cusn:3},
+  'lshape': {name:'L-Shape',      size:'270 × 180 cm',price:4890, cusn:4},
+};
+
+const WHISPERS = {
+  cfg: {
+    '2s':    'A perfect pair — intimate by design, generous in feeling.',
+    '3s':    'The most loved format. Room for the whole family.',
+    'lshape':'Total surrender. The corner becomes your world.',
+  },
+  fab: {
+    'salt':   'The purest expression — Salt complements every interior.',
+    'cream':  'The warmth of linen in morning light.',
+    'pebble': 'Warm and grounding. A favourite in sunlit rooms.',
+    'stone':  'Restrained and sophisticated. Stone speaks quietly.',
+    'coal':   'Dark, confident, timeless. Coal anchors any space.',
+    'sage':   'A touch of nature brought inside. Breathes with the room.',
+    'caramel':'Rich earth tones — character from day one.',
+    'forest': 'Deep and enveloping. For rooms that tell a story.',
+  },
+  leg: {
+    'natural':'The honest beauty of solid oak, unhidden.',
+    'dark':   'Moody depth — the frame disappears into shadow.',
+    'black':  'Zero compromise. The purest visual line.',
+  },
+  cush: {
+    'standard':'Structured and lasting. Keeps its shape for a decade.',
+    'feather': 'Sink in. Feather-wrapped seats hold you like nothing else.',
+  },
+};
+
+/* ── STATE ────────────────────────────────────────────────── */
+let S = {cfg:null, fab:null, leg:null, cush:null, step:1};
+
+/* ── INIT ─────────────────────────────────────────────────── */
+(function init(){
+  buildFabrics();
+  buildLegs();
+  randomProof();
+  loadFromStorage();
+})();
+
+function buildFabrics(){
+  const g = document.getElementById('fab-grid');
+  FABRICS.forEach(f => {
+    const d = document.createElement('div');
+    d.className = 'fab-sw';
+    d.dataset.id = f.id;
+    d.innerHTML = `<div class="sw-color" style="background:${f.color}"></div><div class="sw-name">${f.name}</div><div class="sw-note">${f.note}</div>`;
+    d.addEventListener('mouseenter', () => previewFabric(f));
+    d.addEventListener('mouseleave', () => revertFabric());
+    d.addEventListener('click', () => pickFabric(f.id, d));
+    g.appendChild(d);
+  });
+}
+
+function buildLegs(){
+  const g = document.getElementById('leg-opts');
+  LEGS.forEach(l => {
+    const d = document.createElement('div');
+    d.className = 'leg-opt';
+    d.dataset.id = l.id;
+    d.innerHTML = `<div class="leg-sw" style="background:linear-gradient(135deg,${l.color},${l.dark})"></div><div class="leg-name">${l.name}</div><div class="leg-desc">${l.desc}</div>`;
+    d.addEventListener('click', () => pickLeg(l.id, d));
+    g.appendChild(d);
+  });
+}
+
+function randomProof(){
+  document.getElementById('proof-num').textContent = 38 + Math.floor(Math.random()*22);
+}
+
+function loadFromStorage(){
+  try{
+    const saved = localStorage.getItem('eth-sofa-cfg');
+    if(saved){
+      const p = JSON.parse(saved);
+      if(p.cfg) pickConfig(p.cfg, document.querySelector(`[data-id="${p.cfg}"]`), true);
+      if(p.fab) pickFabric(p.fab, document.querySelector(`[data-id="${p.fab}"]`), true);
+      if(p.leg) pickLeg(p.leg, document.querySelector(`[data-id="${p.leg}"]`), true);
+      if(p.cush) pickCushion(p.cush, document.querySelector(`[data-id="${p.cush}"]`), true);
+    }
+  } catch(e){}
+}
+
+/* ── INTRO ────────────────────────────────────────────────── */
+document.getElementById('start-btn').addEventListener('click', () => {
+  document.getElementById('intro').classList.add('out');
+  document.getElementById('app').classList.add('on');
+  setTimeout(() => document.getElementById('intro').style.display = 'none', 1000);
+});
+
+/* ── PICKS ────────────────────────────────────────────────── */
+function pickConfig(id, el, silent){
+  S.cfg = id;
+  document.querySelectorAll('#step-1 .cfg-opt').forEach(e => e.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+
+  // Update SVG
+  document.getElementById('c2').style.display = id==='2s' ? '' : 'none';
+  document.getElementById('c3').style.display = id==='2s' ? 'none' : '';
+  document.getElementById('chaise').style.opacity = id==='lshape' ? '1' : '0';
+
+  // Sofa scale hint
+  const wrap = document.getElementById('sofa-wrap');
+  wrap.style.transform = id==='lshape' ? 'scale(0.88)' : '';
+
+  // Tags
+  const tag = document.getElementById('tag-cfg');
+  tag.classList.remove('pending');
+  document.getElementById('tc').textContent = CONFIGS[id].name;
+
+  // Whisper + progress
+  if(!silent){
+    setWhisper('w1', WHISPERS.cfg[id]);
+    markDone(1);
+    updatePrice();
+    saveToStorage();
+    setTimeout(() => scrollToStep(2), 420);
+  }
+}
+
+function pickFabric(id, el, silent){
+  S.fab = id;
+  const f = FABRICS.find(x=>x.id===id);
+  document.querySelectorAll('.fab-sw').forEach(e => e.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+
+  // Apply color to SVG
+  applyFabricColor(f.color, f.frame);
+
+  // Tag
+  const tag = document.getElementById('tag-fab');
+  tag.classList.remove('pending');
+  document.getElementById('tf').textContent = f.name;
+  document.getElementById('td-fab').style.background = f.color;
+  document.getElementById('td-fab').style.border = '1px solid rgba(0,0,0,.1)';
+
+  // Popularity bar
+  document.getElementById('pop-bar').style.width = f.pop + '%';
+  document.getElementById('pop-lbl').textContent = f.pop + '% choose this fabric';
+
+  if(!silent){
+    setWhisper('w2', WHISPERS.fab[id]);
+    markDone(2);
+    updatePrice();
+    saveToStorage();
+    setTimeout(() => scrollToStep(3), 420);
+  }
+}
+
+function pickLeg(id, el, silent){
+  S.leg = id;
+  const l = LEGS.find(x=>x.id===id);
+  document.querySelectorAll('.leg-opt').forEach(e => e.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+
+  // Apply to SVG
+  document.querySelectorAll('#sofa-svg .wood').forEach(e => e.style.fill = l.color);
+
+  // Tag
+  const tag = document.getElementById('tag-leg');
+  tag.classList.remove('pending');
+  document.getElementById('tl').textContent = l.name;
+  document.getElementById('td-leg').style.background = l.color;
+
+  if(!silent){
+    setWhisper('w3', WHISPERS.leg[id]);
+    markDone(3);
+    updatePrice();
+    saveToStorage();
+    setTimeout(() => scrollToStep(4), 420);
+  }
+}
+
+function pickCushion(id, el, silent){
+  S.cush = id;
+  document.querySelectorAll('.cush-opt').forEach(e => e.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+
+  // Tag
+  const tag = document.getElementById('tag-cush');
+  tag.classList.remove('pending');
+  document.getElementById('tk').textContent = id==='feather' ? 'Feather Wrap' : 'Standard';
+
+  if(!silent){
+    setWhisper('w4', WHISPERS.cush[id]);
+    markDone(4);
+    updatePrice();
+    saveToStorage();
+    // Show CTA
+    setTimeout(() => {
+      document.getElementById('cfg-cta').classList.add('on');
+      celebrate();
+    }, 500);
+  }
+}
+
+/* ── FABRIC HOVER PREVIEW ─────────────────────────────────── */
+let prevFab = null;
+function previewFabric(f){
+  if(S.fab){
+    prevFab = FABRICS.find(x=>x.id===S.fab);
+  }
+  applyFabricColor(f.color, f.frame);
+}
+function revertFabric(){
+  if(S.fab){
+    const f = FABRICS.find(x=>x.id===S.fab);
+    applyFabricColor(f.color, f.frame);
+  } else {
+    // reset to default
+    document.querySelectorAll('#sofa-svg .fabric').forEach(e => e.style.fill = '');
+    document.querySelectorAll('#sofa-svg .frame-fill').forEach(e => e.style.fill = '');
+    document.querySelectorAll('#sofa-svg .back-frame-fill').forEach(e => e.style.fill = '');
+  }
+}
+function applyFabricColor(color, frame){
+  document.querySelectorAll('#sofa-svg .fabric').forEach(e => e.style.fill = color);
+  document.querySelectorAll('#sofa-svg .frame-fill').forEach(e => e.style.fill = frame);
+  document.querySelectorAll('#sofa-svg .back-frame-fill').forEach(e => e.style.fill = frame);
+  // Also set room scene tint
+  document.getElementById('room').style.setProperty('--room-tint', color);
+}
+
+/* ── STEP MANAGEMENT ──────────────────────────────────────── */
+function markDone(n){
+  const s = document.getElementById('step-'+n);
+  s.classList.remove('active');
+  s.classList.add('done');
+  // Activate next
+  const next = document.getElementById('step-'+(n+1));
+  if(next) next.classList.add('active');
+  updateProgress();
+}
+
+function editStep(n){
+  // Re-activate step n, de-done it
+  const s = document.getElementById('step-'+n);
+  s.classList.remove('done');
+  s.classList.add('active');
+  // Remove done from all subsequent
+  for(let i=n+1;i<=4;i++){
+    const si = document.getElementById('step-'+i);
+    if(si){ si.classList.remove('done','active'); }
+    if(i===n+1) si.classList.remove('active');
+  }
+  // Reset state
+  if(n<=1){ S.cfg=null; document.getElementById('tag-cfg').classList.add('pending'); }
+  if(n<=2){ S.fab=null; document.getElementById('tag-fab').classList.add('pending'); }
+  if(n<=3){ S.leg=null; document.getElementById('tag-leg').classList.add('pending'); }
+  if(n<=4){ S.cush=null; document.getElementById('tag-cush').classList.add('pending'); document.getElementById('cfg-cta').classList.remove('on'); }
+  updateProgress();
+}
+
+function updateProgress(){
+  const done = [S.cfg,S.fab,S.leg,S.cush].filter(Boolean).length;
+  document.getElementById('prog-bar').style.width = (done/4*100)+'%';
+}
+
+function scrollToStep(n){
+  const el = document.getElementById('step-'+n);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start', inline:'nearest'});
+}
+
+/* ── PRICE ────────────────────────────────────────────────── */
+function updatePrice(){
+  if(!S.cfg) return;
+  let p = CONFIGS[S.cfg].price;
+  if(S.cush==='feather') p += 290;
+  const el = document.getElementById('price-display');
+  el.textContent = '€ ' + p.toLocaleString('en-EU');
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+/* ── WHISPER ──────────────────────────────────────────────── */
+function setWhisper(id, text){
+  const el = document.getElementById(id);
+  el.style.opacity = '0';
+  setTimeout(() => { el.textContent = text; el.style.opacity = '1'; }, 200);
+}
+
+/* ── ROOM TOGGLE ──────────────────────────────────────────── */
+document.getElementById('room-toggle').addEventListener('click', function(){
+  this.classList.toggle('on');
+  document.getElementById('room').classList.toggle('room-on');
+});
+
+/* ── STORAGE ──────────────────────────────────────────────── */
+function saveToStorage(){
+  try{
+    localStorage.setItem('eth-sofa-cfg', JSON.stringify({cfg:S.cfg,fab:S.fab,leg:S.leg,cush:S.cush}));
+  }catch(e){}
+}
+
+/* ── SUMMARY ──────────────────────────────────────────────── */
+function showSummary(){
+  if(!S.cfg||!S.fab||!S.leg||!S.cush) return;
+  const sum = document.getElementById('summary');
+  sum.classList.add('on');
+
+  // Clone SVG into summary
+  const orig = document.getElementById('sofa-svg').cloneNode(true);
+  orig.removeAttribute('id');
+  const wrap = document.getElementById('sum-sofa-wrap');
+  wrap.innerHTML = '';
+  wrap.appendChild(orig);
+
+  // Config code
+  const code = `ETH-${S.cfg.toUpperCase()}-${S.fab.toUpperCase()}-${S.leg.toUpperCase()}-${S.cush === 'feather' ? 'FW' : 'STD'}`;
+  document.getElementById('sum-code').textContent = 'Config: ' + code;
+
+  // Details
+  const cfg = CONFIGS[S.cfg];
+  const fab = FABRICS.find(x=>x.id===S.fab);
+  const leg = LEGS.find(x=>x.id===S.leg);
+  document.getElementById('sum-plabel').textContent = `${cfg.name} · ${fab.name} · ${leg.name}`;
+
+  let price = cfg.price;
+  if(S.cush==='feather') price += 290;
+  document.getElementById('sum-price').textContent = '€ '+price.toLocaleString('en-EU');
+
+  const specs = [
+    ['Configuration', cfg.name],
+    ['Dimensions', cfg.size],
+    ['Upholstery', fab.name + ' — ' + fab.note],
+    ['Frame & Legs', leg.name],
+    ['Cushion Fill', S.cush==='feather' ? 'Feather Wrap' : 'Standard Foam'],
+    ['Material', 'Sustainable Solid Oak'],
+    ['Lead Time', '8–10 weeks'],
+  ];
+  document.getElementById('sum-specs').innerHTML = specs.map(([k,v])=>`<div class="sum-spec"><div class="sum-sk">${k}</div><div class="sum-sv">${v}</div></div>`).join('');
+}
+
+function closeSummary(){
+  document.getElementById('summary').classList.remove('on');
+}
+
+/* ── ACTIONS ──────────────────────────────────────────────── */
+function shareConfig(){
+  const code = `ETH-${S.cfg.toUpperCase()}-${S.fab.toUpperCase()}-${S.leg.toUpperCase()}-${S.cush==='feather'?'FW':'STD'}`;
+  try{ navigator.clipboard.writeText(code); } catch(e){}
+  toast('Configuration code copied: ' + code);
+}
+
+function saveConfig(){
+  celebrate();
+  toast('Saved to your wishlist ♡');
+}
+
+function requestQuote(){
+  toast('Opening quote request — please visit your nearest Ethnicraft showroom.');
+}
+
+function visitShowroom(){
+  toast('Find your nearest showroom at ethnicraft.com/stores');
+}
+
+/* ── TOAST ────────────────────────────────────────────────── */
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), 3200);
+}
+
+/* ── CELEBRATE ────────────────────────────────────────────── */
+function celebrate(){
+  const colors = ['#C8A868','#B5A898','#8D9A87','#EAE6DC','#4E4A46','#F0E6D0'];
+  for(let i=0;i<28;i++){
+    setTimeout(()=>{
+      const p = document.createElement('div');
+      p.className = 'part';
+      p.style.cssText = `left:${30+Math.random()*40}%;top:${30+Math.random()*20}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*0.4}s;transform:rotate(${Math.random()*360}deg);border-radius:${Math.random()>0.5?'50%':'2px'}`;
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),2000);
+    }, i*30);
+  }
+}
+</script>
+</body>
+</html>

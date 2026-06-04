@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 01 — Quality Materials | Ethnicraft Academy</title>
+<style>
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Light.woff2') format('woff2'); font-weight:300; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Regular.woff2') format('woff2'); font-weight:400; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Medium.woff2') format('woff2'); font-weight:500; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-SemiBold.woff2') format('woff2'); font-weight:600; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Bold.woff2') format('woff2'); font-weight:700; }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --w:#FFFFFF;--ow:#F9F8F6;--g100:#F2F1EE;--g200:#E8E7E3;
+  --g300:#D0CEC9;--g500:#908E88;--g700:#4A4845;--blk:#1A1916;
+  --taupe:#B5A898;--font:'Suisse',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--blk);background:var(--w);-webkit-font-smoothing:antialiased}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;
+  justify-content:space-between;padding:0 48px;height:64px;
+  background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--g200)}
+.nav-logo{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blk);text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo-dot{width:6px;height:6px;background:var(--blk);border-radius:50%;display:inline-block}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--g500);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--blk)}
+
+/* PROGRESS TOP BAR */
+.module-progress-bar{position:fixed;top:64px;left:0;right:0;z-index:199;
+  height:3px;background:var(--g200)}
+.module-progress-fill{height:100%;background:var(--blk);transition:width .3s ease;width:0%}
+
+/* MODULE HERO */
+.mod-hero{padding-top:64px;position:relative;overflow:hidden;height:80vh;min-height:560px;
+  display:flex;align-items:flex-end}
+.mod-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mod-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,14,.8) 0%,rgba(20,18,14,.25) 60%,transparent 100%)}
+.mod-hero-content{position:relative;z-index:2;padding:64px 48px;width:100%}
+.mod-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);margin-bottom:16px}
+.mod-title{font-size:clamp(40px,6vw,80px);font-weight:300;line-height:1.0;
+  color:#FFF;letter-spacing:-.025em;margin-bottom:0;max-width:800px}
+.mod-title em{font-style:italic}
+
+/* CHAPTER NAV */
+.chapter-nav{background:var(--g100);border-bottom:1px solid var(--g200);
+  padding:0 48px;position:sticky;top:67px;z-index:150}
+.chapter-nav-inner{display:flex;gap:0;overflow-x:auto}
+.chap-link{padding:18px 0;margin-right:36px;font-size:11px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--g500);text-decoration:none;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.chap-link:hover{color:var(--blk)}
+.chap-link.active{color:var(--blk);border-bottom-color:var(--blk)}
+
+/* ARTICLE LAYOUT */
+.article{max-width:1200px;margin:0 auto;padding:0 48px}
+.article-section{padding:96px 0;border-bottom:1px solid var(--g200)}
+.article-section:last-child{border-bottom:none}
+
+/* CHAPTER HEADER */
+.chap-header{margin-bottom:60px}
+.chap-num{font-size:120px;font-weight:300;letter-spacing:-.06em;line-height:1;
+  color:var(--g200);margin-bottom:-20px;display:block}
+.chap-label{font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:14px}
+.chap-title{font-size:clamp(32px,4vw,52px);font-weight:300;line-height:1.1;
+  letter-spacing:-.025em;margin-bottom:24px}
+.chap-intro{font-size:20px;font-weight:300;line-height:1.7;color:var(--g700);
+  max-width:720px}
+
+/* TEXT CONTENT */
+.text-col{max-width:720px}
+.body-text{font-size:16px;font-weight:300;line-height:1.85;color:var(--g700);margin-bottom:24px}
+.body-text strong{color:var(--blk);font-weight:600}
+.pull-quote{font-size:clamp(22px,3vw,32px);font-weight:300;line-height:1.3;
+  letter-spacing:-.015em;color:var(--blk);font-style:italic;
+  border-left:3px solid var(--blk);padding:8px 0 8px 32px;margin:48px 0}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-top:48px}
+.two-col-text{display:flex;flex-direction:column;gap:20px}
+
+/* IMAGE BLOCKS */
+.full-img{width:100%;aspect-ratio:16/9;object-fit:cover;margin:48px 0}
+.img-caption{font-size:12px;color:var(--g500);margin-top:-36px;margin-bottom:48px;
+  letter-spacing:.04em}
+.side-img{width:100%;height:100%;object-fit:cover;min-height:400px}
+
+/* WOOD CARDS */
+.wood-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin:48px 0}
+.wood-card{background:var(--g100);padding:40px;cursor:pointer;
+  border-left:4px solid transparent;transition:border-color .2s,background .2s}
+.wood-card:hover,.wood-card.open{border-left-color:var(--blk);background:var(--g200)}
+.wood-card-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.wood-name{font-size:22px;font-weight:400;letter-spacing:-.01em}
+.wood-tag{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--g500)}
+.wood-subtitle{font-size:13px;color:var(--g500);margin-bottom:0;font-weight:400}
+.wood-detail{max-height:0;overflow:hidden;transition:max-height .4s ease,opacity .3s}
+.wood-detail.open{max-height:400px;opacity:1}
+.wood-detail-inner{padding-top:24px;border-top:1px solid var(--g300);margin-top:20px}
+.wood-detail-inner p{font-size:15px;font-weight:300;line-height:1.8;color:var(--g700);margin-bottom:12px}
+.wood-stats{display:flex;gap:32px;margin-top:16px;flex-wrap:wrap}
+.wood-stat{display:flex;flex-direction:column;gap:3px}
+.wood-stat-val{font-size:24px;font-weight:300;letter-spacing:-.02em}
+.wood-stat-label{font-size:11px;color:var(--g500);letter-spacing:.06em}
+.wood-toggle{font-size:20px;color:var(--g500);line-height:1}
+
+/* COMPARISON TABLE */
+.compare-table{width:100%;border-collapse:collapse;margin:40px 0}
+.compare-table th{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--g500);padding:14px 20px;text-align:left;border-bottom:2px solid var(--g200);
+  background:var(--g100)}
+.compare-table td{padding:16px 20px;font-size:14px;font-weight:300;
+  border-bottom:1px solid var(--g200);vertical-align:top;line-height:1.6}
+.compare-table tr:hover td{background:var(--g100)}
+.badge{display:inline-block;padding:3px 10px;font-size:10px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase}
+.badge-good{background:rgba(76,175,80,.12);color:#2E7D32}
+.badge-mid{background:rgba(255,167,38,.12);color:#E65100}
+.badge-bad{background:rgba(244,67,54,.1);color:#C62828}
+
+/* EUDR TIMELINE */
+.timeline{margin:40px 0;display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:24px;padding:24px 0;border-bottom:1px solid var(--g200)}
+.tl-item:first-child{border-top:1px solid var(--g200)}
+.tl-step{width:32px;height:32px;background:var(--blk);color:#FFF;display:flex;
+  align-items:center;justify-content:center;font-size:12px;font-weight:600;
+  flex-shrink:0;margin-top:2px}
+.tl-content{}
+.tl-title{font-size:16px;font-weight:500;margin-bottom:6px}
+.tl-desc{font-size:14px;font-weight:300;line-height:1.7;color:var(--g700)}
+
+/* QUICK FACTS */
+.facts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:40px 0}
+.fact-card{background:var(--g100);padding:36px 28px}
+.fact-icon{font-size:32px;margin-bottom:16px}
+.fact-title{font-size:15px;font-weight:600;margin-bottom:8px}
+.fact-desc{font-size:13px;font-weight:300;line-height:1.7;color:var(--g700)}
+
+/* QUIZ */
+.quiz-section{background:var(--blk);padding:96px 0}
+.quiz-inner{max-width:800px;margin:0 auto;padding:0 48px}
+.quiz-header{margin-bottom:56px}
+.quiz-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:16px}
+.quiz-title{font-size:clamp(28px,4vw,44px);font-weight:300;line-height:1.1;
+  color:#FFF;letter-spacing:-.02em}
+.quiz-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  padding:40px;margin-bottom:8px;display:none}
+.quiz-card.active{display:block}
+.q-num{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:16px}
+.q-text{font-size:20px;font-weight:300;color:#FFF;line-height:1.5;margin-bottom:32px}
+.q-options{display:flex;flex-direction:column;gap:8px}
+.q-option{padding:16px 20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.8);font-size:15px;font-weight:300;cursor:pointer;
+  transition:all .2s;text-align:left;font-family:var(--font);line-height:1.4}
+.q-option:hover:not([disabled]){background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}
+.q-option.correct{background:rgba(76,175,80,.2);border-color:#4CAF50;color:#A5D6A7}
+.q-option.wrong{background:rgba(244,67,54,.2);border-color:#EF5350;color:#FFCDD2}
+.q-option[disabled]{cursor:default}
+.q-explanation{margin-top:20px;padding:16px 20px;background:rgba(255,255,255,.05);
+  border-left:3px solid rgba(255,255,255,.3);font-size:14px;font-weight:300;
+  line-height:1.7;color:rgba(255,255,255,.7);display:none}
+.q-explanation.show{display:block}
+.q-next{margin-top:24px;padding:14px 32px;background:#FFF;color:var(--blk);
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;border:none;font-family:var(--font);transition:background .2s;display:none}
+.q-next.show{display:inline-flex}
+.q-next:hover{background:var(--g200)}
+.quiz-progress{display:flex;gap:6px;margin-bottom:32px}
+.q-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15)}
+.q-dot.done{background:#FFF}
+.q-dot.current{background:rgba(255,255,255,.6);outline:2px solid rgba(255,255,255,.3);outline-offset:2px}
+.quiz-result{display:none;text-align:center;padding:40px}
+.quiz-result.show{display:block}
+.result-score{font-size:80px;font-weight:300;color:#FFF;line-height:1;letter-spacing:-.04em}
+.result-label{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:24px;letter-spacing:.04em}
+.result-msg{font-size:20px;font-weight:300;color:#FFF;line-height:1.5;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto}
+.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-white{padding:14px 32px;background:#FFF;color:var(--blk);font-size:12px;
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  cursor:pointer;border:none;font-family:var(--font);transition:background .2s}
+.btn-white:hover{background:var(--g200)}
+.btn-outline{padding:14px 32px;background:transparent;color:#FFF;border:1px solid rgba(255,255,255,.3);
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  cursor:pointer;font-family:var(--font);transition:border-color .2s}
+.btn-outline:hover{border-color:#FFF}
+
+/* MODULE NAV */
+.mod-nav-strip{background:var(--g100);padding:48px;display:flex;
+  align-items:center;justify-content:space-between;border-top:1px solid var(--g200)}
+.mod-nav-back{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--g500);text-decoration:none;transition:color .2s}
+.mod-nav-back:hover{color:var(--blk)}
+.mod-nav-next{display:inline-flex;align-items:center;gap:12px;padding:16px 32px;
+  background:var(--blk);color:#FFF;font-size:12px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;text-decoration:none;transition:background .2s}
+.mod-nav-next:hover{background:var(--g700)}
+.mod-nav-title{font-size:13px;font-weight:400;color:var(--g500)}
+
+footer{background:var(--g100);padding:40px 48px;border-top:1px solid var(--g200)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.footer-logo{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--g500)}
+.footer-links{display:flex;gap:28px}
+.footer-links a{font-size:11px;color:var(--g500);text-decoration:none}
+.footer-links a:hover{color:var(--blk)}
+
+@media(max-width:900px){
+  .nav{padding:0 20px}.nav-links{display:none}
+  .mod-hero-content{padding:48px 20px}
+  .chapter-nav{padding:0 20px}
+  .article{padding:0 20px}
+  .two-col{grid-template-columns:1fr;gap:32px}
+  .wood-grid{grid-template-columns:1fr}
+  .facts-grid{grid-template-columns:1fr;gap:2px}
+  .quiz-inner{padding:0 20px}
+  .mod-nav-strip{padding:32px 20px;flex-direction:column;gap:20px;align-items:flex-start}
+  footer{padding:32px 20px}
+  .footer-inner{flex-direction:column;gap:16px;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="academy-index.html">
+    <span class="nav-logo-dot"></span>
+    Ethnicraft <span style="color:var(--g500);font-weight:400">&nbsp;Academy</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="academy-index.html">Home</a></li>
+    <li><a href="academy-module1.html" class="active">01 Materials</a></li>
+    <li><a href="academy-module2.html">02 Craftsmanship</a></li>
+    <li><a href="academy-module3.html">03 Design</a></li>
+  </ul>
+</nav>
+
+<div class="module-progress-bar"><div class="module-progress-fill" id="read-progress"></div></div>
+
+<section class="mod-hero">
+  <div class="mod-hero-img" style="background:#E0DFDB"></div>
+  <div class="mod-hero-overlay"></div>
+  <div class="mod-hero-content">
+    <p class="mod-eyebrow">Module 01 — Quality Materials</p>
+    <h1 class="mod-title">Why wood is the only<br>material that gets <em>better</em><br>with time.</h1>
+  </div>
+</section>
+
+<nav class="chapter-nav">
+  <div class="chapter-nav-inner">
+    <a href="#chap1" class="chap-link active">1. Why Wood?</a>
+    <a href="#chap2" class="chap-link">2. The Wood Manual</a>
+    <a href="#chap3" class="chap-link">3. From Forest to Factory</a>
+    <a href="#chap4" class="chap-link">4. The Healthy Home</a>
+    <a href="#quiz" class="chap-link">Quiz</a>
+  </div>
+</nav>
+
+<!-- CHAPTER 1 -->
+<div class="article">
+<section class="article-section" id="chap1">
+  <div class="chap-header">
+    <span class="chap-num">01</span>
+    <p class="chap-label">Chapter One</p>
+    <h2 class="chap-title">Why Wood?</h2>
+    <p class="chap-intro">In a world of fast furniture, understanding what makes a material honest — and lasting — is your most powerful sales tool.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="two-col-text">
+      <p class="body-text">Walk into any furniture store today and you'll find tables made of MDF, chipboard, or printed foil. They look like wood. They're priced like a bargain. But give them ten years, a spilled glass of water, or a house move — and they will not survive.</p>
+      <p class="body-text"><strong>Solid wood is not simply a premium choice. It is the logical choice.</strong> It is the only furniture material that improves — actually becomes more beautiful — through use and time. The patina that forms on an oak dining table isn't wear. It's a record of a life lived around it.</p>
+      <p class="body-text">This is your opening argument. Not price justification. Not brand prestige. The simple truth: <strong>solid wood furniture is the last furniture you'll ever need to buy.</strong></p>
+      <div class="pull-quote">"The question isn't why solid wood costs more. The question is: how much does cheap furniture cost you over twenty years?"</div>
+      <p class="body-text">Three materials define the furniture market today: solid wood, MDF/chipboard composites, and upholstered frames. Each has its place — but only one will outlast the customer who bought it.</p>
+    </div>
+    <div>
+      <div class="side-img" style="background:#E0DFDB"></div>
+      <p style="font-size:12px;color:var(--g500);margin-top:8px;letter-spacing:.04em">A new dining table being prepared at the Ethnicraft atelier, Indonesia.</p>
+    </div>
+  </div>
+
+  <table class="compare-table" style="margin-top:60px">
+    <thead>
+      <tr>
+        <th>Material</th>
+        <th>Lifespan</th>
+        <th>Repairability</th>
+        <th>Air Quality</th>
+        <th>Resale Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Solid Wood</strong></td>
+        <td><span class="badge badge-good">Decades – Forever</span></td>
+        <td><span class="badge badge-good">Fully repairable</span></td>
+        <td><span class="badge badge-good">No off-gassing</span></td>
+        <td><span class="badge badge-good">High</span></td>
+      </tr>
+      <tr>
+        <td>MDF / Chipboard</td>
+        <td><span class="badge badge-mid">3–8 years</span></td>
+        <td><span class="badge badge-bad">Not repairable</span></td>
+        <td><span class="badge badge-bad">Formaldehyde risk</span></td>
+        <td><span class="badge badge-bad">Near zero</span></td>
+      </tr>
+      <tr>
+        <td>Veneer on chipboard</td>
+        <td><span class="badge badge-mid">5–12 years</span></td>
+        <td><span class="badge badge-bad">Very limited</span></td>
+        <td><span class="badge badge-mid">Moderate</span></td>
+        <td><span class="badge badge-bad">Low</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="body-text" style="margin-top:48px"><strong>Retailer tip:</strong> When a customer hesitates at price, break it down. A solid oak dining table at €3,000 that lasts 40+ years costs €75 per year. An MDF alternative at €900 that needs replacing in 8 years costs €112 per year. Solid wood is actually the economical choice.</p>
+</section>
+
+<!-- CHAPTER 2 -->
+<section class="article-section" id="chap2">
+  <div class="chap-header">
+    <span class="chap-num">02</span>
+    <p class="chap-label">Chapter Two</p>
+    <h2 class="chap-title">The Wood Manual</h2>
+    <p class="chap-intro">Ethnicraft masters four species of solid wood. Each has a personality. Knowing them is knowing your product.</p>
+  </div>
+
+  <p class="body-text text-col">Click each species to explore its character — from origin and hardness to how it ages in a customer's home.</p>
+
+  <div class="wood-grid">
+
+    <div class="wood-card" onclick="toggleWood(this)">
+      <div class="wood-card-top">
+        <span class="wood-name">Oak</span>
+        <span class="wood-toggle">+</span>
+      </div>
+      <p class="wood-tag">European White Oak · Quercus robur</p>
+      <p class="wood-subtitle" style="margin-top:8px;font-size:13px;color:var(--g700)">The backbone of Ethnicraft. Strong, characterful, and endlessly adaptable.</p>
+      <div class="wood-detail">
+        <div class="wood-detail-inner">
+          <p>European White Oak is the cornerstone of the Ethnicraft range. Grown slowly in sustainably managed forests across France, Germany, and the Balkans, it develops a tight, dense grain that gives it exceptional strength and stability.</p>
+          <p>Oak is <strong>tannin-rich</strong> — the same compound found in red wine and tea. This natural tannin reacts with light and air over time to create the warm amber patina that customers fall in love with. Unlike other woods, oak patina is prized, not problematic.</p>
+          <p>The open grain of oak is visually striking and tactilely interesting — each plank is unique. No two Ethnicraft oak pieces are identical. This is not a defect. It is the signature of natural material.</p>
+          <div class="wood-stats">
+            <div class="wood-stat"><span class="wood-stat-val">1,360</span><span class="wood-stat-label">Janka hardness (lbf)</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">720</span><span class="wood-stat-label">kg/m³ density</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">50+</span><span class="wood-stat-label">Years lifespan</span></div>
+          </div>
+          <p style="margin-top:20px;font-size:13px;font-style:italic;color:var(--g500)"><strong>Selling tip:</strong> "Oak is the furniture material your grandchildren will thank you for. It only gets richer."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="wood-card" onclick="toggleWood(this)">
+      <div class="wood-card-top">
+        <span class="wood-name">Teak</span>
+        <span class="wood-toggle">+</span>
+      </div>
+      <p class="wood-tag">Tectona grandis · Southeast Asian Heritage</p>
+      <p class="wood-subtitle" style="margin-top:8px;font-size:13px;color:var(--g700)">Nature's waterproof. The original outdoor wood — equally stunning inside.</p>
+      <div class="wood-detail">
+        <div class="wood-detail-inner">
+          <p>Teak is remarkable because it is essentially <strong>self-protecting</strong>. Its fibres are naturally saturated with silica crystals and rubber-like oils that repel moisture, resist insects, and prevent the cracking that destroys lesser woods. Shipbuilders used teak for centuries for exactly this reason.</p>
+          <p>Ethnicraft sources plantation teak — meaning trees are grown specifically for harvest in managed Indonesian forests, not cleared from ancient rainforest. This is a critical selling point with sustainability-conscious buyers.</p>
+          <p>Teak's colour ranges from golden honey when freshly oiled to a distinguished silver-grey when left untreated outdoors. Both are beautiful. Both are intentional. The customer gets to choose their aesthetic.</p>
+          <div class="wood-stats">
+            <div class="wood-stat"><span class="wood-stat-val">2,330</span><span class="wood-stat-label">Janka hardness (lbf)</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">630</span><span class="wood-stat-label">kg/m³ density</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">75+</span><span class="wood-stat-label">Years lifespan</span></div>
+          </div>
+          <p style="margin-top:20px;font-size:13px;font-style:italic;color:var(--g500)"><strong>Selling tip:</strong> "Teak is the only wood that genuinely requires almost no maintenance. It protects itself."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="wood-card" onclick="toggleWood(this)">
+      <div class="wood-card-top">
+        <span class="wood-name">Mahogany</span>
+        <span class="wood-toggle">+</span>
+      </div>
+      <p class="wood-tag">Swietenia macrophylla · Warmth &amp; Refinement</p>
+      <p class="wood-subtitle" style="margin-top:8px;font-size:13px;color:var(--g700)">Warm reddish tones, exceptional stability, and a smoothness that's almost silky.</p>
+      <div class="wood-detail">
+        <div class="wood-detail-inner">
+          <p>Mahogany has been the wood of choice for fine furniture makers for centuries — from 18th-century cabinetmakers to contemporary designers. Its warm reddish-brown tones and exceptionally fine, straight grain give finished pieces an almost sculptural quality.</p>
+          <p>What makes Mahogany technically exceptional is its <strong>dimensional stability</strong>. It moves very little with changes in humidity — meaning joints stay tight, surfaces stay flat, and doors stay true. For precise designs and complex joinery, Mahogany is the craftsman's wood.</p>
+          <p>Ethnicraft uses sustainably sourced African Mahogany, which has similar properties to its South American counterpart and is certified through responsible forestry programs.</p>
+          <div class="wood-stats">
+            <div class="wood-stat"><span class="wood-stat-val">900</span><span class="wood-stat-label">Janka hardness (lbf)</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">545</span><span class="wood-stat-label">kg/m³ density</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">100+</span><span class="wood-stat-label">Year potential</span></div>
+          </div>
+          <p style="margin-top:20px;font-size:13px;font-style:italic;color:var(--g500)"><strong>Selling tip:</strong> "Mahogany is the wood of Stradivarius violins and 18th-century desks. It ages with extraordinary grace."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="wood-card" onclick="toggleWood(this)">
+      <div class="wood-card-top">
+        <span class="wood-name">Sycamore</span>
+        <span class="wood-toggle">+</span>
+      </div>
+      <p class="wood-tag">Acer pseudoplatanus · Traditional Elegance</p>
+      <p class="wood-subtitle" style="margin-top:8px;font-size:13px;color:var(--g700)">Pale, creamy, and quietly spectacular. The wood of traditional European artisanship.</p>
+      <div class="wood-detail">
+        <div class="wood-detail-inner">
+          <p>Sycamore is the quiet achiever of the Ethnicraft wood range. Pale cream to off-white in colour, with a fine, even grain, it provides a bright, contemporary aesthetic that works beautifully in modern interiors that lean towards natural tones.</p>
+          <p>In traditional European craftsmanship, sycamore was reserved for the finest furniture and musical instruments — particularly violin backs and piano keyboards — where its uniform texture, smooth surface, and ability to hold precise details were invaluable.</p>
+          <p>Sycamore <strong>brightens interiors</strong>. Where oak adds warmth and depth, sycamore adds light. For retailers with customers in smaller spaces or those seeking a Scandinavian aesthetic, sycamore is the perfect recommendation.</p>
+          <div class="wood-stats">
+            <div class="wood-stat"><span class="wood-stat-val">770</span><span class="wood-stat-label">Janka hardness (lbf)</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">625</span><span class="wood-stat-label">kg/m³ density</span></div>
+            <div class="wood-stat"><span class="wood-stat-val">40+</span><span class="wood-stat-label">Years lifespan</span></div>
+          </div>
+          <p style="margin-top:20px;font-size:13px;font-style:italic;color:var(--g500)"><strong>Selling tip:</strong> "Sycamore has been used in Stradivarius violins and the finest European furniture for 300 years. It's the wood of heirlooms."</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="full-img" style="background:#E0DFDB"></div>
+  <p class="img-caption">A freshly completed round oak dining table at the Ethnicraft production facility.</p>
+
+</section>
+
+<!-- CHAPTER 3 -->
+<section class="article-section" id="chap3">
+  <div class="chap-header">
+    <span class="chap-num">03</span>
+    <p class="chap-label">Chapter Three</p>
+    <h2 class="chap-title">From Forest to Factory</h2>
+    <p class="chap-intro">Every piece of Ethnicraft furniture begins with a transparent chain. Know the story — because your customers will ask.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <p class="body-text"><strong>In 2023, the EU introduced the EUDR — the EU Deforestation Regulation.</strong> It requires every piece of wood furniture sold in Europe to be traceable back to its forest of origin. No exceptions. No shortcuts.</p>
+      <p class="body-text">Ethnicraft was already ahead of this. For years, the company has mapped its wood supply chains using satellite imagery, geolocation data, and certified sourcing partnerships. This isn't compliance for compliance's sake — it is a fundamental part of who Ethnicraft is.</p>
+      <p class="body-text">When a customer asks "where does this wood come from?" — you have a complete, honest answer. That answer builds trust. That trust builds sales. That sale builds a relationship that lasts decades.</p>
+      <div class="pull-quote">"We don't just know where our wood comes from. We know which forest. Which hectare. Which tree."</div>
+    </div>
+    <div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-step">1</div>
+          <div class="tl-content">
+            <p class="tl-title">Certified Forest Origin</p>
+            <p class="tl-desc">Wood is sourced only from forests certified under responsible forestry programs (FSC or PEFC). Each forest is geo-referenced — satellite-verified as deforestation-free.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-step">2</div>
+          <div class="tl-content">
+            <p class="tl-title">Chain of Custody Documentation</p>
+            <p class="tl-desc">From sawmill to shipping container, every step is documented. EUDR-compliant Due Diligence Statements (DDS) accompany every shipment.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-step">3</div>
+          <div class="tl-content">
+            <p class="tl-title">Kiln Drying &amp; Quality Control</p>
+            <p class="tl-desc">Timber is kiln-dried to precise moisture levels (6–8%) before production. This prevents future cracking and ensures dimensional stability across all climates.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-step">4</div>
+          <div class="tl-content">
+            <p class="tl-title">Production &amp; Finishing</p>
+            <p class="tl-desc">From raw plank to finished product. Multiple production stages, multiple human inspections. No automation replaces the craftsman's eye.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-step">5</div>
+          <div class="tl-content">
+            <p class="tl-title">Arrives in Your Showroom</p>
+            <p class="tl-desc">Each piece carries its provenance. You can tell the complete story of the wood's journey — from forest to your showroom floor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER 4 -->
+<section class="article-section" id="chap4">
+  <div class="chap-header">
+    <span class="chap-num">04</span>
+    <p class="chap-label">Chapter Four</p>
+    <h2 class="chap-title">The Healthy Home</h2>
+    <p class="chap-intro">What's inside your furniture matters as much as what's on the surface. Especially for the air your customers breathe.</p>
+  </div>
+
+  <p class="body-text text-col">Most people don't think about what their furniture is emitting into their home's air. They should. And as a retailer, <strong>this is one of the most powerful — and underused — arguments for solid wood.</strong></p>
+
+  <div class="facts-grid">
+    <div class="fact-card">
+      <div class="fact-icon">🌿</div>
+      <p class="fact-title">Zero Formaldehyde</p>
+      <p class="fact-desc">MDF and chipboard are bonded with urea-formaldehyde resins. These off-gas for years inside homes. Solid wood contains no synthetic binders. Zero formaldehyde. Full stop.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-icon">✓</div>
+      <p class="fact-title">PFAS-Free Finishes</p>
+      <p class="fact-desc">PFAS ("forever chemicals") are found in many surface treatments. Ethnicraft uses only PFAS-free, natural oil-based or water-based lacquer finishes — safe for the home, safe for the planet.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-icon">🏠</div>
+      <p class="fact-title">Naturally Regulating</p>
+      <p class="fact-desc">Wood is hygroscopic — it naturally absorbs and releases moisture, helping to regulate indoor humidity levels. It acts as a passive climate control system in the home.</p>
+    </div>
+  </div>
+
+  <div class="full-img" style="background:#E0DFDB"></div>
+  <p class="img-caption">Ethnicraft furniture in a designed living environment — natural materials in natural settings.</p>
+
+  <div class="text-col" style="margin-top:0">
+    <p class="body-text">Wood has been part of human homes for as long as humans have had homes. It has been used for furniture, tools, musical instruments, wine barrels, and kitchen utensils — the same material in the Stradivarius violin is in the Ethnicraft dining table in your showroom.</p>
+    <p class="body-text">This is not just a material story. It is a <strong>wellbeing story</strong>. And wellbeing stories sell beautifully in today's market, where customers are thinking harder than ever about the environments they live in.</p>
+    <div class="pull-quote">"When you choose solid wood, you choose a material with no hidden chemistry. What you see is what you get — and what you breathe."</div>
+  </div>
+</section>
+</div>
+
+<!-- QUIZ -->
+<section class="quiz-section" id="quiz">
+  <div class="quiz-inner">
+    <div class="quiz-header">
+      <p class="quiz-eyebrow">Module 01 Quiz</p>
+      <h2 class="quiz-title">Test your knowledge of quality materials.</h2>
+    </div>
+
+    <div class="quiz-progress" id="q-progress">
+      <div class="q-dot current" id="dot0"></div>
+      <div class="q-dot" id="dot1"></div>
+      <div class="q-dot" id="dot2"></div>
+      <div class="q-dot" id="dot3"></div>
+      <div class="q-dot" id="dot4"></div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="quiz-card active" id="qcard0">
+      <p class="q-num">Question 1 of 5</p>
+      <p class="q-text">Which wood species contains natural oils and silica that make it highly water-resistant without any treatment?</p>
+      <div class="q-options">
+        <button class="q-option" onclick="answer(this,0,false,'Oak is durable but requires oiling — it does not have natural self-protecting oils like teak.')">A. Oak</button>
+        <button class="q-option" onclick="answer(this,0,true,'Correct! Teak is naturally saturated with silica crystals and rubber-like oils. This is why shipbuilders used it for centuries and why it is the premier outdoor wood.')">B. Teak</button>
+        <button class="q-option" onclick="answer(this,0,false,'Mahogany is known for stability and refinement, not natural water resistance.')">C. Mahogany</button>
+        <button class="q-option" onclick="answer(this,0,false,'Sycamore is valued for its pale colour and fine grain, not water resistance.')">D. Sycamore</button>
+      </div>
+      <div class="q-explanation" id="exp0"></div>
+      <button class="q-next" id="next0" onclick="nextQ(1)">Next question &rarr;</button>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card" id="qcard1">
+      <p class="q-num">Question 2 of 5</p>
+      <p class="q-text">What does EUDR stand for — and why does it matter for your customers?</p>
+      <div class="q-options">
+        <button class="q-option" onclick="answer(this,1,false,'There is no EU design regulation with this name.')">A. European Union Design Regulation</button>
+        <button class="q-option" onclick="answer(this,1,true,'Correct! The EU Deforestation Regulation (2023) requires wood products to be traceable back to their certified deforestation-free forest of origin. Ethnicraft was already compliant before this law came into effect.')">B. EU Deforestation Regulation</button>
+        <button class="q-option" onclick="answer(this,1,false,'This is not a real certification.')">C. European Durability Requirement</button>
+        <button class="q-option" onclick="answer(this,1,false,'EUDR is specifically about deforestation, not design.')">D. EU Design Research</button>
+      </div>
+      <div class="q-explanation" id="exp1"></div>
+      <button class="q-next" id="next1" onclick="nextQ(2)">Next question &rarr;</button>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card" id="qcard2">
+      <p class="q-num">Question 3 of 5</p>
+      <p class="q-text">What is one TRUE advantage of solid wood furniture over MDF alternatives?</p>
+      <div class="q-options">
+        <button class="q-option" onclick="answer(this,2,false,'MDF often contains formaldehyde-based resins which off-gas into the home. Solid wood has zero synthetic binders.')">A. MDF is healthier for indoor air quality</button>
+        <button class="q-option" onclick="answer(this,2,false,'MDF and solid wood can look similar initially, but this is not an advantage of solid wood.')">B. Solid wood looks identical to MDF</button>
+        <button class="q-option" onclick="answer(this,2,true,'Correct! Solid wood can be sanded, oiled, and refinished multiple times. A scratch on an oak table is a 20-minute repair. A scratch on MDF means replacement.')">C. Solid wood can be repaired and refinished</button>
+        <button class="q-option" onclick="answer(this,2,false,'MDF is typically cheaper to produce. Solid wood costs more to manufacture — but delivers more value.')">D. Solid wood is cheaper to produce</button>
+      </div>
+      <div class="q-explanation" id="exp2"></div>
+      <button class="q-next" id="next2" onclick="nextQ(3)">Next question &rarr;</button>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card" id="qcard3">
+      <p class="q-num">Question 4 of 5</p>
+      <p class="q-text">A customer notices their oak table has darkened and developed a richer colour over 3 years. What do you tell them?</p>
+      <div class="q-options">
+        <button class="q-option" onclick="answer(this,3,false,'This is absolutely not a defect — it is one of the most desirable characteristics of solid oak.')">A. "That is a defect — we can replace it."</button>
+        <button class="q-option" onclick="answer(this,3,false,'This is not a care issue. The darkening is natural and desirable.')">B. "You should have oiled it more regularly."</button>
+        <button class="q-option" onclick="answer(this,3,true,'Correct! Oak is tannin-rich. UV light and oxygen react with those tannins over time to create a warm amber patina. This is not ageing — it is maturing. Like a good wine.')">C. "That is the patina forming — it means the wood is maturing beautifully."</button>
+        <button class="q-option" onclick="answer(this,3,false,'This is factually incorrect and would undermine customer trust.')">D. "That happens to all furniture, solid wood or not."</button>
+      </div>
+      <div class="q-explanation" id="exp3"></div>
+      <button class="q-next" id="next3" onclick="nextQ(4)">Next question &rarr;</button>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-card" id="qcard4">
+      <p class="q-num">Question 5 of 5</p>
+      <p class="q-text">A customer says: "This oak table is €2,800. I can get a similar-looking one for €600." What is your best response?</p>
+      <div class="q-options">
+        <button class="q-option" onclick="answer(this,4,false,'This is defensive and does not address the real question: value over time.')">A. "Yes, but ours is a brand name."</button>
+        <button class="q-option" onclick="answer(this,4,false,'This avoids the question entirely.')">B. "Quality costs money — that is how it works."</button>
+        <button class="q-option" onclick="answer(this,4,true,'Correct! This reframes the conversation from price to cost per year of use. €600 table lasting 5 years = €120/year. €2,800 table lasting 30+ years = under €95/year. Solid wood is the economical choice.')">C. "Let's talk cost per year. Over 30 years, solid oak works out cheaper than replacing cheap furniture three times."</button>
+        <button class="q-option" onclick="answer(this,4,false,'Undermining the competition is rarely a winning strategy with customers who are genuinely comparing.')">D. "That cheaper table will fall apart quickly."</button>
+      </div>
+      <div class="q-explanation" id="exp4"></div>
+      <button class="q-next" id="next4" onclick="showResult()">See my result &rarr;</button>
+    </div>
+
+    <!-- RESULT -->
+    <div class="quiz-result" id="quiz-result">
+      <div class="result-score" id="result-num">0</div>
+      <p class="result-label">out of 5 correct</p>
+      <p class="result-msg" id="result-msg"></p>
+      <div class="result-actions">
+        <button class="btn-white" onclick="retakeQuiz()">Retake quiz</button>
+        <a href="academy-module2.html" class="btn-white">Next module &rarr;</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="mod-nav-strip">
+  <a href="academy-index.html" class="mod-nav-back">&larr; Back to Academy</a>
+  <div>
+    <p class="mod-nav-title">Up next</p>
+    <a href="academy-module2.html" class="mod-nav-next">Module 02 — Craftsmanship &amp; Innovation &rarr;</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Ethnicraft Academy</span>
+    <div class="footer-links">
+      <a href="academy-index.html">Home</a>
+      <a href="academy-module2.html">Module 02</a>
+      <a href="academy-module3.html">Module 03</a>
+    </div>
+    <span style="font-size:11px;color:var(--g300)">&copy; 2026 Ethnicraft</span>
+  </div>
+</footer>
+
+<script>
+var score = 0;
+var current = 0;
+var answered = [false,false,false,false,false];
+
+function toggleWood(el){
+  var detail = el.querySelector('.wood-detail');
+  var toggle = el.querySelector('.wood-toggle');
+  var isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.wood-detail').forEach(function(d){
+    d.classList.remove('open');
+    d.parentElement.querySelector('.wood-toggle').textContent='+';
+    d.parentElement.classList.remove('open');
+  });
+  if(!isOpen){
+    detail.classList.add('open');
+    toggle.textContent='−';
+    el.classList.add('open');
+  }
+}
+
+function answer(btn, qIndex, isCorrect, explanation){
+  if(answered[qIndex]) return;
+  answered[qIndex] = true;
+  var options = btn.parentElement.querySelectorAll('.q-option');
+  options.forEach(function(o){ o.disabled=true; });
+  if(isCorrect){
+    btn.classList.add('correct');
+    score++;
+  } else {
+    btn.classList.add('wrong');
+    options.forEach(function(o){
+      if(o.onclick.toString().indexOf('true')>-1) o.classList.add('correct');
+    });
+  }
+  var exp = document.getElementById('exp'+qIndex);
+  exp.textContent = explanation;
+  exp.classList.add('show');
+  document.getElementById('next'+qIndex).classList.add('show');
+  updateDot(qIndex, isCorrect);
+}
+
+function updateDot(idx, correct){
+  var dot = document.getElementById('dot'+idx);
+  dot.classList.remove('current');
+  dot.classList.add('done');
+  dot.style.background = correct ? '#4CAF50' : '#EF5350';
+}
+
+function nextQ(n){
+  document.getElementById('qcard'+(n-1)).classList.remove('active');
+  document.getElementById('qcard'+n).classList.add('active');
+  var dot = document.getElementById('dot'+n);
+  if(dot) dot.classList.add('current');
+  current = n;
+}
+
+function showResult(){
+  document.getElementById('qcard4').classList.remove('active');
+  var result = document.getElementById('quiz-result');
+  result.classList.add('show');
+  document.getElementById('result-num').textContent = score;
+  var msgs = [
+    "Keep going — the knowledge is within reach. Try the quiz again!",
+    "Good start! A couple more reads and you'll be an expert.",
+    "Solid effort! You know your materials. One more pass and it's perfect.",
+    "Very good! You clearly understand wood. Almost there.",
+    "Outstanding! You are ready to sell solid wood with total confidence. On to Module 02!"
+  ];
+  var msgIdx = Math.min(score, 4);
+  if(score===5) msgIdx = 4;
+  document.getElementById('result-msg').textContent = msgs[msgIdx];
+  localStorage.setItem('academy_m1_score', score);
+  localStorage.setItem('academy_m1_complete', 'true');
+}
+
+function retakeQuiz(){
+  score=0; current=0; answered=[false,false,false,false,false];
+  document.querySelectorAll('.quiz-card').forEach(function(c){ c.classList.remove('active'); });
+  document.getElementById('quiz-result').classList.remove('show');
+  document.getElementById('qcard0').classList.add('active');
+  document.querySelectorAll('.q-option').forEach(function(o){
+    o.disabled=false; o.classList.remove('correct','wrong');
+  });
+  document.querySelectorAll('.q-explanation').forEach(function(e){ e.classList.remove('show'); });
+  document.querySelectorAll('.q-next').forEach(function(n){ n.classList.remove('show'); });
+  for(var i=0;i<5;i++){
+    var d=document.getElementById('dot'+i);
+    d.classList.remove('done');
+    d.style.background='';
+    if(i===0) d.classList.add('current');
+    else d.classList.remove('current');
+  }
+}
+
+// Reading progress
+window.addEventListener('scroll', function(){
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  var pct = (window.scrollY / h) * 100;
+  document.getElementById('read-progress').style.width = pct + '%';
+});
+
+// Chapter nav active state
+var sections = document.querySelectorAll('.article-section');
+var chapLinks = document.querySelectorAll('.chap-link');
+window.addEventListener('scroll', function(){
+  var pos = window.scrollY + 200;
+  sections.forEach(function(s){
+    if(s.offsetTop <= pos && (s.offsetTop + s.offsetHeight) > pos){
+      chapLinks.forEach(function(l){ l.classList.remove('active'); });
+      var id = s.getAttribute('id');
+      var link = document.querySelector('.chap-link[href="#'+id+'"]');
+      if(link) link.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethnicraft Academy — Nourished by Knowledge</title>
+<style>
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Light.woff2') format('woff2'); font-weight:300; font-style:normal; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Regular.woff2') format('woff2'); font-weight:400; font-style:normal; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Medium.woff2') format('woff2'); font-weight:500; font-style:normal; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-SemiBold.woff2') format('woff2'); font-weight:600; font-style:normal; }
+@font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Bold.woff2') format('woff2'); font-weight:700; font-style:normal; }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --w:#FFFFFF; --ow:#F9F8F6; --g100:#F2F1EE; --g200:#E8E7E3;
+  --g300:#D0CEC9; --g500:#908E88; --g700:#4A4845; --blk:#1A1916;
+  --taupe:#B5A898; --font:'Suisse',-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--blk);background:var(--w);-webkit-font-smoothing:antialiased}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;
+  justify-content:space-between;padding:0 48px;height:64px;
+  background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--g200)}
+.nav-logo{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blk);text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo-dot{width:6px;height:6px;background:var(--blk);border-radius:50%;display:inline-block}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--g500);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--blk)}
+
+/* HERO */
+.hero{height:100vh;min-height:680px;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,14,.75) 0%,rgba(20,18,14,.2) 55%,transparent 100%)}
+.hero-content{position:relative;z-index:2;padding:72px 48px;max-width:1000px}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.65);margin-bottom:20px}
+.hero-title{font-size:clamp(48px,7.5vw,100px);font-weight:300;line-height:1.0;
+  color:#FFF;margin-bottom:28px;letter-spacing:-.025em}
+.hero-title em{font-style:italic;font-weight:300}
+.hero-body{font-size:18px;font-weight:300;line-height:1.7;color:rgba(255,255,255,.82);
+  max-width:560px;margin-bottom:36px}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;
+  background:#FFF;color:var(--blk);font-size:12px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s}
+.hero-cta:hover{background:var(--blk);color:#FFF}
+.hero-scroll{position:absolute;bottom:36px;right:48px;z-index:2;display:flex;
+  flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.5)}
+.hero-scroll span{font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.hero-scroll-line{width:1px;height:40px;background:rgba(255,255,255,.3)}
+
+/* MANIFESTO */
+.manifesto{padding:120px 48px;max-width:1200px;margin:0 auto;display:grid;
+  grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.manifesto-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:20px}
+.manifesto-title{font-size:clamp(32px,3.5vw,48px);font-weight:300;line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:0}
+.manifesto-body{font-size:16px;font-weight:300;line-height:1.8;color:var(--g700)}
+.manifesto-body p{margin-bottom:20px}
+.manifesto-body p:last-child{margin-bottom:0}
+.manifesto-stat{display:flex;flex-direction:column;gap:0;padding:32px 0;border-top:1px solid var(--g200)}
+.stat-num{font-size:72px;font-weight:300;letter-spacing:-.04em;line-height:1;color:var(--blk)}
+.stat-label{font-size:13px;font-weight:400;color:var(--g500);margin-top:6px}
+
+/* MODULES INTRO */
+.section-header{padding:0 48px;margin-bottom:56px;display:flex;align-items:baseline;gap:24px}
+.section-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--g500)}
+.section-line{flex:1;height:1px;background:var(--g200)}
+
+/* MODULES GRID */
+.modules{padding:0 48px 120px}
+.modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.module-card{position:relative;background:var(--g100);overflow:hidden;cursor:pointer;
+  text-decoration:none;color:var(--blk);display:block;transition:transform .3s}
+.module-card:hover{transform:translateY(-4px)}
+.module-card:hover .card-img{transform:scale(1.04)}
+.module-card-img-wrap{aspect-ratio:4/3;overflow:hidden;background:var(--g200)}
+.card-img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.module-card-body{padding:32px 32px 40px}
+.card-num{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:14px}
+.card-title{font-size:clamp(22px,2.5vw,28px);font-weight:400;line-height:1.2;
+  letter-spacing:-.01em;margin-bottom:14px}
+.card-desc{font-size:14px;font-weight:300;line-height:1.7;color:var(--g700);margin-bottom:28px}
+.card-meta{display:flex;align-items:center;justify-content:space-between}
+.card-chapters{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
+.card-status{display:flex;align-items:center;gap:8px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--g300)}
+.status-dot.done{background:#4CAF50}
+.status-dot.inprog{background:#FFA726}
+.status-label{font-size:11px;color:var(--g500)}
+.card-arrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--blk);text-decoration:none;
+  border-bottom:1px solid var(--blk);padding-bottom:2px;transition:gap .2s}
+.module-card:hover .card-arrow{gap:14px}
+
+/* PROGRESS BAR */
+.progress-section{background:var(--g100);padding:80px 48px;border-top:1px solid var(--g200)}
+.progress-inner{max-width:1200px;margin:0 auto}
+.progress-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:48px}
+.progress-title{font-size:28px;font-weight:400;letter-spacing:-.01em}
+.progress-score{font-size:14px;color:var(--g500)}
+.progress-modules{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.prog-item{padding:28px;background:var(--w)}
+.prog-item-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:10px}
+.prog-item-name{font-size:15px;font-weight:500;margin-bottom:16px}
+.prog-bar-bg{height:3px;background:var(--g200);border-radius:2px}
+.prog-bar-fill{height:3px;background:var(--blk);border-radius:2px;transition:width .8s ease}
+.prog-pct{font-size:12px;color:var(--g500);margin-top:8px}
+
+/* QUOTE SECTION */
+.quote-section{padding:100px 48px;text-align:center}
+.quote-text{font-size:clamp(24px,3.5vw,44px);font-weight:300;line-height:1.25;
+  letter-spacing:-.02em;max-width:900px;margin:0 auto 24px;font-style:italic}
+.quote-attr{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--g500)}
+
+/* WHY SECTION */
+.why-section{background:var(--blk);color:#FFF;padding:100px 48px}
+.why-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.why-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:20px}
+.why-title{font-size:clamp(32px,3.5vw,48px);font-weight:300;line-height:1.15;
+  letter-spacing:-.02em;color:#FFF;margin-bottom:0}
+.why-items{display:flex;flex-direction:column;gap:0}
+.why-item{padding:28px 0;border-bottom:1px solid rgba(255,255,255,.1);display:flex;gap:20px}
+.why-item:first-child{border-top:1px solid rgba(255,255,255,.1)}
+.why-num{font-size:12px;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,.3);
+  min-width:32px;margin-top:2px}
+.why-item-title{font-size:16px;font-weight:500;color:#FFF;margin-bottom:6px}
+.why-item-desc{font-size:14px;font-weight:300;line-height:1.7;color:rgba(255,255,255,.6)}
+
+/* FOOTER */
+footer{background:var(--g100);padding:48px;border-top:1px solid var(--g200)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between}
+.footer-logo{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--g500)}
+.footer-links{display:flex;gap:32px}
+.footer-links a{font-size:11px;color:var(--g500);text-decoration:none;letter-spacing:.06em}
+.footer-links a:hover{color:var(--blk)}
+.footer-copy{font-size:11px;color:var(--g300)}
+
+@media(max-width:900px){
+  .nav{padding:0 24px}
+  .nav-links{display:none}
+  .hero-content{padding:48px 24px}
+  .manifesto{grid-template-columns:1fr;gap:40px;padding:80px 24px}
+  .modules{padding:0 24px 80px}
+  .modules-grid{grid-template-columns:1fr;gap:2px}
+  .section-header{padding:0 24px}
+  .progress-section{padding:60px 24px}
+  .progress-modules{grid-template-columns:1fr}
+  .why-section{padding:80px 24px}
+  .why-inner{grid-template-columns:1fr;gap:48px}
+  .quote-section{padding:80px 24px}
+  footer{padding:40px 24px}
+  .footer-inner{flex-direction:column;gap:24px;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="academy-index.html">
+    <span class="nav-logo-dot"></span>
+    Ethnicraft <span>&nbsp;Academy</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="academy-index.html" class="active">Home</a></li>
+    <li><a href="academy-module1.html">01 Materials</a></li>
+    <li><a href="academy-module2.html">02 Craftsmanship</a></li>
+    <li><a href="academy-module3.html">03 Design</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-img" style="background:#E0DFDB"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Ethnicraft Academy — 30 Years of Expertise</p>
+    <h1 class="hero-title">Nourished<br>by <em>Knowledge.</em></h1>
+    <p class="hero-body">The world's finest furniture begins with the world's finest materials. Three modules. Everything you need to sell solid wood with confidence.</p>
+    <a href="academy-module1.html" class="hero-cta">Start learning &rarr;</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div>
+    <p class="manifesto-label">Our Manifesto</p>
+    <h2 class="manifesto-title">At Ethnicraft, every piece begins with a tree.</h2>
+  </div>
+  <div>
+    <div class="manifesto-body">
+      <p>A living source of strength, growth, and memory. Just as the rays of a tree nourish and reveal the quality within, the Ethnicraft Academy represents the lifeblood of our expertise.</p>
+      <p>After 30 years of commitment to honest materials and thoughtful making, we open our knowledge to the world. By educating retailers, we extend the life of our furniture — allowing each piece to remain a lasting foundation of the home.</p>
+      <p><strong>Knowledge is the key to timeless longevity.</strong></p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;margin-top:48px">
+      <div class="manifesto-stat">
+        <span class="stat-num">30</span>
+        <span class="stat-label">Years of craftsmanship</span>
+      </div>
+      <div class="manifesto-stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Wood species mastered</span>
+      </div>
+      <div class="manifesto-stat">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Learning modules</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-header">
+  <span class="section-label">Your Learning Path</span>
+  <div class="section-line"></div>
+</div>
+
+<section class="modules">
+  <div class="modules-grid">
+
+    <a class="module-card" href="academy-module1.html">
+      <div class="module-card-img-wrap">
+        <div class="card-img" style="background:#E0DFDB;width:100%;height:100%"></div>
+      </div>
+      <div class="module-card-body">
+        <p class="card-num">Module 01</p>
+        <h3 class="card-title">Quality Materials &amp; the Value of Solid Wood</h3>
+        <p class="card-desc">Understand why wood is not just a material — it's a philosophy. Deep-dive into four species, traceability, and the healthy home argument.</p>
+        <div class="card-meta">
+          <span class="card-chapters">4 chapters · 5 quiz questions</span>
+        </div>
+        <br>
+        <span class="card-arrow">Start Module 01 &rarr;</span>
+      </div>
+    </a>
+
+    <a class="module-card" href="academy-module2.html">
+      <div class="module-card-img-wrap">
+        <div class="card-img" style="background:#E0DFDB;width:100%;height:100%"></div>
+      </div>
+      <div class="module-card-body">
+        <p class="card-num">Module 02</p>
+        <h3 class="card-title">Craftsmanship &amp; Innovation</h3>
+        <p class="card-desc">From the Indonesian atelier to cutting-edge CNC technology — discover what happens between tree and showroom. Where others stop, Ethnicraft begins.</p>
+        <div class="card-meta">
+          <span class="card-chapters">4 chapters · 5 quiz questions</span>
+        </div>
+        <br>
+        <span class="card-arrow">Start Module 02 &rarr;</span>
+      </div>
+    </a>
+
+    <a class="module-card" href="academy-module3.html">
+      <div class="module-card-img-wrap">
+        <div class="card-img" style="background:#E0DFDB;width:100%;height:100%"></div>
+      </div>
+      <div class="module-card-body">
+        <p class="card-num">Module 03</p>
+        <h3 class="card-title">Product Longevity &amp; Design</h3>
+        <p class="card-desc">How to sell longevity. Care, repair, circular economy and the art of helping customers invest — rather than spend — in their home.</p>
+        <div class="card-meta">
+          <span class="card-chapters">4 chapters · 5 quiz questions</span>
+        </div>
+        <br>
+        <span class="card-arrow">Start Module 03 &rarr;</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<section class="progress-section">
+  <div class="progress-inner">
+    <div class="progress-header">
+      <h2 class="progress-title">Your progress</h2>
+      <span class="progress-score" id="overall-score">0 / 3 modules completed</span>
+    </div>
+    <div class="progress-modules">
+      <div class="prog-item">
+        <p class="prog-item-label">Module 01</p>
+        <p class="prog-item-name">Quality Materials</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" id="bar1" style="width:0%"></div></div>
+        <p class="prog-pct" id="pct1">Not started</p>
+      </div>
+      <div class="prog-item">
+        <p class="prog-item-label">Module 02</p>
+        <p class="prog-item-name">Craftsmanship</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" id="bar2" style="width:0%"></div></div>
+        <p class="prog-pct" id="pct2">Not started</p>
+      </div>
+      <div class="prog-item">
+        <p class="prog-item-label">Module 03</p>
+        <p class="prog-item-name">Design &amp; Longevity</p>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" id="bar3" style="width:0%"></div></div>
+        <p class="prog-pct" id="pct3">Not started</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote-section">
+  <p class="quote-text">"Sustainability is not defined by timeless design alone, but by how a product is made, which materials are used, and whether it can be repaired, reused, or recycled."</p>
+  <p class="quote-attr">Ethnicraft Academy Manifesto</p>
+</section>
+
+<section class="why-section">
+  <div class="why-inner">
+    <div>
+      <p class="why-label">Why this platform exists</p>
+      <h2 class="why-title">Because selling well starts with understanding deeply.</h2>
+    </div>
+    <div class="why-items">
+      <div class="why-item">
+        <span class="why-num">01</span>
+        <div>
+          <p class="why-item-title">Build customer trust</p>
+          <p class="why-item-desc">Customers who understand what they're buying become advocates. Knowledge transforms a sale into a relationship.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="why-num">02</span>
+        <div>
+          <p class="why-item-title">Answer every objection</p>
+          <p class="why-item-desc">Price, durability, care — every common sales hurdle has a clear, confident answer when you know your product inside out.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="why-num">03</span>
+        <div>
+          <p class="why-item-title">Sell sustainability honestly</p>
+          <p class="why-item-desc">EUDR compliance, formaldehyde-free finishes, circular initiatives — real sustainability stories that resonate with today's buyers.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="why-num">04</span>
+        <div>
+          <p class="why-item-title">Elevate your floor</p>
+          <p class="why-item-desc">Retailers who understand craftsmanship sell at the right price point. This academy is your competitive advantage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Ethnicraft Academy</span>
+    <div class="footer-links">
+      <a href="academy-module1.html">Module 01</a>
+      <a href="academy-module2.html">Module 02</a>
+      <a href="academy-module3.html">Module 03</a>
+    </div>
+    <span class="footer-copy">&copy; 2026 Ethnicraft</span>
+  </div>
+</footer>
+
+<script>
+function updateProgress(){
+  const scores = [
+    parseInt(localStorage.getItem('academy_m1_score')||'0'),
+    parseInt(localStorage.getItem('academy_m2_score')||'0'),
+    parseInt(localStorage.getItem('academy_m3_score')||'0')
+  ];
+  const completed = [
+    localStorage.getItem('academy_m1_complete')==='true',
+    localStorage.getItem('academy_m2_complete')==='true',
+    localStorage.getItem('academy_m3_complete')==='true'
+  ];
+  const bars = ['bar1','bar2','bar3'];
+  const pcts = ['pct1','pct2','pct3'];
+  let doneCount = 0;
+  bars.forEach(function(id,i){
+    const pct = completed[i] ? 100 : scores[i]*20;
+    document.getElementById(id).style.width = pct+'%';
+    if(completed[i]){
+      document.getElementById(pcts[i]).textContent = 'Completed — '+scores[i]+'/5 correct';
+      doneCount++;
+    } else if(scores[i]>0){
+      document.getElementById(pcts[i]).textContent = 'In progress — '+scores[i]+'/5 correct';
+    } else {
+      document.getElementById(pcts[i]).textContent = 'Not started';
+    }
+  });
+  document.getElementById('overall-score').textContent = doneCount+' / 3 modules completed';
+}
+updateProgress();
+</script>
+</body>
+</html>
