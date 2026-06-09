@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ethnicraft — Website Analyse 2026</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--z:#0a0a0a;--w:#f5f4f0;--g:#888;--l:#d8d5cf;--groen:#1a6b3c;--groen-bg:#eaf4ee}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:var(--w);color:var(--z);line-height:1.5;-webkit-font-smoothing:antialiased}
+    header{padding:2rem 6vw;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--l);position:sticky;top:0;background:var(--w);z-index:100}
+    .merk{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+    .meta{text-align:right;font-size:.7rem;color:var(--g);letter-spacing:.04em;line-height:1.9}
+    .hero{padding:6rem 6vw 5rem;border-bottom:1px solid var(--l)}
+    .hero-label{font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-bottom:2rem}
+    .hero h1{font-size:clamp(2.8rem,5.5vw,5rem);font-weight:700;line-height:1.02;letter-spacing:-.03em;max-width:20ch;margin-bottom:2.5rem}
+    .hero-sub{max-width:58ch;font-size:1rem;color:var(--g);line-height:1.75;margin-bottom:1.5rem}
+    .tech-tags{display:inline-flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+    .tech-tag{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.25rem .7rem;border:1px solid var(--l);color:var(--g)}
+    .stats-bar{display:grid;grid-template-columns:repeat(8,1fr);border-bottom:1px solid var(--l)}
+    .stat{padding:1.8rem 1rem;border-right:1px solid var(--l);text-align:center}
+    .stat:last-child{border-right:none}
+    .stat .num{font-size:1.9rem;font-weight:700;letter-spacing:-.04em;line-height:1}
+    .stat .slbl{font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g);margin-top:.35rem}
+    .stat.budget .num{font-size:1.4rem}
+    .legend{padding:1.5rem 6vw;border-bottom:1px solid var(--l);display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
+    .legend-label{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-right:.5rem}
+    .badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.22rem .55rem;border:1px solid}
+    .badge.p0{background:var(--z);border-color:var(--z);color:var(--w)}
+    .badge.p1{border-color:#3a3a3a;color:#3a3a3a}
+    .badge.p2{border-color:#777;color:#777}
+    .badge.p3{border-color:#aaa;color:#aaa}
+    .legend-item{display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#555}
+    .layout{display:grid;grid-template-columns:220px 1fr}
+    .zijbalk{border-right:1px solid var(--l);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;padding:2rem 0}
+    .zijbalk a{display:block;padding:.55rem 1.5rem;font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g);text-decoration:none;border-left:2px solid transparent;transition:all .15s}
+    .zijbalk a:hover,.zijbalk a.actief{color:var(--z);border-left-color:var(--z)}
+    .zijbalk hr{border:none;border-top:1px solid var(--l);margin:.75rem 1.5rem}
+    .inhoud{min-width:0}
+    .sectie{border-bottom:1px solid var(--l)}
+    .sectie-header{padding:3rem 6vw;display:flex;justify-content:space-between;align-items:baseline;gap:2rem;border-bottom:1px solid var(--l)}
+    .sh-left{display:flex;align-items:baseline;gap:1.2rem}
+    .sh-nr{font-size:.65rem;font-weight:700;letter-spacing:.15em;color:var(--g)}
+    .sh-titel{font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.025em;line-height:1.1}
+    .sh-tag{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--g);white-space:nowrap}
+    .items{list-style:none}
+    .item{padding:2.8rem 6vw;border-bottom:1px solid var(--l)}
+    .item:last-child{border-bottom:none}
+    .item-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;flex-wrap:wrap}
+    .item-nr{font-size:.6rem;font-weight:700;letter-spacing:.15em;color:var(--g)}
+    .item-titel{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;line-height:1.25;margin-bottom:1rem;max-width:70ch}
+    .bollen{list-style:none;margin-bottom:1.4rem;max-width:72ch}
+    .bollen li{font-size:.875rem;color:#4a4a4a;line-height:1.7;padding-left:1.3em;position:relative;margin-bottom:.35rem}
+    .bollen li::before{content:"•";position:absolute;left:0;color:var(--z)}
+    .bewijs{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g);text-decoration:none;border-bottom:1px solid var(--l);padding-bottom:.1rem;margin-bottom:1.4rem;transition:color .15s,border-color .15s}
+    .bewijs:hover{color:var(--z);border-color:var(--z)}
+    .bewijs::before{content:"→"}
+    .mockup{margin-bottom:1.4rem;max-width:680px;border:1px solid var(--l)}
+    .mockup img{width:100%;display:block}
+    .mockup-cap{font-size:.68rem;color:var(--g);padding:.5rem .8rem;border-top:1px solid var(--l);letter-spacing:.04em}
+    .oplossing{background:#f0ede8;padding:1.2rem 1.4rem;margin-bottom:1.2rem;max-width:72ch;border-left:3px solid var(--z)}
+    .opl-label{font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--g);margin-bottom:.5rem}
+    .opl-tekst{font-size:.85rem;color:#333;line-height:1.65}
+    .opl-tekst strong{color:var(--z)}
+    .tags{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+    .tag{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:.25rem .6rem;border:1px solid}
+    .tag.hoog{background:var(--z);border-color:var(--z);color:var(--w)}
+    .tag.middel{border-color:#999;color:#555}
+    .tag.kost{border-color:var(--l);color:var(--g)}
+    .tag.winst{border-color:var(--groen);color:var(--groen);background:var(--groen-bg)}
+    .info-balk{padding:1.2rem 6vw;background:#f7f5f2;border-bottom:1px solid var(--l);font-size:.82rem;color:#555;line-height:1.65}
+    .info-balk strong{color:var(--z)}
+    .invest-tabel{width:100%;border-collapse:collapse;max-width:900px}
+    .invest-tabel th{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--g);text-align:left;padding:.75rem 1rem;border-bottom:2px solid var(--z)}
+    .invest-tabel td{font-size:.82rem;padding:.85rem 1rem;border-bottom:1px solid var(--l);vertical-align:top}
+    .invest-tabel .totaal td{background:var(--z);color:var(--w);font-weight:700}
+    .invest-tabel .p0-rij{background:#f7f5f2}
+    .conclusie{padding:5rem 6vw;border-bottom:1px solid var(--l)}
+    .conclusie-titel{font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin-bottom:2rem;max-width:22ch}
+    .keuze-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;max-width:900px}
+    .keuze{padding:1.8rem;border:1px solid var(--l)}
+    .keuze.aanbevolen{border-color:var(--z);border-width:2px}
+    .keuze-label{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:.75rem}
+    .keuze h3{font-size:1.1rem;font-weight:700;margin-bottom:1rem}
+    .keuze ul{list-style:none}
+    .keuze ul li{font-size:.82rem;color:#4a4a4a;line-height:1.7;padding-left:1.2em;position:relative;margin-bottom:.3rem}
+    .keuze ul li::before{content:"•";position:absolute;left:0;color:var(--z)}
+    .keuze .prijs{font-size:.75rem;font-weight:700;color:var(--g);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--l)}
+    .aanbevolen-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--z);color:var(--w);padding:.25rem .65rem;margin-bottom:.75rem}
+    .rec{background:var(--z);color:var(--w);padding:2.5rem;max-width:900px}
+    .rec-label{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#888;margin-bottom:1rem}
+    .rec-titel{font-size:1.3rem;font-weight:700;letter-spacing:-.02em;line-height:1.25;margin-bottom:1rem}
+    .rec-tekst{font-size:.875rem;color:#ccc;line-height:1.75}
+    .rec-tekst strong{color:var(--w)}
+    .afsluiting{padding:6rem 6vw;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end}
+    .afsluiting-statement{font-size:clamp(1.4rem,2.5vw,2rem);font-weight:700;letter-spacing:-.025em;line-height:1.2}
+    .afsluiting-nota{font-size:.875rem;color:var(--g);line-height:1.75;max-width:50ch}
+    footer{padding:2rem 6vw;border-top:1px solid var(--l);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    footer span{font-size:.68rem;color:var(--g);letter-spacing:.08em}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.zijbalk{display:none}.stats-bar{grid-template-columns:repeat(4,1fr)}.keuze-grid{grid-template-columns:1fr}.afsluiting{grid-template-columns:1fr;gap:2rem}}
+    @media(max-width:600px){.stats-bar{grid-template-columns:repeat(2,1fr)}.sectie-header{flex-direction:column;gap:.5rem}}
+    @media print{.zijbalk{display:none}.layout{grid-template-columns:1fr}header{position:static}}
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="merk">Ethnicraft</span>
+  <div class="meta"><div>Website Analyse — Intern</div><div>Juni 2026</div><div>Robin Prinzie — Art Direction</div></div>
+</header>
+
+<section class="hero">
+  <p class="hero-label">Website &amp; Rebranding Traject</p>
+  <h1>Wat de website tegenhoudt.</h1>
+  <p class="hero-sub">Een eerlijk en volledig overzicht van alles wat niet werkt — voor bezoekers, voor het team, en voor het merk. Elke pijnpunt is uitgelegd in gewone taal, onderbouwd met bewijs van de live website, gevolgd door een concrete oplossing, een realistische kostprijs en een inschatting van wat het oplossen zou opleveren. Op het einde: moeten we repareren of herbouwen?</p>
+  <div class="tech-tags">
+    <span class="tech-tag">SAP Commerce Cloud</span>
+    <span class="tech-tag">Spartacus / Composable Storefront</span>
+    <span class="tech-tag">SmartEdit</span>
+    <span class="tech-tag">HubSpot</span>
+    <span class="tech-tag">Cookiebot</span>
+    <span class="tech-tag">CloudFront (media)</span>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">5</div><div class="slbl">UX</div></div>
+  <div class="stat"><div class="num">6</div><div class="slbl">Partnerportaal</div></div>
+  <div class="stat"><div class="num">7</div><div class="slbl">Design</div></div>
+  <div class="stat"><div class="num">4</div><div class="slbl">Technisch</div></div>
+  <div class="stat"><div class="num">4</div><div class="slbl">Snelheid</div></div>
+  <div class="stat"><div class="num">4</div><div class="slbl">Efficiëntie</div></div>
+  <div class="stat"><div class="num">8</div><div class="slbl">Onder de motorkap</div></div>
+  <div class="stat budget"><div class="num">€297K</div><div class="slbl">Geschatte investering</div></div>
+</div>
+
+<div class="legend">
+  <span class="legend-label">Prioriteit</span>
+  <span class="legend-item"><span class="badge p0">P0</span> Deze week — kost ons nu geld</span>
+  <span class="legend-item"><span class="badge p1">P1</span> Volgende sprint — hoog rendement</span>
+  <span class="legend-item"><span class="badge p2">P2</span> Binnen 6 maanden</span>
+  <span class="legend-item"><span class="badge p3">P3</span> Lange termijn — strategisch</span>
+</div>
+
+<div class="layout">
+<nav class="zijbalk" id="zijbalk">
+  <a href="#ux">01 — UX</a>
+  <a href="#portaal">01B — Partnerportaal</a>
+  <a href="#design">02 — Design</a>
+  <a href="#technisch">03 — Technisch</a>
+  <a href="#snelheid">04 — Snelheid</a>
+  <a href="#efficiëntie">05 — Efficiëntie</a>
+  <a href="#motorkap">06 — Onder de motorkap</a>
+  <hr>
+  <a href="#investering">Investeringsoverzicht</a>
+  <a href="#herbouwen">Herbouwen of repareren?</a>
+</nav>
+
+<div class="inhoud">
+
+<!-- ══ 01 UX ══ -->
+<section class="sectie" id="ux">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">01</span><h2 class="sh-titel">UX</h2></div>
+    <span class="sh-tag">Hoe bezoekers de site beleven</span>
+  </div>
+  <ul class="items">
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">01.1</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">Het allereerste wat elke bezoeker ziet, is een formulier — niet de website</p>
+      <ul class="bollen">
+        <li>Vóór er ook maar een product, afbeelding of tekst zichtbaar is, verschijnt er een venster dat vraagt om land en taal te kiezen. De website bestaat letterlijk niet totdat je dit ingevuld hebt</li>
+        <li>Op een gsm neemt dit venster het hele scherm in — de website is volledig onzichtbaar totdat je het wegklikt</li>
+        <li>Dit gebeurt op elke pagina, bij elk bezoek — zelfs wanneer bezoekers rechtstreeks op een Belgische of Amerikaanse pagina terechtkomen waar het land al duidelijk is vanuit het webadres</li>
+        <li>Het is het digitale equivalent van een winkelmedewerker die de deur blokkeert en je adres vraagt voor je naar binnen mag</li>
+      </ul>
+      <a class="bewijs" href="https://ethnicraft.com/en-be/" target="_blank">Zie het zelf — open deze link</a>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Het pop-upvenster verwijderen voor bezoekers die al op een landspecifieke pagina aankomen.</strong> Het webadres bevat al het land (bv. /en-be/ voor België) — de website weet dus al waar de bezoeker is. Het venster hoeft alleen te verschijnen als iemand de rootpagina zonder landcode bezoekt. Dit is een aanpassing van een paar dagen ontwikkelingswerk.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €800–1.200</span><span class="tag winst">Minder bezoekers die meteen afhaken</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">01.2</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">De website heeft drie doelgroepen maar begeleidt geen van hen expliciet</p>
+      <ul class="bollen">
+        <li>Ethnicraft bedient drie heel verschillende bezoekers: <strong>eindklanten</strong> die inspiratie zoeken en naar een winkel willen, <strong>retailers</strong> die producten bestellen via het partnerportaal, en <strong>Contract &amp; Trade professionals</strong> (architecten, binnenhuisinrichters) die producten kiezen voor klantprojecten</li>
+        <li>De hoofdnavigatie — Indoor, Outdoor, Collaborations — bedient geen van die drie reizen expliciet. Een consument die een winkel zoekt, een retailer die wil bestellen, en een architect die specificaties nodig heeft, landen allemaal op dezelfde pagina</li>
+        <li>Het partnerportaal is bereikbaar via een kleine link bovenaan, en productpagina's vermelden het voor professionals — maar de weg van "ik ontdek Ethnicraft" naar "ik ben een ingelogde handelspartner" is niet duidelijk uitgestippeld voor een nieuwe professional</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Duidelijke instappunten in de navigatie voor elke doelgroep.</strong> Consumenten hebben een duidelijk pad nodig naar "Vind een verkooppunt". Retailers en C&amp;T-professionals hebben een prominente weg nodig naar het portaal en de registratiepagina. Dit vereist geen volledige herbouw — wel een navigatie- en landingspaginastrategie die de drie doelgroepen erkent en elk verder leidt.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €4.000–8.000</span><span class="tag winst">Duidelijkere reizen voor alle drie doelgroepen</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">01.3</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">De megamenu is goed — maar alle categorieadressen bevatten nog interne systeemcodes</p>
+      <ul class="bollen">
+        <li>De Indoor- en Outdoor-menu's hebben degelijke dropdowns met Tafels (5 types), Zitmeubelen, Banken, Opberging, Bureau, Slaapkamer, Accessoires en meer — dat is goed gestructureerd</li>
+        <li>Het bevestigde probleem: alle categorieadressen bevatten nog interne databasecodes. De pagina voor eetstoelen heeft in het adresbalk <strong>cat_furniture_seating_chairs</strong> in plaats van gewoon <strong>zitmeubelen/stoelen</strong></li>
+        <li>Dit treft elke categorie bij Indoor én Outdoor — adressen zijn onleesbaar, ondeelbaar en moeilijker te begrijpen voor Google</li>
+        <li>Twee ontdekkingspaden ontbreken ook: browsen op <strong>collectienaam</strong> (Bok, PI, Osso, Geometric) en filteren op <strong>materiaal</strong> (eiken, teak, walnoot)</li>
+      </ul>
+      <a class="bewijs" href="https://ethnicraft.com/us/nl/c/cat_furniture_tables_diningtables" target="_blank">Eetafels-URL — zie de interne code in het adres</a>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Interne categoriecodes vervangen door leesbare URL-namen.</strong> Dit is een SAP Commerce-configuratie — elke categorie krijgt een leesbaar alias (bv. /indoor/tafels/eettafels). Correcte doorverwijzingen van oud naar nieuw zorgen dat niets breekt. Voeg apart ook "Ontdek per collectie" en "Ontdek per materiaal" toe als navigatie-instappunten.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €4.000–7.000</span><span class="tag winst">Betere adressen + betere Google-indexering</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">01.4</span><span class="badge p3">P3</span></div>
+      <p class="item-titel">Je kunt een product nergens online configureren</p>
+      <ul class="bollen">
+        <li>Ethnicraft verkoopt meubelen in meerdere afwerkingen, maten en stofoptions — maar niets daarvan is online selecteerbaar voor niet-ingelogde bezoekers</li>
+        <li>Een klant die wil weten of de N701 sofa in een bepaalde stof beschikbaar is, moet bellen, e-mailen of het opgeven</li>
+        <li>Op het prijsniveau waarop Ethnicraft opereert, verwachten klanten dit online te kunnen samenstellen — Muuto, Vitra en BoConcept bieden dit allemaal aan</li>
+        <li>Ingelogde partners zien wél een configurator — de data en techniek bestaan dus al. Die stap ontbreekt voor niet-ingelogde bezoekers</li>
+      </ul>
+      <a class="bewijs" href="https://ethnicraft.com/en-be/p/10110513-U/geometric-dining-table" target="_blank">Productpagina — geen opties selecteerbaar voor niet-ingelogde bezoekers</a>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De productconfigurator ook zichtbaar maken voor niet-ingelogde bezoekers.</strong> Materiaal, kleur, afmeting en type kunnen geselecteerd worden. De CTA leidt daarna naar de juiste volgende stap per doelgroep ("Vind een verkooppunt" of "Log in om te bestellen"). De technische fundering (SAP Commerce-varianten) bestaat — het is een Spartacus front-end update.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €15.000–30.000</span><span class="tag winst">Conversie productpagina +15–30%</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">01.5</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">De zoekbalk werkt alleen als je de exacte productnaam al kent</p>
+      <ul class="bollen">
+        <li>Typ "grote warme eiken eettafel" — een volkomen normale zoekopdracht — en de resultaten zijn niet bruikbaar</li>
+        <li>De zoekfunctie begrijpt alleen exacte trefwoorden, geen omschrijvingen, geen typefouten, geen synoniemen</li>
+        <li>Bezoekers die zoeken, kopen 2 tot 3 keer vaker dan bezoekers die browsen. Een gebrekkige zoekbalk kost direct omzet</li>
+        <li>Er zijn geen suggesties tijdens het typen, geen "bedoelde je", geen autocomplete</li>
+      </ul>
+      <a class="bewijs" href="https://ethnicraft.com/en-be/search?query=large+warm+oak+dining+table" target="_blank">Zoek: "large warm oak dining table" — zie de resultaten</a>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De huidige zoekfunctie vervangen door een slimme zoektool zoals Algolia.</strong> Algolia begrijpt gewone taal, corrigeert typefouten, toont suggesties terwijl je typt en leert van wat bezoekers aanklikken. Er bestaat een officiële koppeling met SAP. De investering verdient zichzelf snel terug.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €20.000–30.000 + €900/maand</span><span class="tag winst">Conversie via zoeken +20–30%</span></div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 01B PARTNERPORTAAL ══ -->
+<section class="sectie" id="portaal">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">01B</span><h2 class="sh-titel">Partnerportaal</h2></div>
+    <span class="sh-tag">Geverifieerd vanuit live screenshots</span>
+  </div>
+  <div class="info-balk"><strong>Hoe het écht werkt:</strong> Het bestelportaal ÍS de hoofdwebsite (ethnicraft.com) wanneer je ingelogd bent als handelspartner — het is geen aparte tool. service.ethnicraft.com is enkel het FAQ- en supportticketsysteem. Er is ook een afzonderlijke resourcehub op pages.ethnicraft.nl (catalogi, novelties, stalen) met een compleet ander design. De onderstaande bevindingen zijn gebaseerd op live screenshots vanuit een ingelogde sessie.</div>
+  <ul class="items">
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">PP.1</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">De kortingsdrempels zijn alleen zichtbaar in het winkelmandje — niet terwijl je browst</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit het winkelmandje-screenshot: een duidelijke "Buy more, save more"-banner toont 25% korting tot $10K, 30% tot $20K en 35% daarboven — maar dit verschijnt pas nadat de partner al producten heeft toegevoegd aan het mandje</li>
+        <li>Tijdens het browsen weet een partner niet welke kortingsdrempel van toepassing is of hoeveel ze nog moeten bestellen om naar een hogere korting te springen</li>
+        <li>Voor een C&amp;T-professional die een groot project plant, zou het kennen van de kortingsdrempel beïnvloeden hoe ze hun bestelling opbouwen — en aanzetten tot grotere enkelvoudige bestellingen</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De persoonlijke kortingsdrempel tonen op productpagina's en in de header voor ingelogde partners.</strong> Een kleine permanente indicator — "Jouw huidige korting: 25% — besteed nog €X voor 30%" — geeft partners een echte stimulans om meer toe te voegen tijdens het browsen, niet alleen nadat ze al in het mandje zitten.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €3.000–5.000</span><span class="tag winst">Hogere gemiddelde bestelwaarde per partnersessie</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">PP.2</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Bedrijfsnaam beperkt tot 30 tekens bij het afrekenen — veel echte bedrijfsnamen passen er niet in</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit twee screenshots (afrekenen én adresboek): "Klant- of bedrijfsnaam (max. 30 tekens)" — de bedrijfsnaam is hard beperkt tot 30 tekens</li>
+        <li>Veel legitieme bedrijfsnamen — interieurontwerpstudio's, architectenbureaus, projectbedrijven — overschrijden deze limiet</li>
+        <li>Een partner die zijn bedrijfsnaam moet afkorten op facturen en leveringsnota's ziet er onprofessioneel uit en zorgt voor administratieve verwarring</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De tekenlimiet van het bedrijfsnaamveld verhogen naar 60–80 tekens.</strong> Dit vereist een configuratiewijziging in SAP Commerce's adresmodel — een kleine back-end taak.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €500–1.000</span><span class="tag winst">Verwijdert een echte drempel voor professionele gebruikers</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">PP.3</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Het landveld is leeg bij het afrekenen — ook voor een ingelogde partner met een bestaand account</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit het afrekenen-screenshot: het landdropdown is leeg wanneer een ingelogde partner begint met afrekenen, ondanks het feit dat hun account al landgegevens bevat</li>
+        <li>Voor een partner die regelmatig bestelt, is het niet automatisch invullen van het standaard leveringsadres een onnodige wrevel</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Afreken-velden automatisch invullen vanuit het partneraccount en de opgeslagen adressen.</strong> Als een partner een standaard leveringsadres heeft opgeslagen, moet het afrekenen dat automatisch laden. Het landveld moet minimaal standaard het land zijn dat aan hun account is gekoppeld.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €2.000–4.000</span><span class="tag winst">Sneller herbestellen voor bestaande partners</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">PP.4</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Bestelgeschiedenis toont totaalbedragen maar geen productdetails — je ziet niet wat er in een bestelling zat</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit het bestelgeschiedenisscherm: de lijstweergave toont bestelnummer, referentie, datum, status, type en totaal — maar geen productnamen, hoeveelheden of SKU's</li>
+        <li>Om te zien wat er in een bestelling zat, moet een partner in elke bestelling afzonderlijk klikken</li>
+        <li>Voor een professional die meerdere klantprojecten beheert en vroegere bestellingen raadpleegt voor herbestellingen of specificaties, levert dit onnodige klikken op</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Een productsamenvatting toevoegen aan de lijstweergave van de bestelgeschiedenis.</strong> Toon de eerste 2–3 artikelen van elke bestelling direct in de lijst, met een "+X meer"-indicator voor grotere bestellingen. Voeg ook een snelle "Herbestel"-knop toe.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €3.000–5.000</span><span class="tag winst">Sneller herbestellen + beter projectbeheer voor partners</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">PP.5</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">De Novelties Hub staat op een volledig andere website — ander domein, ander design</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit screenshot: de contractpartner-resourcehub (catalogi, novelties, stalen) staat op <strong>pages.ethnicraft.nl</strong> — een volledig ander domein dan ethnicraft.com, en een ander landdomein (.nl vs .com)</li>
+        <li>Het design is ook compleet anders: donkergroene achtergrond, witte tekst — een andere visuele taal dan de warme beige van de hoofdwebsite</li>
+        <li>Een partner die van de hoofdwebsite naar deze hub navigeert, ervaart een abrupte visuele en contextuele overgang — het voelt als een ander merk</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De Novelties Hub-inhoud integreren in de hoofdwebsite onder een dedicated handelssectie.</strong> Op korte termijn: minstens het visuele design van de hub afstemmen op de identiteit van de hoofdwebsite. Op lange termijn: alles onderbrengen op ethnicraft.com.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €4.000–8.000</span><span class="tag winst">Consistente merkbeleving voor handelspartners</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">PP.6</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Een bestelling wijzigen of annuleren vereist het verlaten van het portaal en het indienen van een supportticket</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit de ondersteunings-FAQ: "Je kunt een bestelling niet zelf wijzigen of annuleren via het portaal. Je moet je verzoek indienen via ons Serviceportaal."</li>
+        <li>Een partner die een hoeveelheid wil aanpassen of een bestelling wil annuleren, moet naar service.ethnicraft.com gaan en een ticket aanmaken — waarna ze wachten tot een medewerker contact opneemt</li>
+        <li>Voor professionals die tijdgevoelige projecten beheren, voegt deze afhankelijkheid van handmatige tussenkomst risico en frustratie toe</li>
+      </ul>
+      <a class="bewijs" href="https://service.ethnicraft.com/faq/can-i-change-or-cancel-my-order" target="_blank">FAQ bestellingen wijzigen — zie het handmatige proces</a>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Zelfbedieningsbeheer van bestellingen toevoegen voor orders die nog niet in productie of verzending zijn.</strong> Partners kunnen hoeveelheden aanpassen of regels annuleren direct op de bestellingsdetailpagina, met duidelijke statusindicatoren die de uiterste datum voor wijzigingen aangeven.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €10.000–18.000</span><span class="tag winst">Minder CS-werklast + betere partnerervaring</span></div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 02 DESIGN ══ -->
+<section class="sectie" id="design">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">02</span><h2 class="sh-titel">Design</h2></div>
+    <span class="sh-tag">Hoe de site eruitziet — en hoe ze zou moeten eruitzien</span>
+  </div>
+  <div class="info-balk"><strong>Context:</strong> In oktober 2023 werden volledige visuele mockups gemaakt voor een nieuwe Ethnicraft-website — inclusief 5 navigatievarianten, productpagina's, winkelmandje, verlanglijstje, zoekfunctie, designerspagina's en mobiele weergaven. Veel van deze visie is nooit gebouwd. De onderstaande bevindingen vergelijken het ontworpen plan met de huidige realiteit, onderbouwd door de live screenshots én de redesign-mockups.</div>
+  <ul class="items">
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">02.1</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Er zijn 5 navigatievarianten uitgetekend — maar er is nooit een definitieve keuze gemaakt en gebouwd</p>
+      <ul class="bollen">
+        <li>De redesign-mockups bevatten vijf uitgewerkte navigatievarianten (Optie 1 t/m 5) die elk een andere aanpak voorstellen voor hoe de megamenu werkt</li>
+        <li>Optie 3 is het meest radicaal: Indoor/Outdoor als toptabs, alle subcategorieën (Tafels, Zitmeubelen, Banken, Opberging, Bureau, Slaapkamer, Accessoires) direct zichtbaar in een tweede balk — geen hover nodig, alles meteen bereikbaar</li>
+        <li>Optie 1 (meest uitgewerkt) groepeert in drie kolommen: Collecties (Bok, Elements, Boomerang) | Indoor meubelen (met Tafels uitgevouwen) | Outdoor meubelen — plus een lifestyleafbeelding rechts</li>
+        <li>De huidige navigatie is functioneel maar volgt geen van deze uitgedachte varianten — het is een tussenvorm zonder duidelijke visuele richting</li>
+      </ul>
+      <div class="mockup"><img src="redesign/OPTIE 1 - obv voorstel 1.png" alt="Navigatieontwerp optie 1"/><p class="mockup-cap">Navigatieontwerp Optie 1 — collecties, indoor en outdoor in drie kolommen met lifestylebeeld</p></div>
+      <div class="mockup"><img src="redesign/OPTIE -3.png" alt="Navigatieontwerp optie 3"/><p class="mockup-cap">Navigatieontwerp Optie 3 — alle categorieën direct zichtbaar in de tweede navigatiebalk</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Kies één van de uitgetekende navigatievarianten en bouw die.</strong> Optie 1 (met collecties als derde kolom) is het sterkst voor merkidentiteit — het communiceert collectienamen als ontdekkingspad naast producttypes. Optie 3 is het sterkst voor snelheid van toegang. De keuze hangt af van de prioriteit: inspiratie of efficiëntie. Combineer eventueel beide: toptabs Indoor/Outdoor met collecties als extra kolom.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €5.000–10.000</span><span class="tag winst">Consistente navigatie-ervaring die het merkverhaal ondersteunt</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">02.2</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Elke pagina ziet er anders uit — er is geen gedeeld visueel rulebook</p>
+      <ul class="bollen">
+        <li>Knoppen zien er anders uit afhankelijk van de pagina. Lettertypegrootten variëren onverwacht. De tussenruimte tussen elementen verschilt van sectie tot sectie</li>
+        <li>Dit gebeurt omdat er geen gedeeld stijlgids bestaat — geen afgesproken rulebook over hoe dingen er moeten uitzien. Elke keer dat een pagina werd gebouwd of bijgewerkt, nam de ontwikkelaar zijn eigen beslissingen</li>
+        <li>Het resultaat voelt samengeraapt in de tijd — wat het ook is</li>
+        <li>Dit inconsistentie communiceert onbewust gebrek aan zorg, wat het tegenovergestelde is van wat een premium meubelmerk moet uitstralen</li>
+      </ul>
+      <div class="mockup"><img src="redesign/HOMEPAGE – 1.png" alt="Homepage redesign"/><p class="mockup-cap">Homepage redesign — consequente typografie, witruimte en componentstijlen doorheen de volledige pagina</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Een visueel rulebook bouwen — één set regels die bepaalt hoe alles op de website eruitziet.</strong> Dit omvat kleuren, lettertypes, knopstijlen, ruimteverdeling en hoe elk herbruikbaar element is opgebouwd. Het Spartacus-framework heeft al een CSS-variabelensysteem (--cx-) als basis — dat moet worden uitgebreid tot een volledig systeem en gedocumenteerd in Figma. Eens dit bestaat, ziet elke nieuwe pagina of update automatisch consistent uit.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €20.000–35.000</span><span class="tag winst">Merkconsistentie + snellere toekomstige builds</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">02.3</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">De website had een verlanglijstje — volledig uitgetekend, nooit gebouwd</p>
+      <ul class="bollen">
+        <li>De redesign-mockups bevatten een volledig uitgewerkte verlanglijstjepagina: productgrid met hartjespictogrammen, "In winkelmandje"-knop bij hover, "Verwijder uit verlanglijstje", een "Laat je inspireren"-sectie met shoppable lifestylebeelden (+ iconen om producten direct toe te voegen), en een "Dit vind jij misschien ook"-aanbevelingssectie</li>
+        <li>Vandaag bestaat dit helemaal niet. Een bezoeker die iets mooi vindt maar nog niet zeker is, heeft geen manier om het te bewaren</li>
+        <li>Voor meubelen — waarbij mensen weken nadenken voor ze kopen — is een verlanglijstje bijzonder waardevol</li>
+        <li>Voor dealers en architecten is het ook nuttig: een selectie opbouwen voor een project en die later in één keer bestellen</li>
+      </ul>
+      <div class="mockup"><img src="redesign/WISHLIST.png" alt="Verlanglijstje redesign"/><p class="mockup-cap">Verlanglijstje — met shoppable inspiratiebeelden en aanbevelingen. Volledig uitgetekend, niet gebouwd.</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Een verlanglijstje toevoegen als ingelogde functie.</strong> Het hartjespictogram zit al in de redesign-mockups naast het winkelmandje in de navigatiebalk. Bezoekers die ingelogd zijn kunnen producten bewaren. SAP Commerce ondersteunt verlanglijstjes (saved lists) van nature — het vereist een Spartacus front-end component en het ontsluiten van de bestaande SAP-functionaliteit.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €8.000–15.000</span><span class="tag winst">Meer terugkerende bezoekers en grotere aankoopkans</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">02.4</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Productkaarten tonen niet hoeveel kleur- en materiaalopties er zijn</p>
+      <ul class="bollen">
+        <li>In de productoverzichts-mockup zijn duidelijk kleurindicatoren zichtbaar op de productkaarten: "+8 kleuren", "+2 kleuren" — kleine tekst maar grote impact</li>
+        <li>Vandaag tonen productkaarten enkel een foto, naam en prijs. Er is geen aanduiding van hoeveel varianten er bestaan — een bezoeker weet pas dat er een donkere eikenvariant bestaat als ze al doorgeklikt hebben</li>
+        <li>"+8 kleuren" vertelt de bezoeker meteen dat er keuze is, zonder door te klikken. Dit is een bewezen techniek die de doorklikratio verhoogt</li>
+      </ul>
+      <div class="mockup"><img src="redesign/PRODUCT OVERVIEW.png" alt="Productoverzicht redesign"/><p class="mockup-cap">Productoverzicht — met kleurindicatoren, rijke filters en verlanglijstje-hartjes op elke productkaart</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Het aantal beschikbare kleur- en materiaalvarianten toevoegen aan elke productkaart.</strong> Dit is een update van het Spartacus-productkaartcomponent dat het variantenaantal uit de SAP-productdata haalt. Combineer dit met de filterupdate (01.3) voor het beste resultaat.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €3.000–5.000</span><span class="tag winst">Hogere doorklikratio op productoverzichten</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">02.5</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Het winkelmandje is druk en complex — de mockup toont hoe eenvoudig het kan zijn</p>
+      <ul class="bollen">
+        <li>De huidige ingelogde winkelwagen (bevestigd via screenshot) toont kortingstiers, promotiebanners, upsell-secties, meerdere knoppen, complexe prijsberekeningen en onduidelijke actieknoppen</li>
+        <li>De redesign-mockup toont een compleet andere aanpak: een clean, tabelachtige layout met kolommen voor productnaam, materiaal/kleur/afwerking, hoeveelheid (+/-), levertijd en prijs. Eenvoudig, duidelijk, elegant</li>
+        <li>Voor een premium meubelmerk moet zelfs het winkelmandje het designniveau van het merk uitstralen — dat doet het vandaag niet</li>
+      </ul>
+      <div class="mockup"><img src="redesign/CART.png" alt="Winkelmandje redesign"/><p class="mockup-cap">Winkelmandje redesign — clean tabelopmaak met levertijd per product zichtbaar</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Het winkelmandje herbouwen als clean, tabelachtige weergave.</strong> Essentie: productnaam, gekozen opties, hoeveelheid, levertijd, prijs. Kortingsinformatie tonen als kleine contextuele indicator, niet als drukke banner. Dit is een Spartacus-componentupdate die prioriteit krijgt samen met de designsysteemopbouw.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €5.000–9.000</span><span class="tag winst">Betere merkbeleving op een cruciaal conversiepad</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">02.6</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Wanneer het nieuwe logo klaar is, moet het overal tegelijk veranderen</p>
+      <ul class="bollen">
+        <li>Het huidige handgeschreven logo past niet meer bij de richting van het merk</li>
+        <li>Het nieuwe typografische logo (in ontwikkeling door Robin en Nancy) moet op hetzelfde moment worden toegepast op elk digitaal aanrakingspunt — niet alleen de websiteheader</li>
+        <li>Dit omvat: het favicon (het kleine icoontje in het browsertabblad), de preview-afbeelding wanneer je een link deelt op sociale media, e-mailtempaltes, het partnerportaal en de Novelties Hub</li>
+        <li>Een logo dat veranderd is op de website maar nog oud is in e-mails of sociale shares, ziet er slechter uit dan helemaal niet veranderen</li>
+        <li>Let op: de ingelogde staat in de mockup toont ook "HI, ROBIN" als gepersonaliseerde begroeting — dit is een kleine maar impactvolle UX-verbetering die ook niet gebouwd is</li>
+      </ul>
+      <div class="mockup"><img src="redesign/LOGGED IN.png" alt="Ingelogde staat"/><p class="mockup-cap">Ingelogde staat — "HI, ROBIN" met verlanglijstje- en winkelmandjeonaders. Gepersonaliseerde begroeting, niet gebouwd.</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Vóór het nieuwe logo live gaat, een checklist maken van elk digitaal touchpoint.</strong> Websiteheader, favicon, Open Graph-afbeelding, alle HubSpot-e-mailtempaltes, het partnerportaal en de Novelties Hub — allemaal tegelijk. Voeg ook de gepersonaliseerde begroeting ("HI, [NAAM]") toe als onderdeel van dezelfde sprint.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €3.000–5.000</span><span class="tag winst">Merkcohesie bij lancering</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">02.7</span><span class="badge p3">P3</span></div>
+      <p class="item-titel">Designerspagina's waren voorzien als rijke verhaalplatforms — ze bestaan nauwelijks</p>
+      <ul class="bollen">
+        <li>De mockup voor Designers &amp; Ateliers is uitgewerkt en ambitieus: per ontwerper een grote foto, biografie, quote, productencarrousel — én een aparte sectie "Ateliers" met een volledige video die vakmanschap toont en emotie oproept</li>
+        <li>Vandaag worden ontwerpers vermeld maar niet echt voorgesteld. Er zijn geen video's, geen uitgebreide biografieën, geen eigen pagina die het verhaal centraal stelt</li>
+        <li>Ethnicraft werkt samen met ontwerpers over de hele wereld. Dat is een authentiek en onderscheidend verhaal — het wordt nauwelijks verteld</li>
+      </ul>
+      <div class="mockup"><img src="redesign/DESIGN(ERS) & ATELIER.png" alt="Designers & Ateliers pagina"/><p class="mockup-cap">Designers &amp; Ateliers — ontwerpersgrid, ateliersvideo en quotes. Uitgetekend, onderontwikkeld.</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Begin klein: kies 3 à 5 sleutelontwerpers en bouw voor hen een volwaardige pagina.</strong> Biografie, foto, quote, video (of kwalitatieve fotografie), en een overzicht van hun producten. Test of bezoekers deze pagina's bezoeken en of ze daarna meer producten bekijken. Schaal daarna op naar alle ontwerpers.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €12.000–20.000</span><span class="tag winst">Merkverhaal + premium positionering</span></div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 03 TECHNISCH ══ -->
+<section class="sectie" id="technisch">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">03</span><h2 class="sh-titel">Technisch</h2></div>
+    <span class="sh-tag">Hoe de website gebouwd is</span>
+  </div>
+  <ul class="items">
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">03.1</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Google bezoekt onze website en ziet een lege pagina — wij hebben dit bevestigd</p>
+      <ul class="bollen">
+        <li>We hebben dit rechtstreeks getest: de ruwe HTML van de homepage ophalen geeft enkel <code>&lt;app-root&gt;&lt;/app-root&gt;</code> terug — een lege container. Geen productnamen, geen beschrijvingen, geen categorieën</li>
+        <li>De website is gebouwd op een manier die vereist dat de browser van de bezoeker alle inhoud opbouwt nadat de pagina geladen heeft. Google wacht hier niet op — het leest de pagina zoals die aankomt</li>
+        <li>We zijn effectief onzichtbaar in zoekresultaten voor elke product- of categoriezoekopdracht: "massief eiken eettafel België", "ethnicraft bank", "moderne buitenmeubelen" — zoekopdrachten waar we in zouden moeten verschijnen, maar niet kunnen</li>
+        <li>Spartacus HAS ondersteuning voor server-side rendering (het is gewoon nooit ingeschakeld)</li>
+      </ul>
+      <a class="bewijs" href="view-source:https://ethnicraft.com/en-be/" target="_blank">Wat Google écht ziet — bekijk de paginabron</a>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Server-side rendering inschakelen op de bestaande Spartacus-setup (Angular Universal).</strong> SAP heeft officiële documentatie hiervoor. Dit vereist het opzetten van een Node.js-server die pagina's vooraf rendert. Dit is de hoogste ROI-technische investering die beschikbaar is. Elke andere SEO-verbetering is zinloos totdat Google de pagina's kan lezen.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €30.000–45.000</span><span class="tag winst">Organisch verkeer +30–50% → geschat +€500K–1,5M/jaar</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">03.2</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Google begrijpt niet wat onze pagina's zijn — hij kan ze dus niet goed weergeven</p>
+      <ul class="bollen">
+        <li>Websites kunnen een verborgen informatielaag toevoegen aan elke pagina die Google precies vertelt wat voor inhoud het betreft: "dit is een productpagina voor een massief eiken kruk", "dit is een collectiepagina voor buitenmeubelen"</li>
+        <li>We hebben bevestigd vanuit de live website dat deze verborgen informatie volledig ontbreekt</li>
+        <li>Wanneer dit WEL aanwezig is, verschijnen zoekresultaten rijker: een correcte breadcrumb ("Indoor &gt; Zitmeubelen &gt; Osso Kruk"), een merkkennispaneel en betere categorisering in afbeeldingszoekopdrachten</li>
+        <li>Merken zoals Muuto, Vitra en Hay gebruiken dit correct — zelfs als catalogus-/B2B-merk zonder directe consumentenkassa</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Gestructureerde informatie toevoegen aan elk paginatype zodat Google onze inhoud correct kan categoriseren.</strong> Dit dekt: productpagina's (productnaam, materiaal, collectie), categoriepagina's (breadcrumb) en de organisatie zelf (merknaam, hoofdkwartier, website). Dit moet gedaan worden onmiddellijk na het oplossen van de Google-zichtbaarheidsprobleem (03.1).</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €8.000–12.000 (na 03.1)</span><span class="tag winst">Betere zoekweergave voor architecten, ontwerpers en dealers</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">03.3</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">De lijst van al onze pagina's is geblokkeerd — Google kan er niet aan</p>
+      <ul class="bollen">
+        <li>Elke website zou een sitemap moeten hebben — een lijst van alle pagina's die Google vertelt "bezoek deze pagina's". Onze sitemap bestaat maar geeft een "Toegang geweigerd"-fout terug. Google kan hem niet openen</li>
+        <li>Nieuwe collecties en producten kunnen maanden duren voor ze verschijnen in zoekopdrachten, of nooit gevonden worden</li>
+        <li>De oplossing is één technische wijziging — 15 minuten werk</li>
+      </ul>
+      <a class="bewijs" href="https://media.ethnicraft.com/sys-master/s3_sitemap/sitemap.xml" target="_blank">Onze sitemap — zie de toegang-geweigerd-fout</a>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De toegangsrechten van het sitemap-bestand herstellen.</strong> Dit is een instellingswijziging in Amazon S3 — ongeveer 15 minuten werk. Daarna de sitemap indienen bij Google Search Console zodat Google onmiddellijk weet waar hij hem kan vinden. Dit is de snelste winst op de volledige lijst.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €200–400</span><span class="tag winst">Alle nieuwe inhoud sneller gevonden door Google</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">03.4</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Dezelfde pagina bestaat in te veel versies — we concurreren tegen onszelf in Google</p>
+      <ul class="bollen">
+        <li>Onze website heeft verschillende versies voor verschillende landen en talen. Wanneer Google meerdere versies van dezelfde pagina ziet, splitst het zijn aandacht — waardoor alle versies lager ranken dan ze zouden moeten</li>
+        <li>De oplossing is standaard voor internationale websites: je vertelt Google simpelweg welke versie de "echte" is voor elk land</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Tags toevoegen aan elke pagina die Google precies vertellen welke versie bij welk land en taal hoort.</strong> Dit is een technische toevoeging aan de websitecode — standaardpraktijk voor internationale websites die volledig binnen de mogelijkheden van ons huidige platform valt.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €6.000–9.000</span><span class="tag winst">Internationale Google-rankings verbeteren</span></div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 04 SNELHEID ══ -->
+<section class="sectie" id="snelheid">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">04</span><h2 class="sh-titel">Snelheid</h2></div>
+    <span class="sh-tag">Hoe snel de site laadt</span>
+  </div>
+  <ul class="items">
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">04.1</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">De website begint van nul voor elke bezoeker — niets wordt onthouden tussen bezoeken</p>
+      <ul class="bollen">
+        <li>We hebben de technische instellingen bevestigd: de website is geconfigureerd om nooit iets op te slaan of te hergebruiken. Elke bezoeker, elke keer, triggert een volledige heropbouw van de pagina vanuit onze server</li>
+        <li>Denk aan een bakkerij die voor elke klant afzonderlijk een brood bakt op bestelling, in plaats van een batch te bakken en daaruit te serveren. Het is trager, het is meer werk, en er is geen goede reden voor</li>
+        <li>Google gebruikt websitesnelheid ook als rankingfactor. Een trage website verschijnt lager in zoekresultaten, ongeacht alles andere</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Pagina-caching inschakelen en een content delivery network toevoegen.</strong> Caching betekent dat pagina's eenmalig worden opgebouwd en opgeslagen, daarna snel geserveerd aan volgende bezoekers. Een CDN serveert die opgeslagen pagina's vanuit een server dicht bij de bezoeker. We gebruiken dit al voor afbeeldingen (CloudFront) — uitbreiden naar de volledige website.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €3.000–5.000 + €1.500/jaar</span><span class="tag winst">Laadtijd –40–60% → conversie +5–8%</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">04.2</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Productfoto's worden op volledige grootte verstuurd naar elk apparaat</p>
+      <ul class="bollen">
+        <li>Een professionele productfoto kan gemakkelijk 5–8 megabyte zijn. Een bezoeker op een gsm krijgt hetzelfde enorme bestand als iemand op een groot bureaublad</li>
+        <li>Voor een merk waarbij fotografie het primaire verkoopinstrument is, is trage beeldlading zowel een prestatie- als een kwaliteitsprobleem</li>
+        <li>Het systeem dat onze afbeeldingen levert (CloudFront) heeft deze optimalisatiemogelijkheid al ingebouwd — het is gewoon niet ingeschakeld</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Automatische beeldoptimalisatie inschakelen voor alle productfotografie.</strong> Elk beeld wordt automatisch gecomprimeerd voor sneller laden, omgezet naar een modern efficiënt formaat (WebP), en verkleind naar het scherm waarop het bekeken wordt. De infrastructuur (CloudFront) is aanwezig — enkel configuratie vereist.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €6.000–9.000</span><span class="tag winst">Mobiele laadtijd aanzienlijk verbeterd</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">04.3</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">Alle tekst op de website is onzichtbaar gedurende een seconde of twee terwijl de pagina laadt</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit de live websitecode: alle lettertypen zijn ingesteld om tekst volledig te verbergen totdat het merklettertype volledig gedownload is</li>
+        <li>Op een trager mobiel netwerk zien bezoekers even een volledig lege pagina voor er tekst verschijnt. Dit voelt kapot</li>
+        <li>De eenvoudige oplossing is tekst meteen te tonen in een standaardlettertype terwijl het merklettertype op de achtergrond downloadt — bezoekers merken de overschakeling nauwelijks</li>
+        <li>Dit is een wijziging van één regel code</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Eén instelling wijzigen in de websitecode zodat tekst onmiddellijk verschijnt in plaats van te wachten op het merklettertype.</strong> De tekst verschijnt kort in een standaardlettertype (zoals Arial) en schakelt daarna vloeiend over naar Post Grotesk zodra het geladen is. Dit is ongeveer 30 minuten ontwikkelingswerk.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €300–500</span><span class="tag winst">Betere eerste indruk bij elk bezoek</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">04.4</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">Een van onze marketingtools bevriest de volledige website terwijl hij laadt</p>
+      <ul class="bollen">
+        <li>Bevestigd vanuit de websitecode: een HubSpot-script is zodanig ingesteld dat de volledige website moet pauzeren en wachten tot het volledig geladen is voor iets aan bezoekers getoond wordt</li>
+        <li>Als HubSpot-servers traag zijn, bevriest onze volledige website terwijl ze wachten — iets waar we geen controle over hebben</li>
+        <li>Het toevoegen van één woord aan de code — "async" — zou de website inhoud en het HubSpot-script tegelijkertijd laten laden in plaats van na elkaar</li>
+        <li>Dit is een reparatie van 5 minuten</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De manier waarop het HubSpot-script geladen wordt aanpassen zodat het de pagina niet langer blokkeert.</strong> Één woord toevoegen aan één coderegel. Verplaats tegelijk alle marketingtools (analytics, advertenties, tracking) naar Google Tag Manager zodat het marketingteam ze zelf kan beheren zonder code-implementaties.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €200–300 voor de fix / €3.000–5.000 voor volledige GTM-setup</span><span class="tag winst">Snellere paginaopbouw — reparatie van 5 minuten</span></div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 05 EFFICIËNTIE ══ -->
+<section class="sectie" id="efficiëntie">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">05</span><h2 class="sh-titel">Efficiëntie</h2></div>
+    <span class="sh-tag">Hoe het team met de site werkt</span>
+  </div>
+  <ul class="items">
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">05.1</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">De contenteditor bestaat — maar is beperkt in wat hij laat doen zonder een ontwikkelaar</p>
+      <ul class="bollen">
+        <li>We hebben SmartEdit — een tool waarmee het marketingteam bepaalde inhoud op de website kan bijwerken zonder IT te vragen. Banners, tekst en sommige paginacomponenten kunnen rechtstreeks worden gewijzigd</li>
+        <li>De beperking: alleen componenten die specifiek gebouwd en bewerkbaar gemaakt zijn in SmartEdit kunnen worden gewijzigd. Alles daarbuiten vereist een ontwikkelaar en een implementatie</li>
+        <li>In de praktijk kan het marketingteam bestaande inhoud bijwerken maar geen nieuwe paginalayouts maken, nieuwe soorten secties toevoegen of structurele wijzigingen aanbrengen zonder IT</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De beschikbare bouwblokken in SmartEdit uitbreiden.</strong> Bouw een bibliotheek van flexibele, herbruikbare componenten — grote hero-banner, tekst+beeld-blok, producthighlightgrid, promotioneel lint, redactionele sectie — en maak die beschikbaar voor het marketingteam. Eens deze bibliotheek bestaat, kan het team elke campagnepagina onafhankelijk bouwen zonder één regel code te schrijven.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €8.000–14.000</span><span class="tag winst">Marketingteam zelfbedienend — minder IT-tickets</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">05.2</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Productinformatie staat op te veel plaatsen en raakt frequent niet meer gesynchroniseerd</p>
+      <ul class="bollen">
+        <li>De afmetingen, afwerkingen, beschikbaarheid en prijs van elk product zouden op één plaats moeten staan en automatisch naar de website stromen. In plaats daarvan wordt dezelfde informatie bijgehouden in meerdere afzonderlijke systemen die frequent niet meer overeenkomen</li>
+        <li>Het resultaat: de website toont producten als beschikbaar wanneer ze het niet zijn, toont ontbrekende afwerkingsopties, of geeft verouderde specificaties weer</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Ons SAP back-end systeem de enige bron van waarheid maken voor alle productinformatie.</strong> Alles — namen, afmetingen, afwerkingen, prijzen, beschikbaarheid — moet daar bijgehouden worden en enkel daar. De website haalt er automatisch uit. Externe spreadsheets of afzonderlijke systemen die productdata aanleveren, moeten geauditeerd en geconsolideerd worden.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €5.000–10.000</span><span class="tag winst">Nauwkeurige data → vertrouwen → conversie</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">05.3</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">Elke beslissing over de website is een gok — we hebben geen manier om te testen wat werkt</p>
+      <ul class="bollen">
+        <li>Wanneer het team een paginatitel verandert, een knop verplaatst of een nieuwe layout probeert — er is momenteel geen manier om te weten of die wijziging hielp of schaadde</li>
+        <li>A/B-testen toont versie A aan de helft van je bezoekers en versie B aan de andere helft, waarna je meet welke versie tot meer aankopen of klikken leidt. Het verandert designbeslissingen van meningen in bewijs</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Een A/B-testtool opzetten die het marketingteam zelfstandig kan gebruiken.</strong> Tools zoals AB Tasty laten het team versies van een pagina testen via een visuele editor — geen codering vereist. Begin met de meest bezochte pagina's: homepage, collectiepagina's en productpagina's.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €4.000 setup + €1.500–2.500/maand</span><span class="tag winst">Doorlopende conversieoptimalisatie</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">05.4</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">We tellen bezoekers maar kunnen de vragen die ertoe doen niet beantwoorden</p>
+      <ul class="bollen">
+        <li>Basisbezoekersaantallen worden waarschijnlijk bijgehouden, maar de betekenisvolle vragen blijven onbeantwoord: welke pagina's leiden tot aankopen? Waar geven mensen op tijdens het afrekenen? Welke collecties krijgen veel weergaven maar geen verkopen?</li>
+        <li>Zonder dit worden alle commerciële beslissingen — wat te promoten, wat te verbeteren, waar te investeren — op intuïtie in plaats van bewijs gebaseerd</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Correcte tracking instellen voor elke betekenisvolle actie die een bezoeker onderneemt.</strong> Dit betekent het bijhouden van: welke productpagina's bekeken worden, wanneer iets aan een mandje wordt toegevoegd, elke stap van het afrekenproces, voltooide aankopen en gebruik van de zoekbalk. Presenteer dit in een live dashboard dat het hele commerciële team kan raadplegen.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €4.000–6.000</span><span class="tag winst">Datagedreven beslissingen voor alle commerciële teams</span></div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 06 ONDER DE MOTORKAP ══ -->
+<section class="sectie" id="motorkap">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">06</span><h2 class="sh-titel">Onder de motorkap</h2></div>
+    <span class="sh-tag">Technische bevindingen uit de live sitecode</span>
+  </div>
+  <ul class="items">
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.1</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">Het interne adres van onze website-motor is zichtbaar voor iedereen die kijkt</p>
+      <ul class="bollen">
+        <li>We hebben dit rechtstreeks gevonden in de websitecode: het privé technische adres van het systeem dat onze volledige website aandrijft, is zichtbaar in elke pagina — iedereen kan het zien door rechts te klikken en "Paginabron bekijken" te selecteren</li>
+        <li>Dit is het equivalent van het serviceingangadres en de beveiligingscode op het etalageraam van een restaurant plakken</li>
+        <li>Het onthult welke softwareleverancier we gebruiken, de naam van ons account en het interne adres van ons handelssysteem — informatie die niet openbaar zou moeten zijn</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Het interne systeemadres doorsturen via een privé Ethnicraft-URL zodat de onderliggende infrastructuur nooit zichtbaar is.</strong> In plaats van het volledige technische adres zichtbaar te zijn, verloopt alle communicatie via api.ethnicraft.com — wat we controleren. Dit verbergt de back-end details en voegt een beveiligingslaag toe.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Beveiliging</span><span class="tag kost">Kost: €800–1.500</span><span class="tag winst">Vermindert blootstelling van backend-infrastructuur</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.2</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Bezoekers ver van Europa wachten langer — de website is alleen snel in de buurt</p>
+      <ul class="bollen">
+        <li>De hoofdwebsite wordt geserveerd vanuit een server in West-Europa. Een bezoeker in New York, Singapore of Sydney moet wachten tot data van Europa naar hun scherm gereisd is bij elk laden van een pagina</li>
+        <li>Onze productafbeeldingen gebruiken al een globaal netwerk om ze overal snel te serveren — maar de websitepagina's zelf komen nog steeds van één locatie</li>
+        <li>Het uitbreiden van dezelfde snelle globale levering naar de volledige website (niet alleen de afbeeldingen) zou de ervaring voor elke internationale bezoeker aanzienlijk verbeteren</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Het bestaande snelle globale leveringsnetwerk dat we al gebruiken voor afbeeldingen uitbreiden naar ook de hoofdwebsitepagina's.</strong> De infrastructuur is al aanwezig (CloudFront) — het hoeft enkel uitgebreid te worden naar de website zelf. Dit is een configuratieproject, geen nieuwe aankoop.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €2.000–4.000 + doorlopende hostingkosten</span><span class="tag winst">Globale laadtijd –40–60%</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.3</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">De cookiemelding voldoet mogelijk niet volledig aan de EU-wetgeving</p>
+      <ul class="bollen">
+        <li>We hebben een screenshot gemaakt van de live cookietoestemmingsmelding en vastgesteld dat de Statistieken-categorie standaard ingeschakeld is wanneer de banner verschijnt</li>
+        <li>Onder de EU-wetgeving (GDPR) kunnen niet-essentiële cookies — waaronder statistieken en marketingtracking — niet standaard ingeschakeld zijn. Bezoekers moeten actief kiezen om ze in te schakelen</li>
+        <li>Als Belgisch bedrijf dat actief is in de EU, is dit een juridische nalevingskwestie. GDPR-boetes kunnen oplopen tot 4% van de jaarlijkse omzet</li>
+        <li>De oplossing is een instelling in Cookiebot — geen websitecodewijziging</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Inloggen in Cookiebot en Statistieken en Marketing standaard uitschakelen.</strong> Bezoekers moeten actief kiezen om ze in te schakelen. Verifieer ook dat geen analytics- of advertentietools starten voor een bezoeker zijn keuze heeft gemaakt. Controleer de juridische bewoording van de toestemmingsmelding met onze juridische afdeling. Dit moet deze week gedaan worden.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Juridisch risico</span><span class="tag kost">Kost: €500–1.000</span><span class="tag winst">Verwijdert juridische blootstelling — doe dit onmiddellijk</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.4</span><span class="badge p0">P0</span></div>
+      <p class="item-titel">Bezoekers op mobiele telefoons kunnen niet inzoomen op de website</p>
+      <ul class="bollen">
+        <li>Bevestigd in de websitecode: pinch-to-zoom is uitgeschakeld op mobiele apparaten — bezoekers kunnen fysiek niet inzoomen op enige inhoud</li>
+        <li>Voor iedereen die moeite heeft met kleine tekst — wat een aanzienlijk deel van een ouder of visueel beperkt publiek omvat — maakt dit de website moeilijk of onmogelijk te gebruiken</li>
+        <li>Dit schendt ook de EU-toegankelijkheidswetgeving, die van kracht is voor privésectorwebsites vanaf medio 2025</li>
+        <li>Het verwijderen van deze beperking duurt een ontwikkelaar 5 minuten</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>De coderegel verwijderen die zoomen op mobiel voorkomt.</strong> Eén instelling, één wijziging, 5 minuten. Dit moet worden gedaan in de volgende code-implementatie ongeacht andere prioriteiten.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Toegankelijkheid + Juridisch</span><span class="tag kost">Kost: €100–200</span><span class="tag winst">Juridische naleving — 5 minuten reparatie</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.5</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Wanneer iets kapot gaat op de website, wordt niemand in ons team op de hoogte gebracht</p>
+      <ul class="bollen">
+        <li>Op dit moment: als het afrekenen stopt met werken op een bepaald telefoonmodel, als een productpagina crasht, of als een knop niet meer reageert — we komen het alleen te weten wanneer een klant klaagt</li>
+        <li>Voor een e-commercesite is een kapot afrekenen dat een werkdag onopgemerkt blijft, significante verloren omzet</li>
+        <li>Foutmonitoringtools sturen een onmiddellijke melding met volledige details — welk apparaat, welke browser, welke actie de fout veroorzaakte — op het moment dat een fout meer dan een handvol gebruikers treft</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Een foutmonitoringtool installeren die het ontwikkelteam onmiddellijk waarschuwt wanneer iets kapot gaat.</strong> Een tool genaamd Sentry is gratis voor kleine volumes en duurt ongeveer een dag om op te zetten. Het is basisinfrastructuur voor elke live e-commercesite.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: €600–1.000 + €25–150/maand</span><span class="tag winst">Omzetblokkerende bugs meteen gevonden</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.6</span><span class="badge p1">P1</span></div>
+      <p class="item-titel">Marketingtools stapelen zich op zonder overzicht</p>
+      <ul class="bollen">
+        <li>We hebben meerdere tracking- en marketingscripts direct in de websitecode gevonden — waaronder HubSpot dat op twee verschillende manieren draait, één waarvan de paginalading vertraagt</li>
+        <li>Elke tool die op deze manier wordt toegevoegd, vereist een ontwikkelaar om te wijzigen of te verwijderen — en niemand heeft een volledig beeld van wat er momenteel draait</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Alle marketing- en trackingtools verplaatsen naar één beheersysteem — Google Tag Manager.</strong> Dit is een gratis tool waar alle analytics-, advertentie- en trackingtools worden toegevoegd, beheerd en verwijderd via een eenvoudige interface — door het marketingteam, zonder enige ontwikkelaarsbetrokkenheid. Eenmaal geïnstalleerd, beheer je alles ervan voor altijd.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Gemiddelde impact</span><span class="tag kost">Kost: €3.000–5.000</span><span class="tag winst">Marketing-onafhankelijkheid + snelheid + juridische veiligheid</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.7</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">De website was ontworpen voor desktop eerst — en dat zie je op telefoons</p>
+      <ul class="bollen">
+        <li>De website werd ontworpen met een grote computermonitor in gedachten en daarna aangepast voor een telefoon. Het resultaat is een mobiele ervaring die gecomprimeerd aanvoelt in plaats van ontworpen</li>
+        <li>Meer dan de helft van alle websitebezoeken wereldwijd gebeurt op een mobiele telefoon. Google gebruikt ook de mobiele versie van een website als primaire versie voor zoekrankings</li>
+        <li>De redesign-mockups tonen al een sterke mobiele visie: schermvullende hero, handgeschreven logo, grote typeface, "ontdek meer"-knop — dit gevoel is er vandaag niet</li>
+      </ul>
+      <div class="mockup"><img src="redesign/iPhone 14 Pro Max – 1.png" alt="Mobiele homepage redesign"/><p class="mockup-cap">Mobiele homepage redesign — schermvullend beeld, duidelijke CTA, geen onderbrekingen</p></div>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Bij het herbouwen van het designsysteem beginnen vanaf de kleinste scherm en opschalen naar desktop.</strong> Start met de belangrijkste mobiele reizen — homepage, collectiepagina, productpagina, afrekenen — en ontwerp ze voor een 390px breed scherm. De redesign-mockups voor mobiel zijn al beschikbaar als vertrekpunt.</p>
+      </div>
+      <div class="tags"><span class="tag hoog">Hoge impact</span><span class="tag kost">Kost: inbegrepen in designsysteemwerk</span><span class="tag winst">Mobiele conversie op gelijk niveau met desktop</span></div>
+    </li>
+
+    <li class="item">
+      <div class="item-top"><span class="item-nr">06.8</span><span class="badge p2">P2</span></div>
+      <p class="item-titel">De website is niet bruikbaar voor iedereen</p>
+      <ul class="bollen">
+        <li>Ongeveer 15% van de mensen heeft een handicap die beïnvloedt hoe ze websites gebruiken — visuele beperking, kleurenblindheid, motorische moeilijkheden of het gebruik van hulptechnologieën zoals schermlezers</li>
+        <li>Bevestigde problemen: zoomen uitgeschakeld op mobiel (zie 06.4). Verwachte bijkomende problemen: inconsistente alt-teksten op productafbeeldingen, onvoldoende kleurcontrast op sommige tekst-/achtergrondelementen, toetsenbordnavigatie niet volledig getest</li>
+        <li>De EU-Toegankelijkheidswet vereist naleving voor privésectorwebsites, van kracht vanaf medio 2025</li>
+      </ul>
+      <div class="oplossing">
+        <p class="opl-label">Wat we moeten doen</p>
+        <p class="opl-tekst"><strong>Een toegankelijkheidsaudit laten uitvoeren door een specialist.</strong> Een auditor test schermlezer-compatibiliteit, toetsenbordnavigatie, kleurcontrast en formulierlabeling voor de belangrijkste gebruikersflows. Begin met bevindingen van hoge ernst. Plan een hertest na de reparaties om naleving te bevestigen.</p>
+      </div>
+      <div class="tags"><span class="tag middel">Juridisch + Inclusie</span><span class="tag kost">Kost: €8.000–15.000</span><span class="tag winst">Juridische naleving + breder publiek</span></div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 07 INVESTERINGSOVERZICHT ══ -->
+<section class="sectie" id="investering">
+  <div class="sectie-header">
+    <div class="sh-left"><span class="sh-nr">07</span><h2 class="sh-titel">Investeringsoverzicht</h2></div>
+    <span class="sh-tag">Kosten &amp; rendement</span>
+  </div>
+  <div style="padding:4rem 6vw">
+    <p style="font-size:.875rem;color:var(--g);max-width:60ch;line-height:1.7;margin-bottom:2.5rem">Alle kosten zijn schattingen in euro inclusief bureau- en ontwikkelaarstijd, tools en configuratie. Terugkerende kosten staan apart vermeld. Omzetschattingen gaan uit van een huidige jaarlijkse online omzet van €8–12 miljoen.</p>
+    <table class="invest-tabel">
+      <thead><tr><th>Fase</th><th>Wat er opgelost wordt</th><th>Timing</th><th>Eenmalige kost</th><th>Wat het per jaar oplevert</th></tr></thead>
+      <tbody>
+        <tr class="p0-rij">
+          <td><span class="badge p0">P0</span><br><strong>Deze week</strong></td>
+          <td>Pop-up verwijderen · Tekst laadt zichtbaar · HubSpot-script · Zoom op mobiel · Cookietoestemming fix · Systeemadres verbergen · Sitemap herstellen</td>
+          <td>1–2 weken</td>
+          <td>€3.500–6.000</td>
+          <td>Juridisch risico weg. Site laadt sneller. Google vindt nieuwe inhoud.</td>
+        </tr>
+        <tr>
+          <td><span class="badge p1">P1</span><br><strong>Volgende sprint</strong></td>
+          <td>Tracking setup · Caching + snelle levering · Beeldoptimalisatie · Foutmelding · Logo-uitrol · Content editor uitbreiden · Land/taalcodes voor Google · Kortingsdrempel zichtbaar</td>
+          <td>1–3 maanden</td>
+          <td>€40.000–65.000<br><small style="color:var(--g)">+ €3.000/jaar tools</small></td>
+          <td>+€200.000–400.000/jaar via betere conversie en herstelde navigatiepaden</td>
+        </tr>
+        <tr>
+          <td><span class="badge p2">P2</span><br><strong>Binnen 6 maanden</strong></td>
+          <td>Google-zichtbaarheid fix · Productinfo voor Google · Slimmere zoekfunctie · Visueel rulebook · A/B-testen · Toegankelijkheid · Verlanglijstje · Kleurindicatoren · Designerspagina's</td>
+          <td>3–6 maanden</td>
+          <td>€95.000–140.000<br><small style="color:var(--g)">+ €4.500/maand tools</small></td>
+          <td>+€700.000–1.500.000/jaar via organisch verkeer en betere UX</td>
+        </tr>
+        <tr>
+          <td><span class="badge p3">P3</span><br><strong>Strategisch</strong></td>
+          <td>Productconfigurator voor iedereen · Navigatievariant bouwen · Mobiel-eerst herontwerp · Volledige merkimplementatie · Designerspagina's uitgebreid</td>
+          <td>6–18 maanden</td>
+          <td>€120.000–180.000</td>
+          <td>+€1.000.000–2.500.000/jaar via configurator en betere merkbeleving</td>
+        </tr>
+        <tr class="totaal">
+          <td colspan="3">Totaal (eenmalig + eerste jaar lopende kosten)</td>
+          <td>€258.500–391.000</td>
+          <td>Geschat +€2M–4,5M/jaar bij volledige uitrol</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ 08 HERBOUWEN OF REPAREREN ══ -->
+<section class="conclusie" id="herbouwen">
+  <div class="sectie-header" style="padding:3rem 0 2rem;border-bottom:none">
+    <div class="sh-left"><span class="sh-nr">08</span><h2 class="sh-titel">Herbouwen of repareren?</h2></div>
+    <span class="sh-tag">Het eerlijke oordeel</span>
+  </div>
+  <h3 class="conclusie-titel">Moeten we repareren wat we hebben, of opnieuw beginnen?</h3>
+  <div class="keuze-grid">
+    <div class="keuze">
+      <p class="keuze-label">Optie A</p>
+      <h3>De huidige website repareren en verbeteren</h3>
+      <ul>
+        <li>Het SAP-platform is al betaald en werkt betrouwbaar — dat is echte waarde</li>
+        <li>Het Partnerportaal is solide en hoeft niet vervangen te worden — het heeft enkel betere zichtbaarheid nodig</li>
+        <li>De P0- en P1-fixes leveren reële, meetbare verbeteringen op binnen weken</li>
+        <li>Minder verstoring — het team kent het huidige systeem</li>
+        <li>Maar: de website werd niet gebouwd om door Google gelezen te worden. Dat repareren op het huidige platform is duur en complex</li>
+        <li>En: de ontwikkelaarstool die voor de front-end gebruikt wordt (Spartacus/Angular) is moeilijk om voor te aanwerven en traag om in te bouwen</li>
+      </ul>
+      <div class="prijs">Kost om een competitieve standaard te bereiken: <strong>€150.000–250.000</strong> over 12 maanden, plus SAP-licentie van ca. €80.000–160.000/jaar</div>
+    </div>
+    <div class="keuze aanbevolen">
+      <span class="aanbevolen-badge">Aanbevolen</span>
+      <p class="keuze-label">Optie B</p>
+      <h3>SAP-backend behouden. Alleen de websitefront-end vervangen.</h3>
+      <ul>
+        <li>De SAP-backend (het systeem dat producten, prijzen, bestellingen en het Partnerportaal beheert) is het behouden waard — het werkt</li>
+        <li>Alleen wat bezoekers zien vervangen: de front-end website, opnieuw gebouwd op moderne technologie (Next.js) die Google-zichtbaarheid standaard heeft ingebouwd</li>
+        <li>Google-zichtbaarheid is van dag één opgelost — geen dure retroactieve aanpassing</li>
+        <li>Het designsysteem, de configurator en alle uitgetekende redesign-mockups zijn allemaal veel gemakkelijker clean te bouwen op een nieuwe front-end</li>
+        <li>Moderne front-endtechnologie heeft een veel groter pool van ontwikkelaars — sneller te bouwen, goedkoper te onderhouden</li>
+        <li>SAP zelf beveelt deze composable aanpak officieel aan voor bedrijven in onze positie</li>
+        <li>De SAP-licentie blijft — alleen de front-end verandert</li>
+      </ul>
+      <div class="prijs">Kost: <strong>€200.000–320.000</strong> voor een nieuwe front-end over 12–18 maanden. SAP-licentie blijft. Lagere langetermijn-onderhoudskosten.</div>
+    </div>
+  </div>
+  <div class="rec">
+    <p class="rec-label">Conclusie</p>
+    <p class="rec-titel">Repareer de dringende zaken deze week. Plan een nieuwe front-end voor 2027.</p>
+    <p class="rec-tekst">
+      De website heeft drie fundamentele problemen die samen dagelijks significante omzet kosten: <strong>Google kan onze pagina's niet lezen</strong> (we bestaan nauwelijks in zoekopdrachten), <strong>bezoekers zien een formulier voor ze de website zien</strong> (eerste indruk is slecht), en <strong>de site is traag en niet gecached</strong> (mensen vertrekken voor ze gebrowst hebben). Dit zijn geen cosmetische problemen — het zijn structurele.<br><br>
+      <strong>De juiste aanpak is twee sporen tegelijk.</strong> Repareer de P0- en P1-zaken onmiddellijk — kost €40.000–75.000, reëel rendement binnen 3–6 maanden. Begin tegelijkertijd met het plannen van een nieuwe website-front-end voor een lancering in 2027, gebouwd op moderne technologie waarbij al deze grote fixes — Google-zichtbaarheid, snelheid, mobiel, configurator, uitgetekende mockups — veel gemakkelijker en goedkoper te realiseren zijn.<br><br>
+      <strong>Besteed geen €250.000 aan het patchwerk van de huidige front-end.</strong> De structurele problemen zijn te diep en de technologie te beperkend. De SAP-backend is het behouden waard. De website die de wereld ziet, is dat niet.<br><br>
+      De totale potentiële verbetering bij correct uitvoeren: <strong>geschat +€2–4,5 miljoen extra jaarlijkse omzet</strong>. Bij een totale investering van ongeveer €300.000 betaalt het rendement zich terug binnen 9 tot 18 maanden.
+    </p>
+  </div>
+</section>
+
+</div><!-- inhoud -->
+</div><!-- layout -->
+
+<div class="afsluiting">
+  <p class="afsluiting-statement">Dit is het startpunt.<br>Niet de eindbestemming.</p>
+  <p class="afsluiting-nota">Alles hierboven is gedocumenteerd, onderbouwd en van een kostprijs voorzien. De P0-zaken kunnen deze week starten — geen strategische beslissing vereist. De grotere keuzes over de toekomst van de website kunnen worden gemaakt op de tijdlijn die is vastgesteld tijdens de kick-off.</p>
+</div>
+
+<footer>
+  <span>Ethnicraft — Website Analyse 2026</span>
+  <span>Intern gebruik — Katrien Maes / Monday.com</span>
+  <span>Robin Prinzie — Art Direction</span>
+</footer>
+
+<script>
+  const secties = document.querySelectorAll('.sectie[id], .conclusie[id]');
+  const links = document.querySelectorAll('.zijbalk a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('actief'));
+        const a = document.querySelector(`.zijbalk a[href="#${e.target.id}"]`);
+        if (a) a.classList.add('actief');
+      }
+    });
+  }, { rootMargin:'-40% 0px -55% 0px' });
+  secties.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

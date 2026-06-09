@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ethnicraft — Webdesign Analyse 2026</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --zwart:#0a0a0a;--wit:#f5f4f0;--grijs:#888;--lijn:#d8d5cf;
+      --groen:#1a6b3c;--groen-bg:#eaf4ee;
+      --rood:#8b1a1a;--rood-bg:#fdf0f0;
+      --oranje:#7a4a0a;--oranje-bg:#fdf4e7;
+    }
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:var(--wit);color:var(--zwart);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+    header{padding:2rem 6vw;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--lijn);position:sticky;top:0;background:var(--wit);z-index:100}
+    .merk{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+    .meta{text-align:right;font-size:.7rem;color:var(--grijs);letter-spacing:.04em;line-height:1.9}
+
+    .hero{padding:6rem 6vw 5rem;border-bottom:1px solid var(--lijn)}
+    .hero-label{font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--grijs);margin-bottom:2rem}
+    .hero h1{font-size:clamp(2.8rem,5.5vw,5rem);font-weight:700;line-height:1.02;letter-spacing:-.03em;max-width:22ch;margin-bottom:2.5rem}
+    .hero-intro{max-width:60ch;font-size:1rem;color:var(--grijs);line-height:1.8;margin-bottom:1.5rem}
+    .pdf-tag{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .8rem;border:1px solid var(--lijn);color:var(--grijs)}
+
+    /* stats */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--lijn)}
+    .stat{padding:2rem 1.5rem;border-right:1px solid var(--lijn);text-align:center}
+    .stat:last-child{border-right:none}
+    .stat .num{font-size:2rem;font-weight:700;letter-spacing:-.04em;line-height:1;margin-bottom:.4rem}
+    .stat .slbl{font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--grijs)}
+    .stat .num.groen{color:var(--groen)}
+    .stat .num.rood{color:#c0392b}
+
+    /* layout */
+    .pagina{display:grid;grid-template-columns:220px 1fr}
+    .zijbalk{border-right:1px solid var(--lijn);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;padding:2rem 0}
+    .zijbalk a{display:block;padding:.55rem 1.5rem;font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grijs);text-decoration:none;border-left:2px solid transparent;transition:all .15s}
+    .zijbalk a:hover,.zijbalk a.actief{color:var(--zwart);border-left-color:var(--zwart)}
+    .zijbalk-scheiding{height:1px;background:var(--lijn);margin:.75rem 1.5rem}
+    .inhoud{min-width:0}
+
+    /* secties */
+    .sectie{border-bottom:1px solid var(--lijn)}
+    .sectie-header{padding:3rem 6vw;display:flex;justify-content:space-between;align-items:baseline;gap:2rem;border-bottom:1px solid var(--lijn)}
+    .sectie-links{display:flex;align-items:baseline;gap:1.2rem}
+    .sectie-nr{font-size:.65rem;font-weight:700;letter-spacing:.15em;color:var(--grijs)}
+    .sectie-titel{font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.025em;line-height:1.1}
+    .sectie-tag{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--grijs);white-space:nowrap}
+
+    /* onderdelen */
+    .onderdelen{list-style:none}
+    .onderdeel{padding:2.8rem 6vw;border-bottom:1px solid var(--lijn)}
+    .onderdeel:last-child{border-bottom:none}
+    .onderdeel-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;flex-wrap:wrap}
+    .onderdeel-nr{font-size:.6rem;font-weight:700;letter-spacing:.15em;color:var(--grijs)}
+    .onderdeel-titel{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;line-height:1.25;margin-bottom:1rem;max-width:70ch}
+
+    .bollen{list-style:none;margin-bottom:1.4rem;max-width:72ch}
+    .bollen li{font-size:.875rem;color:#4a4a4a;line-height:1.7;padding-left:1.3em;position:relative;margin-bottom:.35rem}
+    .bollen li::before{content:"•";position:absolute;left:0;color:var(--zwart)}
+
+    /* status badges */
+    .badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.22rem .6rem;border:1px solid}
+    .badge.gepland{background:#f7f5f2;border-color:var(--lijn);color:var(--grijs)}
+    .badge.gebouwd{background:var(--groen-bg);border-color:var(--groen);color:var(--groen)}
+    .badge.ontbreekt{background:var(--rood-bg);border-color:#c0392b;color:#c0392b}
+    .badge.gedeeltelijk{background:var(--oranje-bg);border-color:var(--oranje);color:var(--oranje)}
+    .badge.hoog{background:var(--zwart);border-color:var(--zwart);color:var(--wit)}
+    .badge.middel{border-color:#999;color:#555}
+
+    /* vergelijking blok */
+    .vergelijk{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.4rem;max-width:72ch}
+    .vergelijk-blok{padding:1rem 1.2rem;font-size:.82rem;line-height:1.6}
+    .vergelijk-blok.plan{background:#f7f5f2;border-left:3px solid var(--lijn)}
+    .vergelijk-blok.nu{background:var(--rood-bg);border-left:3px solid #c0392b}
+    .vergelijk-blok.goed{background:var(--groen-bg);border-left:3px solid var(--groen)}
+    .vergelijk-label{font-size:.58rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem;color:var(--grijs)}
+    .vergelijk-blok.nu .vergelijk-label{color:#c0392b}
+    .vergelijk-blok.goed .vergelijk-label{color:var(--groen)}
+
+    /* advies blok */
+    .advies{background:#f0ede8;padding:1.2rem 1.4rem;margin-bottom:1.2rem;max-width:72ch;border-left:3px solid var(--zwart)}
+    .advies-label{font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--grijs);margin-bottom:.5rem}
+    .advies-tekst{font-size:.85rem;color:#333;line-height:1.65}
+    .advies-tekst strong{color:var(--zwart)}
+
+    .tags-rij{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.5rem}
+    .tag{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:.25rem .6rem;border:1px solid}
+    .tag.kost{border-color:var(--lijn);color:var(--grijs)}
+    .tag.winst{border-color:var(--groen);color:var(--groen);background:var(--groen-bg)}
+
+    /* samenvatting tabel */
+    .samenvatting-tabel{width:100%;border-collapse:collapse;max-width:900px;margin-top:1.5rem}
+    .samenvatting-tabel th{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--grijs);text-align:left;padding:.75rem 1rem;border-bottom:2px solid var(--zwart)}
+    .samenvatting-tabel td{font-size:.82rem;padding:.85rem 1rem;border-bottom:1px solid var(--lijn);vertical-align:top}
+    .samenvatting-tabel tr.totaal td{background:var(--zwart);color:var(--wit);font-weight:700}
+
+    /* afsluiting */
+    .afsluiting{padding:6rem 6vw;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end}
+    .afsluiting-statement{font-size:clamp(1.4rem,2.5vw,2rem);font-weight:700;letter-spacing:-.025em;line-height:1.2}
+    .afsluiting-nota{font-size:.875rem;color:var(--grijs);line-height:1.75;max-width:50ch}
+
+    footer{padding:2rem 6vw;border-top:1px solid var(--lijn);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    footer span{font-size:.68rem;color:var(--grijs);letter-spacing:.08em}
+
+    @media(max-width:900px){
+      .pagina{grid-template-columns:1fr}
+      .zijbalk{display:none}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .vergelijk{grid-template-columns:1fr}
+      .afsluiting{grid-template-columns:1fr;gap:2rem}
+    }
+    @media print{
+      .zijbalk{display:none}
+      .pagina{grid-template-columns:1fr}
+      header{position:static}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="merk">Ethnicraft</span>
+  <div class="meta">
+    <div>Webdesign Analyse — Intern</div>
+    <div>Juni 2026</div>
+    <div>Robin Prinzie — Art Direction</div>
+  </div>
+</header>
+
+<section class="hero">
+  <p class="hero-label">Website &amp; Rebranding Traject</p>
+  <h1>Het plan versus de werkelijkheid.</h1>
+  <p class="hero-intro">
+    In oktober 2023 werd een gedetailleerd webdesign-document opgesteld met wireframes voor een nieuwe Ethnicraft-website. Dit document analyseert dat oorspronkelijke plan, vergelijkt het met wat er vandaag effectief gebouwd is, en legt uit — in gewone mensentaal — wat het verschil betekent voor onze bezoekers, partners en het merk.
+  </p>
+  <span class="pdf-tag">Gebaseerd op: ETHNI_WEBDESIGN_1.pdf — oktober 2023 (59 pagina's)</span>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="num groen">10</div><div class="slbl">Onderdelen gebouwd</div></div>
+  <div class="stat"><div class="num rood">13</div><div class="slbl">Onderdelen ontbreken</div></div>
+  <div class="stat"><div class="num" style="color:#7a4a0a">4</div><div class="slbl">Gedeeltelijk gebouwd</div></div>
+  <div class="stat"><div class="num">3 jaar</div><div class="slbl">Tussen plan en vandaag</div></div>
+</div>
+
+<div class="pagina">
+
+<nav class="zijbalk" id="zijbalk">
+  <a href="#inleiding">Inleiding</a>
+  <a href="#navigatie">Navigatie</a>
+  <a href="#homepage">Homepage</a>
+  <a href="#zoeken">Zoeken</a>
+  <a href="#producten">Producten</a>
+  <a href="#detail">Productdetail</a>
+  <a href="#designers">Designers</a>
+  <div class="zijbalk-scheiding"></div>
+  <a href="#samenvatting">Samenvatting</a>
+  <a href="#aanbeveling">Aanbeveling</a>
+</nav>
+
+<div class="inhoud">
+
+<!-- ══ INLEIDING ══ -->
+<section class="sectie" id="inleiding">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">00</span>
+      <h2 class="sectie-titel">Wat is dit document?</h2>
+    </div>
+    <span class="sectie-tag">Achtergrond</span>
+  </div>
+  <ul class="onderdelen">
+
+    <li class="onderdeel">
+      <div class="onderdeel-top"><span class="onderdeel-nr">00.1</span></div>
+      <p class="onderdeel-titel">In oktober 2023 werd een volledig plan gemaakt voor een nieuwe website. Veel daarvan is nooit gebouwd.</p>
+      <ul class="bollen">
+        <li>Het document ETHNI_WEBDESIGN_1.pdf bevat 59 pagina's met uitgewerkte wireframes — dat zijn schematische tekeningen die tonen hoe elke pagina er zou moeten uitzien en hoe bezoekers er doorheen zouden navigeren</li>
+        <li>Het plan was doordacht en ambitieus: van een slimme zoekbalk met meerdere stappen tot een productconfigurator waarbij je online je afwerking en maat kiest</li>
+        <li>Bijna drie jaar later is een groot deel van dat plan niet gerealiseerd. De huidige website mist cruciale onderdelen die wél al uitgedacht waren</li>
+        <li>Dit document legt per onderdeel uit: wat was het plan, wat is er van gebouwd, en wat betekent dat verschil in de praktijk — voor een eindklant, een dealer, en voor het merk</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Belangrijke nuance</p>
+        <p class="advies-tekst">Het oorspronkelijke plan was volledig gericht op B2C — rechtstreeks aan eindconsumenten verkopen. Ethnicraft verkoopt vandaag via drie kanalen: eindklanten (B2C), retailers en Contract &amp; Trade professionals. Sommige onderdelen uit het plan zijn daardoor niet langer 100% relevant in hun originele vorm, maar kunnen wel aangepast worden om alle drie de doelgroepen te bedienen.</p>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ NAVIGATIE ══ -->
+<section class="sectie" id="navigatie">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">01</span>
+      <h2 class="sectie-titel">Navigatie</h2>
+    </div>
+    <span class="sectie-tag">Hoe beweegt een bezoeker door de site</span>
+  </div>
+  <ul class="onderdelen">
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">01.1</span>
+        <span class="badge gebouwd">Grotendeels gebouwd</span>
+      </div>
+      <p class="onderdeel-titel">De navigatie zelf is goed — maar het taal- en landmenu is van de verkeerde plek verhuisd</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Logo links, producten en inspiratie in het midden, praktische zaken (zoeken, winkel, login, winkelmandje, verlanglijstje) rechts. De taal- en valutakeuze (NL/EUR) zit discreet in de navigatiebalk zelf.
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Navigatie is aanwezig met logo, Indoor/Outdoor/Collaborations, zoekbalk, login en winkelwagen. Maar de taal- en landkeuze is vervangen door een grote pop-up die bij elk bezoek opduikt — vóór de bezoeker ook maar iets van de website gezien heeft.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>De originele visie was slim: de taalwissel zit small en discreet in de balk, zodat bezoekers er meteen bij kunnen zonder onderbroken te worden</li>
+        <li>Wat er gebouwd is, is het omgekeerde: een venster dat het volledige scherm blokkeert en vereist dat je eerst een keuze maakt voor je iets kunt zien</li>
+        <li>Op een gsm is dat venster zo groot dat de website volledig onzichtbaar is tot je het wegklikt</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Wat we zouden moeten doen</p>
+        <p class="advies-tekst"><strong>Het pop-upvenster verwijderen voor bezoekers die al op een land-specifieke pagina aankomen.</strong> Als iemand op /en-be/ terechtkomt, weet de website al dat die persoon in België is en Engels verkiest. Het venster is dan overbodig. Enkel tonen wanneer iemand op de rootpagina zonder landcode aankomt. Dit is een aanpassing van enkele dagen ontwikkelingswerk.</p>
+      </div>
+      <div class="tags-rij">
+        <span class="tag kost">Kost: €800–1.200</span>
+        <span class="tag winst">Directe verbetering eerste indruk</span>
+      </div>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">01.2</span>
+        <span class="badge ontbreekt">Ontbreekt volledig</span>
+      </div>
+      <p class="onderdeel-titel">Het verlanglijstje (wishlist) was gepland maar is nooit gebouwd</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Een hartje-icoon in de navigatiebalk waarmee bezoekers producten kunnen bewaren voor later. Zichtbaar als icoon naast het winkelmandje.
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Geen verlanglijstje. Een bezoeker die iets mooi vindt maar nog niet zeker is, heeft geen manier om het te bewaren. Ze moeten een schermafbeelding maken of de pagina bookmarken — en vergeten het daarna.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>Denk aan hoe je op Zalando of IKEA werkt: je klikt op het hartje, het product wordt bewaard, en je kunt later rustig vergelijken</li>
+        <li>Voor meubelen — waarbij mensen weken nadenken voor ze kopen — is een verlanglijstje bijzonder waardevol</li>
+        <li>Het geeft ook Ethnicraft data: welke producten worden het meest bewaard maar nooit gekocht? Dat is interessante informatie</li>
+        <li>Voor dealers en architecten is een verlanglijstje ook nuttig: ze kunnen een selectie opbouwen voor een project en die later in één keer bestellen via het partnerportaal</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Wat we zouden moeten doen</p>
+        <p class="advies-tekst"><strong>Een verlanglijstje toevoegen als ingelogde functie.</strong> Bezoekers die ingelogd zijn (zowel consumenten als partners) kunnen producten bewaren. Voor consumenten leidt dat naar de winkelzoeker of het inspiratieplatform. Voor partners verschijnt er een knop "Voeg toe aan bestelling" die doorlinkt naar het portaal. Dit is een uitbreiding van de SAP Commerce-module — haalbaar maar vereist ontwikkelingswerk.</p>
+      </div>
+      <div class="tags-rij">
+        <span class="tag kost">Kost: €8.000–15.000</span>
+        <span class="tag winst">Meer terugkerende bezoekers en grotere kans op aankoop</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ HOMEPAGE ══ -->
+<section class="sectie" id="homepage">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">02</span>
+      <h2 class="sectie-titel">Homepage</h2>
+    </div>
+    <span class="sectie-tag">De eerste pagina die iedereen ziet</span>
+  </div>
+  <ul class="onderdelen">
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">02.1</span>
+        <span class="badge gebouwd">Gebouwd</span>
+      </div>
+      <p class="onderdeel-titel">De hero-sectie (groot beeld bovenaan) is aanwezig — maar de begeleidende tekst mist kracht</p>
+      <ul class="bollen">
+        <li>Het plan vroeg om een groot, kwalitatief beeld bovenaan dat meteen de sfeer van het merk uitstraalt — dat is aanwezig en werkt goed</li>
+        <li>De bijgevoegde tekst ("captivating statement") moet beknopt zijn en het beeld laten spreken — het plan zei expliciet "niet te groot, laat de foto de aandacht trekken"</li>
+        <li>De huidige homepage slaagt hierin redelijk goed wanneer je de pop-ups eenmaal weggewerkt hebt</li>
+        <li>Wat ontbreekt: een duidelijke CTA (call to action — de knop die zegt wat je moet doen). Het plan stelde de vraag "subtiel (stijlvol) of een knop (betere conversie)?" — die vraag is nooit beantwoord, want er is nauwelijks een CTA</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Wat we zouden moeten doen</p>
+        <p class="advies-tekst"><strong>Beslis bewust welke actie de homepage-bezoeker moet ondernemen.</strong> Wil je dat consumenten een collectie ontdekken? Dan is "Ontdek Indoor" de primaire knop. Wil je dat dealers zich aanmelden voor het portaal? Voeg dan een secundaire knop toe. Test welke formulering het best werkt via A/B-testing. Zonder een duidelijke volgende stap verlaten bezoekers de pagina zonder te doen wat we hopen.</p>
+      </div>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">02.2</span>
+        <span class="badge ontbreekt">Ontbreekt</span>
+      </div>
+      <p class="onderdeel-titel">Uitgelichte producten met kleurindicatoren — gepland, niet gebouwd</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Een carrousel van 4 uitgelichte producten (bestsellers of nieuwkomers) met productafbeelding, naam, prijs, en een kleine aanduiding zoals "+8 kleuren" of "+2 kleuren". Maximaal 16 producten, 3 klikken om doorheen te scrollen. Labels als "NIEUW" of "BESTSELLER" om aandacht te trekken.
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Er zijn uitgelichte producten aanwezig op de homepage, maar zonder kleurindicatoren, zonder labels en zonder de slimme carrousel-logica. Bezoekers zien een foto en prijs — maar niet hoeveel opties er zijn.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>"+8 kleuren" is een kleine tekst maar heeft grote impact: het vertelt de bezoeker meteen dat er keuze is, zonder dat ze door moeten klikken naar de productpagina</li>
+        <li>Labels zoals "NIEUW" of "BESTSELLER" wekken nieuwsgierigheid en moedigen aan om te klikken — dit zijn bewezen technieken uit e-commerce</li>
+        <li>Het originele plan stelde zelfs voor dit te A/B-testen (twee versies vergelijken) omdat het effect niet altijd voorspelbaar is — die nuance was goed doordacht</li>
+      </ul>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">02.3</span>
+        <span class="badge gedeeltelijk">Gedeeltelijk</span>
+      </div>
+      <p class="onderdeel-titel">Blog en inspiratie zijn losgekoppeld van de website</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Blog en inspiratie-content geïntegreerd op de homepage zelf — als een sectie die bezoekers inspireert, de mogelijkheden van de meubelen toont, en doorlinkt naar meer content.
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Inspiratie bestaat op een apart subdomein (inspiration.ethnicraft.com). Het is volledig los van de hoofdwebsite — een ander adres, een aparte structuur.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>Als inspiratiecontent op een andere website staat, telt het SEO-voordeel niet mee voor ethnicraft.com — Google beschouwt het als een aparte site</li>
+        <li>Voor een bezoeker voelt de overgang ook abrupt: je bent aan het browsen op ethnicraft.com en klikt dan door naar een pagina die er anders uitziet en een ander webadres heeft</li>
+        <li>Inspiratiecontent is waardevol voor zowel consumenten als C&amp;T-professionals die ideeën zoeken voor een project</li>
+      </ul>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">02.4</span>
+        <span class="badge ontbreekt">Ontbreekt</span>
+      </div>
+      <p class="onderdeel-titel">Instagram-feed op de homepage — gepland maar terecht met voorzichtigheid</p>
+      <ul class="bollen">
+        <li>Het plan voorzag een live Instagram-feed op de homepage — je ziet de meest recente berichten van @ethnicraft direct op de site</li>
+        <li>Slim detail: het plan schreef er zelf bij "VOORWAARDE: de socials moeten on point zijn. Anders kunnen we dit beter niet integreren" — een eerlijke en scherpe opmerking</li>
+        <li>Als de Instagram-feed niet regelmatig bijgewerkt wordt of niet het gewenste kwaliteitsniveau heeft, trekt het de hele website naar beneden</li>
+        <li>Overweeg dit pas te implementeren als er een duidelijk contentbeleid is voor Instagram, met consistente stijl en frequentie</li>
+      </ul>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ ZOEKEN ══ -->
+<section class="sectie" id="zoeken">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">03</span>
+      <h2 class="sectie-titel">Zoekfunctie</h2>
+    </div>
+    <span class="sectie-tag">Hoe bezoekers iets vinden</span>
+  </div>
+  <ul class="onderdelen">
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">03.1</span>
+        <span class="badge ontbreekt">Grotendeels niet gebouwd</span>
+      </div>
+      <p class="onderdeel-titel">De slimme zoekbalk uit het plan bestond uit 5 verschillende situaties — vandaag is er maar één</p>
+      <ul class="bollen">
+        <li>Het plan tekende 5 aparte situaties uit voor de zoekbalk: <strong>(1)</strong> bezoeker is nieuw en heeft nog niets getypt — toon populaire zoekopdrachten en populaire producten; <strong>(2)</strong> bezoeker is al eerder geweest — toon recente zoekopdrachten en recent bekeken producten; <strong>(3)</strong> bezoeker begint te typen — laadscherm met suggesties; <strong>(4)</strong> bezoeker heeft getypt en er zijn resultaten — toon suggesties en producten; <strong>(5)</strong> bezoeker heeft getypt maar er zijn geen resultaten — "Bedoelde je..." met alternatieven</li>
+        <li>Vandaag is er één eenvoudige zoekbalk die enkel werkt als je de exacte productnaam kent. Typ "grote eikenhouten eettafel" — niets nuttigs</li>
+        <li>Bezoekers die zoeken zijn de meest gemotiveerde kopers op een website. Ze zoeken actief iets specifieks. Als de zoekbalk teleurstelt, zijn ze weg</li>
+        <li>Dit verschil is groot: het plan beschreef een zoekervaring die bezoekers begrijpt en helpt, ongeacht hoe ze zoeken. De huidige zoekfunctie begrijpt alleen exacte productnamen</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Wat we zouden moeten doen</p>
+        <p class="advies-tekst"><strong>De huidige zoekfunctie vervangen door een slimme zoektool zoals Algolia.</strong> Algolia begrijpt gewone taal ("grote donkere eettafel voor 8 personen"), herkent typefouten, toont suggesties terwijl je typt, en toont populaire zoekopdrachten aan nieuwe bezoekers. Er bestaat een officiële koppeling met ons SAP-platform. De investering verdient zichzelf snel terug omdat zoekende bezoekers 2 tot 3 keer vaker kopen dan bezoekers die enkel browsen.</p>
+      </div>
+      <div class="tags-rij">
+        <span class="tag kost">Kost: €20.000–30.000 + €900/maand</span>
+        <span class="tag winst">Conversie via zoeken +20–30%</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ PRODUCTEN ══ -->
+<section class="sectie" id="producten">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">04</span>
+      <h2 class="sectie-titel">Productoverzicht &amp; filters</h2>
+    </div>
+    <span class="sectie-tag">Hoe bezoekers door het aanbod bladeren</span>
+  </div>
+  <ul class="onderdelen">
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">04.1</span>
+        <span class="badge gedeeltelijk">Gedeeltelijk gebouwd</span>
+      </div>
+      <p class="onderdeel-titel">De filteropties waren veel rijker gepland dan wat er vandaag staat</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Filteren op: Categorie, Collectie, Kleur, Materiaal, Afmetingen, Ontwerper, Levertijd. Plus actieve filterchips bovenaan zodat je ziet wat je hebt geselecteerd en het makkelijk kunt verwijderen.
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Beperkte filters aanwezig. Filteren op collectienaam, kleur of specifieke ontwerper is niet mogelijk. De rijkdom van het Ethnicraft-assortiment vertaalt zich niet naar de filtermogelijkheden.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>"Toon mij alle meubelen van Raf Simons" of "Toon mij alle eikenhouten producten" — dat zijn zoekopdrachten die vandaag niet werken maar die wel in het plan stonden</li>
+        <li>Voor een C&amp;T-professional die voor een project specifieke materialen nodig heeft, is filteren op materiaal of levertijd cruciaal</li>
+        <li>De actieve filterchips (kleine labels die tonen wat je hebt geselecteerd) zijn een UX-detail dat veel verschil maakt — je ziet altijd wat je hebt ingesteld en kunt het makkelijk aanpassen</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Wat we zouden moeten doen</p>
+        <p class="advies-tekst"><strong>De filteropties uitbreiden met Collectie, Materiaal, Kleur en Ontwerper.</strong> Deze data bestaat al in ons SAP-systeem — ze hoeft enkel zichtbaar gemaakt te worden als filteroptie. Dit is een SAP Commerce-configuratie en een update van de Spartacus-filtercomponent. Koppel dit aan de Algolia-zoekinvestering (zie 03.1) voor het beste resultaat.</p>
+      </div>
+      <div class="tags-rij">
+        <span class="tag kost">Kost: €5.000–8.000</span>
+        <span class="tag winst">Betere productontdekking voor alle doelgroepen</span>
+      </div>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">04.2</span>
+        <span class="badge ontbreekt">Ontbreekt</span>
+      </div>
+      <p class="onderdeel-titel">Productkaarten tonen niet hoeveel kleur- en materiaalopties er zijn</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Op elke productkaart in het overzicht: een kleine aanduiding zoals "+8 kleuren" of "+2 materialen". Zo ziet een bezoeker meteen dat er keuze is, zonder door te klikken.
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Productkaarten tonen alleen een foto, naam en prijs. Er is geen aanduiding van hoeveel varianten of opties er zijn. Een bezoeker weet pas dat er een donkere eiken variant bestaat als ze al doorgeklikt hebben.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>Dit klinkt als een klein detail maar heeft grote impact: bezoekers die zien "+8 kleuren" klikken vaker door omdat ze weten dat er iets voor hen tussen zit</li>
+        <li>Het communiceert ook de rijkdom van het assortiment — Ethnicraft biedt veel keuze, maar dat is nauwelijks zichtbaar in het overzicht</li>
+      </ul>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ PRODUCTDETAIL ══ -->
+<section class="sectie" id="detail">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">05</span>
+      <h2 class="sectie-titel">Productdetailpagina</h2>
+    </div>
+    <span class="sectie-tag">De pagina waar de aankoopbeslissing valt</span>
+  </div>
+  <ul class="onderdelen">
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">05.1</span>
+        <span class="badge ontbreekt">Grootste ontbrekend onderdeel</span>
+        <span class="badge hoog">Hoogste prioriteit</span>
+      </div>
+      <p class="onderdeel-titel">De productconfigurator — materiaal, kleur en maat kiezen op de pagina zelf — is volledig afwezig</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Op de productpagina: een dropdown voor Materiaal, een dropdown voor Kleur, een dropdown voor Afmetingen, een dropdown voor Type, een hoeveelheidsveld, een "In winkelwagen"-knop EN een "Vind een verkooppunt"-knop als alternatief. Alles op één scherm.
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Niet-ingelogde bezoekers zien enkel een "Vind een verkooppunt"-knop. Ingelogde partners zien wel een configurator met dropdowns — maar gewone consumenten niet. De keuze-opties bestaan, maar zijn onzichtbaar voor wie er het meest nood aan heeft.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>Stel je voor: je wil een eettafel kopen. Je gaat naar de productpagina. Er staat een foto, een prijs, en een knop die zegt "Vind een verkooppunt". Je weet niet welke afwerkingen er zijn, welke maten beschikbaar zijn, of de tafel er ook in donker eiken bestaat. Je moet dus naar een winkel gaan om die basisvragen te stellen</li>
+        <li>Merken zoals Muuto, BoConcept en Vitra laten bezoekers alles online samenstellen. Dat is de standaard bij premium meubelen</li>
+        <li>De data om dit te bouwen bestaat al in ons SAP-systeem: alle varianten, afwerkingen en maten zijn er. Ze worden enkel nog niet getoond aan de bezoeker</li>
+        <li>Dit is het onderdeel dat het meeste effect zou hebben op het aantal mensen dat doorstroomt naar een dealer of een aankoop</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Wat we zouden moeten doen</p>
+        <p class="advies-tekst"><strong>De productconfigurator ook zichtbaar maken voor niet-ingelogde bezoekers.</strong> Materiaal, kleur, afmeting en type kunnen geselecteerd worden. De prijs past mee aan. De CTA ("Vind een verkooppunt" of "Log in om te bestellen") leidt daarna naar de juiste volgende stap per doelgroep. De technische fundering (SAP Commerce varianten) is aanwezig — het is een Spartacus front-end update die de data zichtbaar maakt.</p>
+      </div>
+      <div class="tags-rij">
+        <span class="tag kost">Kost: €15.000–30.000</span>
+        <span class="tag winst">Conversie productpagina +20–35%</span>
+      </div>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">05.2</span>
+        <span class="badge ontbreekt">Ontbreekt</span>
+      </div>
+      <p class="onderdeel-titel">360°-weergave en "Zie het in je ruimte" (AR) waren gepland maar zijn nooit gebouwd</p>
+      <ul class="bollen">
+        <li>Het plan beschreef twee geavanceerde beeldfuncties: een 360°-rotatiefunctie zodat je het product van alle kanten kunt bekijken, en een knop "Zie het in je ruimte" (augmented reality — je houdt je gsm omhoog en ziet het meubel virtueel in je eigen kamer staan)</li>
+        <li>Dit zijn technologisch complexe features die een serieuze investering vragen in 3D-bestanden en technische integratie</li>
+        <li>De 3D-bestanden bestaan al (ze zijn downloadbaar via het partnerportaal), wat een goed vertrekpunt is</li>
+        <li>360°-weergave is realistisch voor de korte termijn. AR ("zie het in je ruimte") is een langetermijn-ambitie die haalbaar wordt via tools zoals Cylindo of Auglio</li>
+      </ul>
+      <div class="tags-rij">
+        <span class="tag kost">360°-weergave: €8.000–20.000</span>
+        <span class="tag kost">AR: €25.000–60.000</span>
+        <span class="tag winst">Vertrouwen bij aankoop +30% (bewezen in onderzoek)</span>
+      </div>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">05.3</span>
+        <span class="badge ontbreekt">Ontbreekt</span>
+      </div>
+      <p class="onderdeel-titel">"Toon de maten op de afbeelding" — een slim detail dat bezoekers helpt bij de aankoop</p>
+      <ul class="bollen">
+        <li>Het plan voorzag een knop op de productafbeelding die de exacte afmetingen op de foto toont — zodat je visueel kunt zien hoe groot 240cm is in verhouding tot de rest van het beeld</li>
+        <li>Meubels kopen online is moeilijk omdat je de schaal niet voelt. "Toon maten" lost dat deels op zonder dat je een liniaal nodig hebt</li>
+        <li>Dit is een relatief eenvoudig te bouwen feature die de aankooponzekerheid significant vermindert</li>
+      </ul>
+    </li>
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">05.4</span>
+        <span class="badge gedeeltelijk">Gedeeltelijk aanwezig</span>
+      </div>
+      <p class="onderdeel-titel">De productdetails-sectie is aanwezig maar mist de ontwerper als verhaalelement</p>
+      <ul class="bollen">
+        <li>Het plan voorzag een sectie "Designed by [voornaam achternaam]" met een korte biografie, een quote en een link naar alle producten van die ontwerper</li>
+        <li>De SAP-productpagina toont technische details, specificaties en downloads — goed en functioneel</li>
+        <li>Maar de verhalen achter de producten — wie heeft dit ontworpen, waarom, wat was de inspiratie — zijn nauwelijks aanwezig op de productpagina zelf</li>
+        <li>Voor een premium merk dat 30 jaar vakmanschap uitdraagt, is het verhaal achter elk stuk minstens even belangrijk als de prijs</li>
+      </ul>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ DESIGNERS ══ -->
+<section class="sectie" id="designers">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">06</span>
+      <h2 class="sectie-titel">Designers &amp; ateliers</h2>
+    </div>
+    <span class="sectie-tag">Het verhaal achter de producten</span>
+  </div>
+  <ul class="onderdelen">
+
+    <li class="onderdeel">
+      <div class="onderdeel-top">
+        <span class="onderdeel-nr">06.1</span>
+        <span class="badge gedeeltelijk">Beperkt uitgewerkt</span>
+      </div>
+      <p class="onderdeel-titel">De designerspagina's waren voorzien als rijke verhaalpagina's — ze bestaan maar zijn onderbezet</p>
+      <div class="vergelijk">
+        <div class="vergelijk-blok plan">
+          <p class="vergelijk-label">Wat het plan zei</p>
+          Per ontwerper: een uitgebreide biografie, een video over het atelier die vakmanschap toont en emotie oproept, lifestylebeelden, een productcarrousel met alle creaties van die ontwerper, een quote, en een navigatie naar andere ontwerpers ("Ontmoet de andere ontwerpers").
+        </div>
+        <div class="vergelijk-blok nu">
+          <p class="vergelijk-label">Wat er vandaag is</p>
+          Ontwerpers worden vermeld maar niet uitgebreid voorgesteld. Er zijn geen video's, geen uitgebreide biografieën en geen eigen pagina die het verhaal van de ontwerper centraal stelt.
+        </div>
+      </div>
+      <ul class="bollen">
+        <li>Ethnicraft werkt samen met ontwerpers uit de hele wereld. Dat is een authentiek en onderscheidend verhaal — maar het wordt nauwelijks verteld op de website</li>
+        <li>Consumenten en architecten die weten wie een product ontworpen heeft, hechten er meer waarde aan. Het rechtvaardigt ook de prijs</li>
+        <li>De video's over vakmanschap ("toon hoe het gemaakt wordt") zijn het type content dat mensen deelt op sociale media en dat vertrouwen opbouwt bij bezoekers die de producten nog niet kennen</li>
+        <li>Dit is geen technisch complex project — het is in de eerste plaats een contentproject dat content vereist (video, foto, tekst) en daarna een platformuitbreiding</li>
+      </ul>
+      <div class="advies">
+        <p class="advies-label">Wat we zouden moeten doen</p>
+        <p class="advies-tekst"><strong>Begin klein: kies 3 à 5 sleutelontwerpers en bouw voor hen een volwaardige pagina.</strong> Biografie, foto, quote, video (of mooie fotografie als video te duur is), en een overzicht van hun producten. Test of bezoekers deze pagina's bezoeken en of ze na een bezoek meer producten bekijken. Schaal daarna op naar alle ontwerpers. De structuur in SmartEdit kan hiervoor hergebruikt worden.</p>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ SAMENVATTING ══ -->
+<section class="sectie" id="samenvatting">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">07</span>
+      <h2 class="sectie-titel">Samenvatting</h2>
+    </div>
+    <span class="sectie-tag">Visie vs. realiteit in één overzicht</span>
+  </div>
+  <div style="padding:3rem 6vw">
+    <p style="font-size:.875rem;color:var(--grijs);line-height:1.7;max-width:60ch;margin-bottom:2rem">Onderstaande tabel toont elk gepland onderdeel uit het October 2023-document, of het vandaag bestaat, en hoe groot de prioriteit is om het alsnog te bouwen.</p>
+
+    <table class="samenvatting-tabel">
+      <thead>
+        <tr>
+          <th>Onderdeel</th>
+          <th>Status</th>
+          <th>Prioriteit</th>
+          <th>Geschatte kost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Pop-up taal/land verwijderen</strong><br><small>Bezoeker ziet website meteen zonder blokkerende pop-up</small></td>
+          <td><span class="badge ontbreekt">Niet gedaan</span></td>
+          <td><span class="badge hoog">Hoogste</span></td>
+          <td>€800–1.200</td>
+        </tr>
+        <tr>
+          <td><strong>Slimme zoekbalk</strong><br><small>Begrijpt gewone taal, toont suggesties, herkent typefouten</small></td>
+          <td><span class="badge ontbreekt">Niet gebouwd</span></td>
+          <td><span class="badge hoog">Hoog</span></td>
+          <td>€20.000–30.000</td>
+        </tr>
+        <tr>
+          <td><strong>Productconfigurator zichtbaar voor iedereen</strong><br><small>Materiaal, kleur, maat kiezen op de productpagina</small></td>
+          <td><span class="badge gedeeltelijk">Alleen ingelogd</span></td>
+          <td><span class="badge hoog">Hoog</span></td>
+          <td>€15.000–30.000</td>
+        </tr>
+        <tr>
+          <td><strong>Kleurindicatoren op productkaarten</strong><br><small>"+8 kleuren" tonen in het overzicht</small></td>
+          <td><span class="badge ontbreekt">Niet gebouwd</span></td>
+          <td><span class="badge middel">Middel</span></td>
+          <td>€3.000–5.000</td>
+        </tr>
+        <tr>
+          <td><strong>Rijke filters (collectie, materiaal, ontwerper)</strong><br><small>Meer manieren om te filteren in het productoverzicht</small></td>
+          <td><span class="badge gedeeltelijk">Beperkt</span></td>
+          <td><span class="badge middel">Middel</span></td>
+          <td>€5.000–8.000</td>
+        </tr>
+        <tr>
+          <td><strong>Verlanglijstje</strong><br><small>Producten bewaren voor later</small></td>
+          <td><span class="badge ontbreekt">Niet gebouwd</span></td>
+          <td><span class="badge middel">Middel</span></td>
+          <td>€8.000–15.000</td>
+        </tr>
+        <tr>
+          <td><strong>Designerspagina's als verhaalplatform</strong><br><small>Bio, video, producten per ontwerper</small></td>
+          <td><span class="badge gedeeltelijk">Onderontwikkeld</span></td>
+          <td><span class="badge middel">Middel</span></td>
+          <td>€12.000–20.000</td>
+        </tr>
+        <tr>
+          <td><strong>"Toon maten op afbeelding"</strong><br><small>Visuele maataanduiding op de productfoto</small></td>
+          <td><span class="badge ontbreekt">Niet gebouwd</span></td>
+          <td><span class="badge middel">Middel</span></td>
+          <td>€4.000–7.000</td>
+        </tr>
+        <tr>
+          <td><strong>360°-productweergave</strong><br><small>Product van alle kanten bekijken</small></td>
+          <td><span class="badge ontbreekt">Niet gebouwd</span></td>
+          <td><span class="badge middel">Middel</span></td>
+          <td>€8.000–20.000</td>
+        </tr>
+        <tr>
+          <td><strong>Blog/inspiratie geïntegreerd op de website</strong><br><small>Nu op apart subdomein</small></td>
+          <td><span class="badge gedeeltelijk">Losgekoppeld</span></td>
+          <td><span class="badge middel">Middel</span></td>
+          <td>€8.000–15.000</td>
+        </tr>
+        <tr>
+          <td><strong>"Zie het in je ruimte" (AR)</strong><br><small>Augmented reality — meubel in je eigen kamer</small></td>
+          <td><span class="badge ontbreekt">Niet gebouwd</span></td>
+          <td><span class="badge gepland">Lange termijn</span></td>
+          <td>€25.000–60.000</td>
+        </tr>
+        <tr>
+          <td><strong>Instagram-feed op homepage</strong><br><small>Enkel als social media-aanwezigheid consistent is</small></td>
+          <td><span class="badge ontbreekt">Niet gebouwd</span></td>
+          <td><span class="badge gepland">Lange termijn</span></td>
+          <td>€3.000–5.000</td>
+        </tr>
+        <tr class="totaal">
+          <td colspan="3">Totale geschatte investering om de 2023-visie volledig te realiseren</td>
+          <td>€120.000–216.000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ AANBEVELING ══ -->
+<section class="sectie" id="aanbeveling">
+  <div class="sectie-header">
+    <div class="sectie-links">
+      <span class="sectie-nr">08</span>
+      <h2 class="sectie-titel">Onze aanbeveling</h2>
+    </div>
+    <span class="sectie-tag">Wat nu?</span>
+  </div>
+  <div style="padding:3rem 6vw;max-width:900px">
+
+    <div style="background:var(--zwart);color:var(--wit);padding:2.5rem;margin-bottom:2rem">
+      <p style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#888;margin-bottom:1rem">Conclusie</p>
+      <p style="font-size:1.3rem;font-weight:700;letter-spacing:-.02em;line-height:1.25;margin-bottom:1rem">Het denkwerk van 2023 is nog steeds geldig. De uitvoering is uitgebleven.</p>
+      <p style="font-size:.875rem;color:#ccc;line-height:1.75">
+        De wireframes uit oktober 2023 beschrijven een website die Ethnicraft écht zou onderscheiden: een slimme zoekbalk, een configurator voor elke bezoeker, rijke filters, verhalen over ontwerpers, en een vloeiende overgang van inspiratie naar aankoop. Bijna drie jaar later zijn de meeste van die onderdelen er nog steeds niet.<br><br>
+        <strong style="color:var(--wit)">Drie onderdelen verdienen absolute prioriteit:</strong><br><br>
+        <strong style="color:var(--wit)">1. De pop-up verwijderen.</strong> Elke bezoeker wordt geblokkeerd vóór ze ook maar één product zien. Dit is de meest eenvoudige fix met de grootste directe impact op de eerste indruk. Kost: minder dan €1.200. Tijd: 2 à 3 dagen.<br><br>
+        <strong style="color:var(--wit)">2. De configurator zichtbaar maken voor niet-ingelogde bezoekers.</strong> De data bestaat. De techniek bestaat voor ingelogde partners. Het enige wat ontbreekt is de stap om dit ook te tonen aan wie nog geen account heeft. Dit is het verschil tussen een website die meubelen verkoopt en een website die enkel meubelen toont.<br><br>
+        <strong style="color:var(--wit)">3. De zoekfunctie upgraden.</strong> De huidige zoekbalk begrijpt alleen exacte productnamen. Een slimme zoekfunctie begrijpt hoe mensen écht zoeken. Zoekende bezoekers zijn de meest waardevolle bezoekers op elke website.<br><br>
+        De rest van de 2023-visie kan worden uitgevoerd in fases — maar begin met deze drie.
+      </p>
+    </div>
+
+    <div style="border:1px solid var(--lijn);padding:1.8rem;margin-bottom:1.5rem">
+      <p style="font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--grijs);margin-bottom:.75rem">Wat is er veranderd sinds 2023?</p>
+      <p style="font-size:.875rem;color:#444;line-height:1.7">Het oorspronkelijke plan was volledig B2C-gericht. Inmiddels is duidelijk dat Ethnicraft drie doelgroepen heeft: eindklanten, retailers en Contract &amp; Trade professionals. De website moet al die drie groepen bedienen. Dat was niet voorzien in de 2023-wireframes. De features die wél zijn uitgetekend blijven geldig — maar de CTA-structuur per pagina moet worden herzien zodat elke doelgroep naar de juiste volgende stap wordt geleid.</p>
+    </div>
+
+    <div style="border:1px solid var(--lijn);padding:1.8rem">
+      <p style="font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--grijs);margin-bottom:.75rem">Bouwen of herbouwen?</p>
+      <p style="font-size:.875rem;color:#444;line-height:1.7">De meeste ontbrekende functies kunnen worden toegevoegd aan de huidige website (SAP Commerce + Spartacus) zonder alles te herbouwen. Maar de technische basis — die vandaag onzichtbaar is voor Google — vereist een fundamentelere aanpak. De aanbeveling blijft: <strong>repareer het dringende nu</strong> (pop-up, configurator, zoekfunctie), en <strong>plan een nieuwe front-end voor 2027</strong> die de volledige 2023-visie alsnog realiseert op een platform dat ook voor Google leesbaar is.</p>
+    </div>
+
+  </div>
+</section>
+
+</div>
+</div>
+
+<div class="afsluiting">
+  <p class="afsluiting-statement">Het plan was goed.<br>De uitvoering kan beter.</p>
+  <p class="afsluiting-nota">Dit document is bedoeld als input voor het webtraject dat in oktober 2026 verder wordt geleid door Katrien. De prioriteiten en kostenramingen hier zijn een startpunt voor gesprek — geen definitieve beslissingen.</p>
+</div>
+
+<footer>
+  <span>Ethnicraft — Webdesign Analyse 2026</span>
+  <span>Intern gebruik — Robin Prinzie, Art Direction</span>
+  <span>Gebaseerd op ETHNI_WEBDESIGN_1.pdf (oktober 2023)</span>
+</footer>
+
+<script>
+  const secties = document.querySelectorAll('.sectie[id]');
+  const links = document.querySelectorAll('.zijbalk a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('actief'));
+        const a = document.querySelector(`.zijbalk a[href="#${e.target.id}"]`);
+        if (a) a.classList.add('actief');
+      }
+    });
+  }, { rootMargin:'-40% 0px -55% 0px' });
+  secties.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

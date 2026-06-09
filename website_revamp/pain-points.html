@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ethnicraft — Website Audit 2026</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --black:#0a0a0a;--white:#f5f4f0;--mid:#888;--line:#d8d5cf;
+      --p0:#0a0a0a;--p1:#3a3a3a;--p2:#777;--p3:#aaa;
+    }
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:var(--white);color:var(--black);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+    header{padding:2rem 6vw;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--white);z-index:100}
+    .brand{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+    .meta{text-align:right;font-size:.7rem;color:var(--mid);letter-spacing:.04em;line-height:1.9}
+
+    .hero{padding:6rem 6vw 5rem;border-bottom:1px solid var(--line)}
+    .hero-label{font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:2rem}
+    .hero h1{font-size:clamp(2.8rem,5.5vw,5rem);font-weight:700;line-height:1.02;letter-spacing:-.03em;max-width:20ch;margin-bottom:2.5rem}
+    .hero-sub{max-width:58ch;font-size:1rem;color:var(--mid);line-height:1.75;margin-bottom:2rem}
+    .hero-tech{display:inline-flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+    .tech-tag{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.25rem .7rem;border:1px solid var(--line);color:var(--mid)}
+
+    .stats-bar{display:grid;grid-template-columns:repeat(8,1fr);border-bottom:1px solid var(--line)}
+    .stat{padding:1.8rem 1rem;border-right:1px solid var(--line);text-align:center}
+    .stat:last-child{border-right:none}
+    .stat .num{font-size:1.9rem;font-weight:700;letter-spacing:-.04em;line-height:1}
+    .stat .lbl{font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mid);margin-top:.35rem}
+    .stat.budget-stat .num{font-size:1.4rem}
+
+    .legend{padding:1.5rem 6vw;border-bottom:1px solid var(--line);display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
+    .legend-label{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);margin-right:.5rem}
+    .p-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.22rem .55rem;border:1px solid}
+    .p-badge.p0{background:var(--black);border-color:var(--black);color:var(--white)}
+    .p-badge.p1{background:transparent;border-color:var(--p1);color:var(--p1)}
+    .p-badge.p2{background:transparent;border-color:var(--p2);color:var(--p2)}
+    .p-badge.p3{background:transparent;border-color:var(--p3);color:var(--p3)}
+    .legend-item{display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:#555}
+
+    .page-body{display:grid;grid-template-columns:220px 1fr}
+    .sidebar{border-right:1px solid var(--line);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;padding:2rem 0}
+    .sidebar-section{margin-bottom:.25rem}
+    .sidebar a{display:block;padding:.55rem 1.5rem;font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);text-decoration:none;border-left:2px solid transparent;transition:all .15s}
+    .sidebar a:hover,.sidebar a.active{color:var(--black);border-left-color:var(--black)}
+    .sidebar-divider{height:1px;background:var(--line);margin:.75rem 1.5rem}
+
+    .sections{min-width:0}
+    .section{border-bottom:1px solid var(--line)}
+    .section-header{padding:3rem 6vw;display:flex;justify-content:space-between;align-items:baseline;gap:2rem;border-bottom:1px solid var(--line)}
+    .section-left{display:flex;align-items:baseline;gap:1.2rem}
+    .section-index{font-size:.65rem;font-weight:700;letter-spacing:.15em;color:var(--mid);flex-shrink:0}
+    .section-title{font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.025em;line-height:1.1}
+    .section-tag{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);white-space:nowrap;flex-shrink:0}
+
+    .issues{list-style:none}
+    .issue{padding:2.8rem 6vw;border-bottom:1px solid var(--line)}
+    .issue:last-child{border-bottom:none}
+    .issue-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;flex-wrap:wrap}
+    .issue-num{font-size:.6rem;font-weight:700;letter-spacing:.15em;color:var(--mid)}
+    .issue-title{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;line-height:1.25;margin-bottom:1rem;max-width:70ch}
+
+    .issue-bullets{list-style:none;margin-bottom:1.4rem;max-width:72ch}
+    .issue-bullets li{font-size:.875rem;color:#4a4a4a;line-height:1.7;padding-left:1.3em;position:relative;margin-bottom:.35rem}
+    .issue-bullets li::before{content:"•";position:absolute;left:0;color:var(--black);font-size:1em}
+
+    .evidence{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:.1rem;margin-bottom:1.4rem;transition:color .15s,border-color .15s}
+    .evidence:hover{color:var(--black);border-color:var(--black)}
+    .evidence::before{content:"→"}
+
+    .solution-box{background:#f0ede8;padding:1.2rem 1.4rem;margin-bottom:1.2rem;max-width:72ch;border-left:3px solid var(--black)}
+    .solution-label{font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:.5rem}
+    .solution-text{font-size:.85rem;color:#333;line-height:1.65}
+    .solution-text strong{color:var(--black)}
+
+    .tags-row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+    .tag{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:.25rem .6rem;border:1px solid}
+    .tag.high{background:var(--black);border-color:var(--black);color:var(--white)}
+    .tag.medium{border-color:#999;color:#555}
+    .tag.budget{border-color:var(--line);color:var(--mid)}
+    .tag.revenue{border-color:#1a6b3c;color:#1a6b3c;background:#eaf4ee}
+
+    .invest-section{padding:4rem 6vw;border-bottom:1px solid var(--line)}
+    .invest-sub{font-size:.875rem;color:var(--mid);max-width:60ch;line-height:1.7;margin-bottom:2.5rem}
+    .invest-table{width:100%;border-collapse:collapse;max-width:900px}
+    .invest-table th{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);text-align:left;padding:.75rem 1rem;border-bottom:2px solid var(--black)}
+    .invest-table td{font-size:.82rem;padding:.85rem 1rem;border-bottom:1px solid var(--line);vertical-align:top}
+    .invest-table .phase{font-weight:700;font-size:.75rem;letter-spacing:.05em}
+    .invest-table .euro{font-variant-numeric:tabular-nums;white-space:nowrap}
+    .row-p0{background:#f7f5f2}
+    .total-row td{background:var(--black);color:var(--white);font-weight:700}
+
+    .conclusion{padding:5rem 6vw;border-bottom:1px solid var(--line)}
+    .conclusion-title{font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin-bottom:2rem;max-width:22ch}
+    .verdict-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;max-width:900px}
+    .verdict-card{padding:1.8rem;border:1px solid var(--line)}
+    .verdict-card.winner{border-color:var(--black);border-width:2px}
+    .verdict-card-label{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);margin-bottom:.75rem}
+    .verdict-card h3{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin-bottom:1rem}
+    .verdict-card ul{list-style:none}
+    .verdict-card ul li{font-size:.82rem;color:#4a4a4a;line-height:1.7;padding-left:1.2em;position:relative;margin-bottom:.3rem}
+    .verdict-card ul li::before{content:"•";position:absolute;left:0;color:var(--black)}
+    .verdict-card .price{font-size:.75rem;font-weight:700;color:var(--mid);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+    .winner-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--black);color:var(--white);padding:.25rem .65rem;margin-bottom:.75rem}
+
+    .recommendation{background:var(--black);color:var(--white);padding:2.5rem;max-width:900px}
+    .rec-label{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#888;margin-bottom:1rem}
+    .rec-title{font-size:1.3rem;font-weight:700;letter-spacing:-.02em;line-height:1.25;margin-bottom:1rem}
+    .rec-text{font-size:.875rem;color:#ccc;line-height:1.75}
+    .rec-text strong{color:var(--white)}
+
+    .closing{padding:6rem 6vw;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end}
+    .closing-statement{font-size:clamp(1.4rem,2.5vw,2rem);font-weight:700;letter-spacing:-.025em;line-height:1.2}
+    .closing-note{font-size:.875rem;color:var(--mid);line-height:1.75;max-width:50ch}
+
+    footer{padding:2rem 6vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+    footer span{font-size:.68rem;color:var(--mid);letter-spacing:.08em}
+
+    @media(max-width:900px){
+      .page-body{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .stats-bar{grid-template-columns:repeat(4,1fr)}
+      .stat{border-bottom:1px solid var(--line)}
+      .verdict-grid{grid-template-columns:1fr}
+      .closing{grid-template-columns:1fr;gap:2rem}
+    }
+    @media(max-width:600px){
+      .stats-bar{grid-template-columns:repeat(2,1fr)}
+      .section-header{flex-direction:column;gap:.5rem}
+    }
+    @media print{
+      .sidebar{display:none}
+      .page-body{grid-template-columns:1fr}
+      header{position:static}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="brand">Ethnicraft</span>
+  <div class="meta">
+    <div>Website Audit — Internal</div>
+    <div>June 2026</div>
+    <div>Robin Prinzie — Art Direction</div>
+  </div>
+</header>
+
+<section class="hero">
+  <p class="hero-label">Website &amp; Rebranding Trajectory</p>
+  <h1>What's holding the website back.</h1>
+  <p class="hero-sub">
+    An honest overview of everything that's not working — written for everyone, not just developers. Each problem is explained in plain language, backed by evidence from the live website, and followed by a concrete solution, a realistic cost, and an estimate of what fixing it could mean for revenue. At the end: should we repair what we have, or start fresh?
+  </p>
+  <div class="hero-tech">
+    <span class="tech-tag">Built on SAP Commerce Cloud</span>
+    <span class="tech-tag">Partner Portal: service.ethnicraft.com</span>
+    <span class="tech-tag">Marketing: HubSpot</span>
+    <span class="tech-tag">Cookies: Cookiebot</span>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">5</div><div class="lbl">UX issues</div></div>
+  <div class="stat"><div class="num">6</div><div class="lbl">Partner Portal</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">Design issues</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">Technical issues</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">Speed issues</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">Efficiency issues</div></div>
+  <div class="stat"><div class="num">8</div><div class="lbl">Under the hood</div></div>
+  <div class="stat budget-stat"><div class="num">€297K</div><div class="lbl">Est. total investment</div></div>
+</div>
+
+<div class="legend">
+  <span class="legend-label">Priority</span>
+  <span class="legend-item"><span class="p-badge p0">P0</span> Fix this week — costing us money right now</span>
+  <span class="legend-item"><span class="p-badge p1">P1</span> Fix next — high return, achievable quickly</span>
+  <span class="legend-item"><span class="p-badge p2">P2</span> Fix within 6 months</span>
+  <span class="legend-item"><span class="p-badge p3">P3</span> Long-term — strategic investments</span>
+</div>
+
+<div class="page-body">
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <a href="#ux">01 — UX</a>
+    <a href="#portal">01B — Partner Portal</a>
+    <a href="#design">02 — Design</a>
+    <a href="#technical">03 — Technical</a>
+    <a href="#speed">04 — Speed</a>
+    <a href="#efficiency">05 — Efficiency</a>
+    <a href="#devview">06 — Under the hood</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <a href="#investment">Investment overview</a>
+  <a href="#conclusion">Rebuild or repair?</a>
+</nav>
+
+<div class="sections">
+
+<!-- ══ 01 UX ══ -->
+<section class="section" id="ux">
+  <div class="section-header">
+    <div class="section-left">
+      <span class="section-index">01</span>
+      <h2 class="section-title">UX</h2>
+    </div>
+    <span class="section-tag">How people experience the site</span>
+  </div>
+  <ul class="issues">
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">01.1</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">The first thing every visitor sees is a form — not the website</p>
+      <ul class="issue-bullets">
+        <li>Before a single product, image, or piece of content is visible, the website asks visitors to choose their country and language in a pop-up window</li>
+        <li>On a phone, this pop-up takes up the entire screen. The website effectively does not exist until the visitor fills it in</li>
+        <li>This happens on every page, every time — even when visitors arrive directly on a Belgium or US page where the country is already obvious from the web address</li>
+        <li>It's the digital equivalent of a shop assistant blocking the door and asking for your address before you're allowed to browse</li>
+        <li>First impressions matter. This one says friction, not luxury</li>
+      </ul>
+      <a class="evidence" href="https://ethnicraft.com/en-be/" target="_blank">See it yourself — open this link</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Remove the pop-up for visitors who already arrive on a country-specific page.</strong> Since the web address already contains the country (e.g. /en-be/ for Belgium), the website already knows where the visitor is. The pop-up should only appear when someone lands on the root page with no country in the address. This is a straightforward configuration change — about 2 to 3 days of developer work.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €800–1,200</span>
+        <span class="tag revenue">Fewer visitors leaving immediately</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">01.2</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The website has three distinct audiences but the navigation and content don't reflect that</p>
+      <ul class="issue-bullets">
+        <li>Ethnicraft serves three different types of visitors, each with completely different needs: <strong>end consumers</strong> who are researching and want to be directed to a nearby store; <strong>retailers</strong> who stock Ethnicraft products and need to order via the Partner Portal; and <strong>Contract &amp; Trade professionals</strong> (interior architects, project developers) who order for client projects</li>
+        <li>The main navigation — three items, Indoor / Outdoor / Collaborations — serves none of these three journeys explicitly. A consumer looking for a store near them, a retailer looking to log in and order, and an architect looking for contract specifications all land on the same page with the same options</li>
+        <li>The Partner Portal is accessible via a small link in the top utility bar, and product pages do mention it for professionals — but as secondary text. The question is whether the journey from discovery to registration is clear enough for each type of visitor</li>
+        <li>Note: we can only observe the public-facing website. Whether the full trade journey (discovery → registration → ordering) is working well in practice requires input from actual dealers and architects, not just a website audit</li>
+      </ul>
+      <a class="evidence" href="https://service.ethnicraft.com" target="_blank">The Partner Portal — separate domain from the main site</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Define clear entry points in the navigation for each audience.</strong> Consumers need a clear path to "Find a store". Retailers and C&T professionals need a clear, prominent path to the Partner Portal and its registration page. This doesn't require rebuilding the website — it requires a navigation and landing page strategy that acknowledges the three audiences exist and guides each one forward. Start by asking your sales team: where do new trade partners get stuck or confused?</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €4,000–8,000</span>
+        <span class="tag revenue">Clearer journeys for all three audiences</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">01.3</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The navigation megamenu is well-structured — but every category address still shows an internal code</p>
+      <ul class="issue-bullets">
+        <li>The Indoor and Outdoor menus have proper dropdown megamenus covering Tables (5 types), Seating, Sofas, Storage, Office, Bedroom, Accessories, Outdoor Dining, Lounge, and more — this is genuinely well-organised</li>
+        <li>The confirmed issue is the web addresses: every category page still shows an internal database code instead of a readable word. The dining chairs page address contains <strong>cat_furniture_seating_chairs</strong> instead of simply <strong>seating/chairs</strong></li>
+        <li>This affects every category across both Indoor and Outdoor — making addresses impossible to read aloud, awkward to type or share, and harder for Google to interpret correctly</li>
+        <li>Two discovery paths are also currently missing from the navigation: browsing by <strong>collection name</strong> (Bok, PI, Osso, Geometric) and filtering by <strong>material</strong> (oak, teak, walnut) — both natural ways for designers and consumers to explore the catalogue</li>
+      </ul>
+      <a class="evidence" href="https://ethnicraft.com/us/nl/c/cat_furniture_tables_diningtables" target="_blank">Dining tables — see the internal code in the address</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Replace internal category codes with clean, readable URL slugs.</strong> This is a SAP Commerce configuration change — each category gets a human-readable alias (e.g. /indoor/tables/dining-tables). Proper redirects from old to new addresses ensure nothing breaks for Google or for bookmarked links. As a separate addition, consider a "Shop by collection" and "Shop by material" entry point in the nav — both missing discovery paths that suit the Ethnicraft catalogue well.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €4,000–7,000</span>
+        <span class="tag revenue">Cleaner addresses + better Google indexing</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">01.4</span><span class="p-badge p3">P3</span></div>
+      <p class="issue-title">You cannot configure a product anywhere on the website</p>
+      <ul class="issue-bullets">
+        <li>Ethnicraft sells furniture in multiple finishes, sizes, and upholstery options — but none of this can be selected on the website</li>
+        <li>A customer who wants to know if the N701 sofa comes in a specific fabric has to call a dealer, send an email, or simply give up</li>
+        <li>At the price point Ethnicraft operates in, customers expect to explore their options online before committing. Brands like Muuto, Vitra, and BoConcept all offer this</li>
+        <li>The result: many potential buyers leave without buying because they can't get the information they need without picking up the phone</li>
+        <li>This is the single biggest missed sales opportunity on the entire website</li>
+      </ul>
+      <a class="evidence" href="https://ethnicraft.com/en-be/p/10110513-U/geometric-dining-table" target="_blank">Product page — no options to select</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Add an online product configurator.</strong> This is a tool that lets visitors choose finish, size, and fabric directly on the product page and see the result visually. The product variant data (finishes, fabrics, dimensions) already exists in our back-end system — it just needs to be exposed on the website. A visual configurator would make Ethnicraft significantly more competitive online and reduce pressure on dealers to answer basic product questions.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €70,000–110,000</span>
+        <span class="tag revenue">Online conversion rate +15–30%</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">01.5</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The search bar only works if you already know the exact product name</p>
+      <ul class="issue-bullets">
+        <li>Try searching for "large wooden dining table" or "warm oak bench" — searches that any real customer might type — and the results are poor or irrelevant</li>
+        <li>The search only understands exact keywords. It cannot handle a description, a typo, or a synonym</li>
+        <li>This matters more than it might seem: visitors who use the search bar convert to buyers at two to three times the rate of visitors who just browse. A broken search is lost revenue</li>
+        <li>There is no autocomplete (suggestions as you type), no "did you mean" correction, and no understanding of what the visitor is actually looking for</li>
+      </ul>
+      <a class="evidence" href="https://ethnicraft.com/en-be/search?query=large+warm+oak+dining+table" target="_blank">Search: "large warm oak dining table" — see the results</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Replace the current search with a smarter search tool.</strong> A tool called Algolia understands natural language, corrects typos, learns from what visitors click, and shows results instantly as you type. It connects directly to our product catalogue and can be configured by the marketing team without needing a developer. The investment pays back quickly because search users are the most likely buyers on any website.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €20,000–30,000 + €900/month</span>
+        <span class="tag revenue">Search-to-purchase rate +20–30%</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 01B PARTNER PORTAL ══ -->
+<section class="section" id="portal">
+  <div class="section-header">
+    <div class="section-left">
+      <span class="section-index">01B</span>
+      <h2 class="section-title">Partner Portal</h2>
+    </div>
+    <span class="section-tag">Verified from live screenshots</span>
+  </div>
+  <div style="padding:1.4rem 6vw;background:#f7f5f2;border-bottom:1px solid var(--line);font-size:.82rem;color:#444;line-height:1.7;max-width:100%">
+    <strong style="color:var(--black)">How it actually works:</strong> The ordering portal is the <strong>main website (ethnicraft.com)</strong> when logged in with a trade account — not a separate platform. When a partner is logged in, the website reveals trade pricing, discount tiers, lead times, cart, checkout, and order history. The <strong>service.ethnicraft.com</strong> site is only the FAQ and support ticket system. There is also a separate resource hub at <strong>pages.ethnicraft.nl</strong> (catalogues, novelties, swatches) which is a completely different website with a different design. The findings below are based on live screenshots from inside a logged-in session.
+  </div>
+  <ul class="issues">
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">PP.1</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">The discount tiers are only revealed in the cart — not while browsing products</p>
+      <ul class="issue-bullets">
+        <li>Confirmed from the cart screenshot: a prominent "Buy more, save more" banner shows 25% off up to $10K, 30% off up to $20K, and 35% above $20K — but this only appears once the partner has already added items to the cart</li>
+        <li>During product browsing, a partner has no idea what discount applies to their order until they've already committed to selecting items</li>
+        <li>For a C&amp;T professional planning a large project, knowing the discount tier upfront would likely influence how they build their order — and could encourage larger single orders to reach the next tier</li>
+        <li>Hiding this information until the cart stage is a missed commercial opportunity</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Show the personalised discount tier on product pages and in the header for logged-in partners.</strong> A small persistent indicator — "Your current discount: 25% — spend $X more for 30%" — gives partners a real incentive to add more to their order while browsing, not only after they've reached the cart. This is a Spartacus component addition and a meaningful commercial change.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €3,000–5,000</span>
+        <span class="tag revenue">Larger average order values per partner session</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">PP.2</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">Company name is limited to 30 characters at checkout — many real company names don't fit</p>
+      <ul class="issue-bullets">
+        <li>Confirmed from two separate screenshots (checkout and address book): "Klant- of bedrijfsnaam (max. 30 tekens)" — company name is hard-limited to 30 characters</li>
+        <li>Many legitimate business names — interior design studios, architectural firms, project companies — exceed this limit: "Van der Berghe Interiors &amp; Design" is already 37 characters</li>
+        <li>A partner forced to truncate their company name on invoices and delivery notes looks unprofessional and creates administrative confusion</li>
+        <li>This is a SAP Commerce field length constraint — it can be changed but requires a back-end configuration update</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Increase the company name field character limit.</strong> 60–80 characters would accommodate the vast majority of real company names. This requires a configuration change in SAP Commerce's address model — a small back-end task. While in there, also verify phone number and address field lengths are sufficient for international formats.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €500–1,000</span>
+        <span class="tag revenue">Removes a real friction point for professional users</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">PP.3</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The country field is blank at checkout — even for a logged-in partner with a known account</p>
+      <ul class="issue-bullets">
+        <li>Confirmed from the checkout screenshot: the country dropdown is empty when a logged-in partner begins checkout, despite the fact that their account already contains country information</li>
+        <li>Requiring a partner to re-enter their country on every order adds unnecessary friction to a process that should be as fast as possible for repeat buyers</li>
+        <li>The address book also appeared empty in the screenshots — suggesting that either saved addresses are not being pre-loaded, or the test account has none saved</li>
+        <li>For a B2B partner who orders regularly, not having their default shipping address pre-filled is a noticeable inefficiency</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Pre-fill checkout fields from the partner's account and saved addresses.</strong> If a partner has a default shipping address saved, the checkout should load it automatically. The country field should at minimum default to the country associated with their account. This is a Spartacus checkout component configuration — it may already be supported but not enabled.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €2,000–4,000</span>
+        <span class="tag revenue">Faster repeat ordering for existing partners</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">PP.4</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">Order history shows totals but no product detail — you can't see what was in an order at a glance</p>
+      <ul class="issue-bullets">
+        <li>Confirmed from the order history screenshot: the list view shows order number, reference, date, status, order type, and total — but no product names, quantities, or SKUs</li>
+        <li>To see what was in an order, a partner must click into each order individually</li>
+        <li>For a trade professional managing multiple client projects and referencing past orders for re-orders or specifications, this creates unnecessary clicks</li>
+        <li>A simple product summary (e.g. "3 items — Bok chair × 4, PI table × 1") in the list view would make the order history immediately useful without opening each order</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Add a product summary to the order history list view.</strong> Show the first 2–3 items from each order directly in the list, with a "+X more" indicator for larger orders. Also add a quick "Re-order" button at the list level for repeat purchases. This is a Spartacus order history component update.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €3,000–5,000</span>
+        <span class="tag revenue">Faster repeat orders + better project management for partners</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">PP.5</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">The Novelties Hub lives on a completely different website — separate domain, completely different design</p>
+      <ul class="issue-bullets">
+        <li>Confirmed from screenshot: the contract partner resource hub (catalogues, novelties, swatches) is at <strong>pages.ethnicraft.nl</strong> — a completely different domain from ethnicraft.com, and a different country domain (.nl vs .com)</li>
+        <li>The design is completely different too: dark green background, white text, a different visual language to the warm beige of the main website</li>
+        <li>A partner navigating from the main website to this hub experiences an abrupt visual and contextual shift — it feels like a different brand entirely</li>
+        <li>This hub is clearly maintained manually and separately, rather than being integrated into the main platform — creating additional content management overhead</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Integrate the Novelties Hub content into the main website under a dedicated trade section.</strong> This content — new catalogue PDFs, novelties, swatch downloads — should live at ethnicraft.com/trade or similar, within the same design system as the main site. In the short term, at minimum align the visual style of the hub with the main website's identity so the transition between them doesn't feel jarring.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €4,000–8,000 (integration)</span>
+        <span class="tag revenue">Consistent brand experience for trade partners</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">PP.6</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">Changing or cancelling an order requires leaving the site and filing a support ticket</p>
+      <ul class="issue-bullets">
+        <li>Confirmed from the support FAQ: "You cannot change or cancel an order yourself via the Portal. You will need to submit your request via our Service Portal."</li>
+        <li>A partner who placed an order and needs to adjust a quantity or cancel must go to service.ethnicraft.com and create a support ticket — they then wait for a Customer Service representative to respond</li>
+        <li>For professionals managing time-sensitive projects, this dependency on manual intervention adds risk and frustration</li>
+      </ul>
+      <a class="evidence" href="https://service.ethnicraft.com/faq/can-i-change-or-cancel-my-order" target="_blank">Order change FAQ — see the manual process</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Add self-service order editing for orders that haven't yet been confirmed for production.</strong> Allow partners to adjust quantities or cancel lines directly in the order detail page, with clear status indicators showing the cutoff point. This is a meaningful SAP Commerce + Spartacus development task but significantly reduces CS workload and partner frustration.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €10,000–18,000</span>
+        <span class="tag revenue">Reduced CS workload + better partner experience</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 02 DESIGN ══ -->
+<section class="section" id="design">
+  <div class="section-header">
+    <div class="section-left">
+      <span class="section-index">02</span>
+      <h2 class="section-title">Design</h2>
+    </div>
+    <span class="section-tag">How the site looks and feels</span>
+  </div>
+  <ul class="issues">
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">02.1</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">Every page looks slightly different — nothing feels intentional</p>
+      <ul class="issue-bullets">
+        <li>Buttons look different depending on which page you're on. Fonts change size unexpectedly. Spacing between elements varies from section to section</li>
+        <li>This happens because there is no shared style guide — no agreed rulebook for how things should look. Every time a page was built or updated, whoever did it made their own decisions</li>
+        <li>The result feels assembled over time rather than designed with intention — which it was</li>
+        <li>This inconsistency subtly communicates a lack of care, which is the opposite of what a premium furniture brand should convey</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Create a visual rulebook — one set of rules that governs how everything on the website looks.</strong> This covers colours, fonts, button styles, spacing, and how every reusable element is built. Once this exists, every new page or update automatically looks consistent, and the team no longer has to make visual decisions from scratch each time. This work also feeds directly into the logo rollout and the mobile redesign.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €20,000–35,000</span>
+        <span class="tag revenue">Brand consistency + faster future builds</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">02.2</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The website could be selling any furniture brand</p>
+      <ul class="issue-bullets">
+        <li>The warmth, craftsmanship, and character that make Ethnicraft products desirable are not present in the digital experience</li>
+        <li>Remove the logo and the website is indistinguishable from dozens of other furniture websites</li>
+        <li>The typography is functional but has no personality. The colour use is generic. Product photography is small and uncurated on category pages</li>
+        <li>Customers who pay premium prices for premium furniture expect the online experience to feel premium too. Right now it doesn't</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Define what Ethnicraft looks and feels like digitally — and apply it.</strong> The new logo project (already underway) is the right moment to do this. Define how photography is used, what the brand's tone is online, what colours and fonts are used and how. Then apply this consistently across every page. Brand and design must move together — a new logo without a new digital identity is half the job.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: included in design system work</span>
+        <span class="tag revenue">Brand perception + premium positioning</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">02.3</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">There are no clear "next steps" — visitors don't know what to do</p>
+      <ul class="issue-bullets">
+        <li>A "call to action" is the button or link that tells you what to do next on a page — "view the full collection", "find a store near you", "add to cart"</li>
+        <li>On the current website, these are either missing, too small to notice, or placed so low on the page that most visitors never reach them</li>
+        <li>On the homepage, there is no single clear action above the visible area when you first arrive</li>
+        <li>Every page a visitor leaves without doing anything is a missed opportunity. Clear next-step buttons are one of the simplest ways to improve this</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Redesign every key page with one clear primary action defined upfront.</strong> Each page should have one obvious thing it wants the visitor to do next. These actions should be visually prominent — high contrast, well-placed, with clear wording. This is a design decision first, then a small development task. Can be done page by page starting with the highest-traffic pages: homepage, collection pages, product pages.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €3,000–5,000</span>
+        <span class="tag revenue">Click-through and engagement +10–20%</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">02.4</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">When the new logo is ready, it must change everywhere at once</p>
+      <ul class="issue-bullets">
+        <li>The current handwritten logo no longer fits the direction the brand is heading</li>
+        <li>The new typographic logo (being developed by Robin and Nancy) will need to be applied across every digital touchpoint at the same time — not just the website header</li>
+        <li>This includes: the small icon you see in the browser tab, the preview image when you share a link on social media, email headers, the Partner Portal, and any digital advertising</li>
+        <li>A logo that's changed on the website but still old in emails or social shares looks worse than leaving it unchanged — inconsistency damages credibility</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Before the new logo goes live, map out every digital location where it appears and plan the rollout as one coordinated action.</strong> Update the website header, the browser tab icon, the social sharing preview image, all email templates in HubSpot, and the Partner Portal header — all at the same time. Assign ownership for each touchpoint before launch day.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €2,000–3,500</span>
+        <span class="tag revenue">Brand coherence at launch</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 03 TECHNICAL ══ -->
+<section class="section" id="technical">
+  <div class="section-header">
+    <div class="section-left">
+      <span class="section-index">03</span>
+      <h2 class="section-title">Technical</h2>
+    </div>
+    <span class="section-tag">How the site is built</span>
+  </div>
+  <ul class="issues">
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">03.1</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">Google visits our website and sees a blank page — we verified this</p>
+      <ul class="issue-bullets">
+        <li>We tested exactly what Google sees when it visits ethnicraft.com. The answer: almost nothing. No product names, no descriptions, no categories — just a blank container waiting for code to run</li>
+        <li>This happens because the website is built in a way that requires a visitor's browser to do all the work of assembling the page after it loads. Google doesn't wait for this to happen — it reads the page as it arrives</li>
+        <li>The consequence is serious: we are effectively invisible in Google search results for any product or category search. "Solid oak dining table Belgium", "ethnicraft bench", "modern outdoor furniture" — all searches we should appear in, but cannot</li>
+        <li>This is a structural issue with how the website was built — it was never set up to be readable by Google</li>
+        <li>This is the number one technical priority on the entire list</li>
+      </ul>
+      <a class="evidence" href="view-source:https://ethnicraft.com/en-be/" target="_blank">What Google actually sees — view page source</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Enable the website to send fully built pages to Google instead of empty ones.</strong> Our website platform (SAP Commerce with Spartacus) supports this — it's called Server-Side Rendering and it is a standard option that was never switched on. Enabling it means Google can read every product name, description, and category from the moment it visits. This is the highest-ROI technical investment available to us right now. Every other improvement to Google visibility is worthless until this is done.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €30,000–45,000</span>
+        <span class="tag revenue">Google visibility +30–50% → est. +€500K–1.5M/yr</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">03.2</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">Google doesn't understand what our pages are about — so it can't display them well</p>
+      <ul class="issue-bullets">
+        <li>Websites can add a hidden layer of information to each page that tells Google exactly what type of content it's looking at: "this is a product page for a solid oak stool", "this is a collection page for outdoor furniture", "this organisation is called Ethnicraft and is based in Boom, Belgium"</li>
+        <li>We confirmed from the live website that none of this hidden information exists — Google has to guess what our pages are about based on text it can barely read (see issue 03.1)</li>
+        <li>When this information IS present, search results display more richly: a proper breadcrumb trail ("Indoor &gt; Seating &gt; Osso Stool"), a brand knowledge panel, and better categorisation in image search — all making Ethnicraft more visible when interior architects and designers search for inspiration</li>
+        <li>Brands like Muuto, Vitra, and Hay all use this correctly — even as catalogue/B2B brands with no direct consumer checkout</li>
+        <li>There's no consumer checkout to protect — every improvement here helps both architects searching for product references AND dealers searching by product name</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Add structured information to every page type so Google can properly categorise and display our content.</strong> This covers: product pages (product name, material, collection), category pages (breadcrumb trail), and the organisation itself (brand name, headquarters, website). This should be done immediately after fixing the Google visibility issue (03.1) — there is no point adding it to a page Google still can't read. No prices or reviews needed — this is purely about helping Google understand our catalogue correctly.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €8,000–12,000 (after 03.1)</span>
+        <span class="tag revenue">Better search appearance for architects, designers, and dealers</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">03.3</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">The list of all our pages is locked — Google can't access it</p>
+      <ul class="issue-bullets">
+        <li>Every website should maintain a list of all its pages (called a sitemap) and share it with Google. Google uses this to find and index all content — especially new product pages and collections added after launch</li>
+        <li>Our list exists, but we checked it and it returns an "Access Denied" error. Google cannot open it</li>
+        <li>This means Google has to discover our pages on its own, like navigating a building without a floor plan. New collections may take months to appear in search, or never be found at all</li>
+        <li>The fix is a single technical change — 15 minutes of work — that would restore Google's ability to find all our pages immediately</li>
+      </ul>
+      <a class="evidence" href="https://media.ethnicraft.com/sys-master/s3_sitemap/sitemap.xml" target="_blank">Our sitemap — see the Access Denied error</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Fix the access permissions on the file that contains the list of our pages.</strong> This is a settings change in one of our systems — about 15 minutes of work. Once done, submit the sitemap address to Google Search Console (a free Google tool) so Google immediately knows where to find it. This is the fastest win on the entire list.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €200–400</span>
+        <span class="tag revenue">All new content found by Google faster</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">03.4</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The same page exists in too many versions — we're competing against ourselves on Google</p>
+      <ul class="issue-bullets">
+        <li>Our website has different versions for different countries and languages — Belgium in English, Belgium in French, the US, the Netherlands, and so on. Each is a slightly different web address for essentially the same content</li>
+        <li>When Google sees multiple versions of the same page, it gets confused about which one is the "real" one and splits its attention between all of them — which means all of them rank lower than they should</li>
+        <li>This is a known problem with international websites and has a straightforward technical fix — you simply tell Google which version is the "main" one for each country</li>
+      </ul>
+      <a class="evidence" href="https://ethnicraft.com/us/en/c/cat_furniture_tables" target="_blank">US version of the tables page</a>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Add tags to every page that tell Google exactly which version belongs to which country and language.</strong> This is a technical addition to the website code — it's standard practice for international websites and well within the capabilities of our current platform. The result is that each regional version of a page gets its full Google ranking credit instead of sharing it.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €6,000–9,000</span>
+        <span class="tag revenue">International Google rankings improve</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 04 SPEED ══ -->
+<section class="section" id="speed">
+  <div class="section-header">
+    <div class="section-left">
+      <span class="section-index">04</span>
+      <h2 class="section-title">Speed</h2>
+    </div>
+    <span class="section-tag">How fast the site loads</span>
+  </div>
+  <ul class="issues">
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">04.1</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">The website starts from zero for every single visitor — nothing is remembered between visits</p>
+      <ul class="issue-bullets">
+        <li>We checked the technical settings and confirmed: the website is configured to never store or reuse any page. Every visitor, every time, triggers a complete rebuild of the page from scratch on our server</li>
+        <li>Think of a bakery that bakes one fresh loaf per customer on demand instead of baking a batch and serving from it. It's slower, it's more work, and there's no good reason for it</li>
+        <li>Caching — the technical term for storing and reusing pages — is one of the simplest and most effective ways to make a website faster. We are not using it at all</li>
+        <li>Google also uses website speed as a ranking factor. A slow website appears lower in search results, independent of everything else</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Switch on page caching and add a content delivery network.</strong> Caching means pages are built once and stored, then served quickly to subsequent visitors. A content delivery network means those stored pages are served from a server close to the visitor — a Belgium visitor gets the page from Belgium, a US visitor from the US, instead of everyone waiting for a response from the same server. We already use this for images — we need to extend it to the full website.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €3,000–5,000 + €1,500/yr</span>
+        <span class="tag revenue">Page load time –40–60% → sales +5–8%</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">04.2</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">Product photos are sent at full size to every device — phones get the same file as big monitors</p>
+      <ul class="issue-bullets">
+        <li>A product photo taken in a professional studio can easily be 5–8 megabytes in size. A visitor on a mobile phone receives that same enormous file as someone viewing on a large desktop screen</li>
+        <li>This makes the website slow, particularly on phones — and for a brand where photography is the primary way to sell products, slow-loading images are both a performance problem and a quality problem</li>
+        <li>Modern web technology can automatically send a smaller, compressed version of each image to phones, and a larger version to big screens — with no visible quality difference</li>
+        <li>Our product images are stored and delivered through a system that already has this capability built in. It just isn't switched on</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Enable automatic image optimisation for all product photography.</strong> This means every image is automatically compressed for faster loading, converted to a modern efficient format, and resized to match the screen it's being viewed on. The system that delivers our images (Amazon CloudFront) already supports this — it requires configuration, not new tools.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €6,000–9,000</span>
+        <span class="tag revenue">Mobile load time improves significantly</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">04.3</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">All text on the website is invisible for a second or two while the page loads</p>
+      <ul class="issue-bullets">
+        <li>We confirmed this from the live website code: all fonts are set to hide text completely until the brand font has finished downloading</li>
+        <li>On a slower internet connection — which is still common on mobile — visitors briefly see a completely empty page before any text appears. This feels broken</li>
+        <li>The simple fix is to show text immediately in a standard system font while the brand font downloads in the background — visitors barely notice the switch, and the page feels responsive from the first moment</li>
+        <li>This is a one-line code change</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Change one setting in the website code so text appears immediately instead of waiting for the brand font.</strong> The text will briefly show in a standard font (like Arial) and then smoothly switch to Post Grotesk once it loads — most visitors will never notice. This is roughly 30 minutes of developer work and immediately improves the feeling of page load speed for all visitors.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €300–500</span>
+        <span class="tag revenue">Better first impression on every visit</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">04.4</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">One of our marketing tools is freezing the entire website while it loads</p>
+      <ul class="issue-bullets">
+        <li>We found this directly in the website's code: one of our HubSpot scripts is set up in a way that forces the entire website to pause and wait for it to fully load before showing anything to visitors</li>
+        <li>If HubSpot's servers are having a slow moment, our entire website freezes waiting for them — something we have no control over</li>
+        <li>Adding a single word to the code — "async" — would tell the website to load our content and the HubSpot script at the same time instead of one after the other</li>
+        <li>This is a 5-minute fix with no functional impact on anything HubSpot does</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Change how the HubSpot script is loaded so it no longer blocks the page.</strong> One word added to one line of code. While we're at it, move all marketing tools (analytics, ads, tracking) to a single management system (Google Tag Manager) so the marketing team can add, remove, and update these tools themselves without ever needing a developer.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €200–300 for the fix / €3,000–5,000 for full GTM setup</span>
+        <span class="tag revenue">Faster page load — 5-minute fix</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 05 EFFICIENCY ══ -->
+<section class="section" id="efficiency">
+  <div class="section-header">
+    <div class="section-left">
+      <span class="section-index">05</span>
+      <h2 class="section-title">Efficiency</h2>
+    </div>
+    <span class="section-tag">How the team works with the site</span>
+  </div>
+  <ul class="issues">
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">05.1</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">The content editor tool exists but is limited in what it lets us do without a developer</p>
+      <ul class="issue-bullets">
+        <li>We have SmartEdit — a tool that lets the marketing team update certain content on the website without asking IT. Banners, text, and some page components can be changed directly</li>
+        <li>The limitation is that only the components that have been specifically built and made editable in SmartEdit can be changed. Anything outside that set requires a developer and a deployment</li>
+        <li>In practice: the marketing team can update existing content but cannot create new page layouts, add new types of sections, or make structural changes. These all need IT</li>
+        <li>This creates a constant dependency between marketing and development — campaign timelines slow down, small updates pile up as IT tickets, and the team's ability to react quickly to opportunities is limited</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Expand what the content editor can do.</strong> Build a library of flexible, reusable building blocks — a large hero image, a text and image block, a product highlight grid, a promotional banner, an editorial section — and make all of these available to the marketing team in SmartEdit. Once this library exists, the team can build any campaign page on their own without writing a single line of code. This is a one-time investment that saves time on every future campaign.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €8,000–14,000</span>
+        <span class="tag revenue">Marketing team self-sufficient — fewer IT tickets</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">05.2</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">Product information lives in too many places and frequently goes out of sync</p>
+      <ul class="issue-bullets">
+        <li>The dimensions, finishes, availability, and pricing for each product should live in one place and flow automatically to the website. Instead, the same information is maintained in multiple separate systems — and they frequently fall out of step with each other</li>
+        <li>The result: the website shows products as available when they're not, shows missing finish options, or displays outdated specifications</li>
+        <li>For dealers and consumers making decisions based on website information, this creates mistrust. It also creates manual work for the team keeping everything updated</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Make our SAP back-end system the single source of truth for all product information.</strong> Everything — names, dimensions, finishes, pricing, availability — should be maintained there and only there. The website should pull directly from it automatically. Any external spreadsheets or separate systems currently feeding product data to the website should be audited and consolidated. This is partly a process change, partly a technical one.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €5,000–10,000</span>
+        <span class="tag revenue">Accurate data → trust → conversion</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">05.3</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">Every decision about the website is a guess — we have no way to test what works</p>
+      <ul class="issue-bullets">
+        <li>When the team changes a page headline, moves a button, or tries a different layout — there is currently no way to know whether that change helped or hurt</li>
+        <li>A/B testing is a technique where half your visitors see version A and the other half see version B, then you measure which one leads to more purchases or clicks. It turns design decisions from opinions into evidence</li>
+        <li>Without this, we're spending time and money on website changes that might be making things worse without anyone knowing</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Set up an A/B testing tool that the marketing team can use without technical help.</strong> Tools like AB Tasty allow the team to test different versions of a page through a visual editor — no coding required. Results are measured automatically against sales and engagement goals. Start with the most visited pages: homepage, collection pages, and product pages. Every test that produces a winning result compounds into permanently better performance.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €4,000 setup + €1,500–2,500/month</span>
+        <span class="tag revenue">Ongoing conversion improvement</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">05.4</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">We count visitors but can't answer what actually matters</p>
+      <ul class="issue-bullets">
+        <li>Basic visitor numbers are probably tracked, but the meaningful questions go unanswered: which pages lead to purchases? Where do people give up in the checkout? Which collections get lots of views but no sales? Which campaigns bring in buyers versus browsers?</li>
+        <li>Without this, every commercial decision — what to promote, what to improve, where to invest — is based on intuition rather than evidence</li>
+        <li>The data to answer these questions is available. It just hasn't been set up to be collected and reported in a useful way</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Set up proper tracking for every meaningful action a visitor takes on the website.</strong> This means tracking: which product pages are viewed, when something is added to a cart, each step of the checkout process, completed purchases, use of the search bar, and use of the store locator. Present this in a live dashboard that the whole commercial team can access. Combined with the A/B testing tool (05.3), this gives us the feedback loop needed to continuously improve the website based on real behaviour.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €4,000–6,000</span>
+        <span class="tag revenue">Data-driven decisions for all commercial teams</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ 06 UNDER THE HOOD ══ -->
+<section class="section" id="devview">
+  <div class="section-header">
+    <div class="section-left">
+      <span class="section-index">06</span>
+      <h2 class="section-title">Under the hood</h2>
+    </div>
+    <span class="section-tag">Technical findings from the live site</span>
+  </div>
+  <ul class="issues">
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.1</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">The internal address of our website's engine is visible to anyone who looks</p>
+      <ul class="issue-bullets">
+        <li>We found this directly in the website's code: the private technical address of the system that runs our entire website is visible in every page's source — anyone can see it by right-clicking and selecting "View page source"</li>
+        <li>This is the equivalent of leaving the service entrance address and security code on the front window of a restaurant</li>
+        <li>It reveals which software provider we use, the name of our account, and the internal address of our commerce system — information that should not be public</li>
+        <li>The fix routes this address through our own domain so the underlying system is hidden behind ethnicraft.com</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Route the internal system address through a private Ethnicraft URL so the underlying infrastructure is never exposed.</strong> Instead of the full technical address being visible, all communication goes through api.ethnicraft.com — which we control. This hides the back-end details, adds a layer of security, and makes the system easier to maintain if anything ever changes on the back-end.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Security</span>
+        <span class="tag budget">Cost: €800–1,500</span>
+        <span class="tag revenue">Reduces exposure of backend infrastructure</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.2</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">Visitors far from Europe wait longer — the website is only fast nearby</p>
+      <ul class="issue-bullets">
+        <li>The main website is served from a server in Western Europe. A visitor in New York, Singapore, or Sydney has to wait for data to travel from Europe to their screen on every page load</li>
+        <li>Our product images already use a global network to serve them quickly everywhere — but the website pages themselves still come from one location</li>
+        <li>Extending the same fast global delivery to the full website (not just the images) would improve the experience for every international visitor</li>
+        <li>For a brand with a global audience, a US or Asian visitor should not have a noticeably slower experience than a Belgian one</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Extend the fast global delivery network we already use for images to also cover the main website pages.</strong> The infrastructure is already in place (Amazon CloudFront) — it just needs to be extended to the website itself. This is a configuration project, not a new purchase. Combined with the caching fix (04.1), this would deliver significantly faster load times for visitors outside Europe.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €2,000–4,000 + ongoing hosting costs</span>
+        <span class="tag revenue">Global load time –40–60%</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.3</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">The cookie notice may not meet EU legal requirements</p>
+      <ul class="issue-bullets">
+        <li>We captured a screenshot of the live cookie consent notice and found that the Statistics category is switched ON by default when the banner appears</li>
+        <li>Under EU law (GDPR), non-essential cookies — including statistics and marketing tracking — cannot be pre-enabled. Visitors must actively choose to turn them on</li>
+        <li>As a Belgian company operating across the EU, this is a legal compliance issue. GDPR fines can reach 4% of annual global turnover</li>
+        <li>The fix is a settings change inside Cookiebot — our cookie management tool — not a website code change. It takes less than 30 minutes</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Log into the Cookiebot settings and switch Statistics and Marketing to off by default.</strong> Visitors will need to actively choose to enable them. Also verify that no analytics or advertising tools start running before a visitor has made their choice — this requires a quick audit of how our tracking tools are set up. Check the legal wording of the consent notice with our legal team to make sure it meets current requirements. Do this this week.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">Legal risk</span>
+        <span class="tag budget">Cost: €500–1,000</span>
+        <span class="tag revenue">Removes legal exposure — do this immediately</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.4</span><span class="p-badge p0">P0</span></div>
+      <p class="issue-title">Visitors on mobile phones cannot zoom in on the website</p>
+      <ul class="issue-bullets">
+        <li>We confirmed this in the website code: pinch-to-zoom is disabled on mobile devices — visitors physically cannot zoom in on any content</li>
+        <li>For anyone who struggles to read small text — which includes a significant portion of an older or visually-impaired audience — this makes the website difficult or impossible to use</li>
+        <li>This also violates EU accessibility law, which has been enforceable for private sector websites since mid-2025</li>
+        <li>Removing this restriction takes a developer about 5 minutes and has no negative side effects whatsoever</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Remove the line of code that prevents zooming on mobile.</strong> One setting, one change, 5 minutes. This should be done in the next code deployment regardless of any other priorities.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Accessibility + Legal</span>
+        <span class="tag budget">Cost: €100–200</span>
+        <span class="tag revenue">Legal compliance — 5-minute fix</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.5</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">When something breaks on the website, no one on our team is told</p>
+      <ul class="issue-bullets">
+        <li>Right now, if the checkout stops working on a particular phone model, if a product page crashes, or if a button stops responding — nobody at Ethnicraft receives an alert</li>
+        <li>We find out only when a customer complains — which means the problem may have been affecting sales for hours or days before anyone knows</li>
+        <li>A broken checkout that goes unnoticed for one working day on a website of this size is a meaningful amount of lost revenue</li>
+        <li>Error monitoring tools send an immediate notification the moment any error occurs, with full details about what went wrong and where</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Install an error monitoring tool that alerts the development team the moment anything breaks.</strong> A tool called Sentry connects to the website and sends a Slack or email notification — with details — the instant an error affects more than a handful of users. It is free for small volumes and takes about a day to set up. For any live e-commerce website, this is basic infrastructure.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: €600–1,000 + €25–150/month</span>
+        <span class="tag revenue">Broken features caught immediately, not days later</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.6</span><span class="p-badge p1">P1</span></div>
+      <p class="issue-title">Marketing tools have been added to the website one by one with no oversight</p>
+      <ul class="issue-bullets">
+        <li>We found multiple tracking and marketing scripts embedded directly in the website code — including HubSpot running in two different ways, one of which is slowing down every page load</li>
+        <li>Over time, every tool added this way requires a developer to change or remove it, and nobody has a complete picture of what's currently running</li>
+        <li>On many websites, these accumulated tools account for a significant portion of page load time. They also risk collecting data before a visitor has given cookie consent — a legal concern</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Move all marketing and tracking tools into a single management system — Google Tag Manager.</strong> This is a free tool where all analytics, advertising, and tracking tools are added, managed, and removed through a simple interface — by the marketing team, without any developer involvement. It also connects to the Cookiebot consent system so tools only run after a visitor has agreed. Install it once, manage everything from it forever.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Medium impact</span>
+        <span class="tag budget">Cost: €3,000–5,000</span>
+        <span class="tag revenue">Marketing independence + speed + legal safety</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.7</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The website was built for desktop first — and it shows on phones</p>
+      <ul class="issue-bullets">
+        <li>The website was designed with a large computer screen in mind and then adjusted to work on a phone. The result is a mobile experience that feels compressed rather than designed</li>
+        <li>On a phone today: the country selector takes over the full screen on arrival, navigation collapses without clear signposting, and some touch targets are too small to tap reliably</li>
+        <li>More than half of all website visits globally happen on a mobile phone. Google also uses the mobile version of a website as its primary version for search rankings</li>
+        <li>A website designed for phones first — and then adapted for desktop — produces a structurally better mobile experience</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>When rebuilding the design system and visual identity, design for phones first.</strong> Start with the most important mobile journeys — arriving on the homepage, browsing a collection, viewing a product, completing a purchase — and design those for a 390px wide screen. Scale up to desktop from there. This approach is built into the recommended rebuild strategy (Section 08).</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag high">High impact</span>
+        <span class="tag budget">Cost: included in design system work</span>
+        <span class="tag revenue">Mobile conversion at par with desktop</span>
+      </div>
+    </li>
+
+    <li class="issue">
+      <div class="issue-top"><span class="issue-num">06.8</span><span class="p-badge p2">P2</span></div>
+      <p class="issue-title">The website is not usable for everyone</p>
+      <ul class="issue-bullets">
+        <li>Around 15% of people have a disability that affects how they use websites — visual impairment, colour blindness, motor difficulties, or reliance on assistive tools like screen readers</li>
+        <li>Confirmed issues include: zoom disabled on mobile (see 06.4), which alone excludes many users with vision difficulties</li>
+        <li>Further likely issues (based on the type of website): product images without descriptive text for screen readers, low contrast between some text and background colours, forms that are difficult to navigate without a mouse</li>
+        <li>The EU Web Accessibility Act has required private sector websites to be accessible since mid-2025. This is no longer optional</li>
+      </ul>
+      <div class="solution-box">
+        <p class="solution-label">What we should do</p>
+        <p class="solution-text"><strong>Commission an accessibility audit from a specialist.</strong> An auditor reviews the website against a standard checklist — covering screen reader compatibility, keyboard navigation, colour contrast, and form usability — and delivers a prioritised list of what to fix. Start with the high-severity findings. Budget for a second check after fixes are applied to confirm compliance. This protects both our users and our legal position.</p>
+      </div>
+      <div class="tags-row">
+        <span class="tag medium">Legal + Inclusion</span>
+        <span class="tag budget">Cost: €8,000–15,000</span>
+        <span class="tag revenue">Legal compliance + broader audience</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ══ INVESTMENT ══ -->
+<section class="invest-section" id="investment">
+  <div class="section-header" style="padding:3rem 0 2rem;border-bottom:none">
+    <div class="section-left">
+      <span class="section-index">07</span>
+      <h2 class="section-title">Investment overview</h2>
+    </div>
+    <span class="section-tag">Cost &amp; return</span>
+  </div>
+  <p class="invest-sub">All costs are estimates in euros including agency and developer time, tools, and configuration. Recurring costs are listed separately. Revenue estimates assume current annual online revenue of €8–12 million.</p>
+  <table class="invest-table">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>What gets fixed</th>
+        <th>When</th>
+        <th>One-time cost</th>
+        <th>What it's worth per year</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-p0">
+        <td><span class="p-badge p0">P0</span><br><span class="phase">This week</span></td>
+        <td>Country popup · Text loading issue · Marketing script slowdown · Zoom on mobile · Cookie consent fix · System address hidden</td>
+        <td>1–2 weeks</td>
+        <td class="euro">€3,500–6,000</td>
+        <td>Legal risk removed. Site loads faster immediately.</td>
+      </tr>
+      <tr>
+        <td><span class="p-badge p1">P1</span><br><span class="phase">Next sprint</span></td>
+        <td>Navigation 404 fixes · Tracking setup · Caching + fast delivery · Image optimisation · Error alerts · Logo rollout · Content editor expansion · Country/language tags for Google</td>
+        <td>1–3 months</td>
+        <td class="euro">€40,000–65,000<br><small style="color:var(--mid)">+ €3,000/yr tools</small></td>
+        <td>+€200,000–400,000/yr from better conversion and restored navigation paths</td>
+      </tr>
+      <tr>
+        <td><span class="p-badge p2">P2</span><br><span class="phase">Within 6 months</span></td>
+        <td>Google visibility fix · Product info for Google · Smarter search · Visual rulebook · A/B testing · Accessibility · Navigation rebuild · Product data consolidation</td>
+        <td>3–6 months</td>
+        <td class="euro">€95,000–140,000<br><small style="color:var(--mid)">+ €4,500/month tools</small></td>
+        <td>+€700,000–1,500,000/yr from organic traffic and better UX</td>
+      </tr>
+      <tr>
+        <td><span class="p-badge p3">P3</span><br><span class="phase">Strategic</span></td>
+        <td>Product configurator · Trade vs. consumer split · Mobile-first redesign · Full brand implementation</td>
+        <td>6–18 months</td>
+        <td class="euro">€120,000–180,000</td>
+        <td>+€1,000,000–2,500,000/yr from configurator and trade</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="3">Total (one-time + first year running costs)</td>
+        <td class="euro">€263,500–396,000</td>
+        <td>Estimated +€2M–4.5M/yr at full rollout</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══ CONCLUSION ══ -->
+<section class="conclusion" id="conclusion">
+  <div class="section-header" style="padding:3rem 0 2rem;border-bottom:none">
+    <div class="section-left">
+      <span class="section-index">08</span>
+      <h2 class="section-title">Rebuild or repair?</h2>
+    </div>
+    <span class="section-tag">The honest verdict</span>
+  </div>
+
+  <h3 class="conclusion-title">Should we fix what we have, or start fresh?</h3>
+
+  <div class="verdict-grid">
+    <div class="verdict-card">
+      <p class="verdict-card-label">Option A</p>
+      <h3>Repair and improve the current website</h3>
+      <ul>
+        <li>The back-end platform (SAP) is already paid for and runs reliably — that's genuine value</li>
+        <li>The Partner Portal is solid and doesn't need replacing — it needs better visibility</li>
+        <li>The P0 and P1 fixes deliver real, measurable improvements within weeks</li>
+        <li>Less disruption — the team knows the current system</li>
+        <li>No migration risk or downtime</li>
+        <li>But: the website was not built to be read by Google. Fixing that on the current platform is expensive and complex</li>
+        <li>And: the developer tool used for the front-end (Spartacus/Angular) is difficult to hire for and slow to build with</li>
+      </ul>
+      <div class="price">Cost to reach a competitive standard: <strong>€150,000–250,000</strong> over 12 months, plus SAP licence of approx. €80,000–160,000/year</div>
+    </div>
+    <div class="verdict-card winner">
+      <span class="winner-badge">Recommended</span>
+      <p class="verdict-card-label">Option B</p>
+      <h3>Keep the SAP back-end. Replace only the website front-end</h3>
+      <ul>
+        <li>The SAP back-end (the engine that manages products, pricing, orders, and the Partner Portal) is worth keeping — it works</li>
+        <li>Replace only what visitors see: the front-end website, built fresh on a modern technology (Next.js) that has Google visibility built in by default</li>
+        <li>Google visibility is solved on day one — no expensive retrofitting</li>
+        <li>The design system, configurator, and trade/consumer split are all far easier to build cleanly on a new front-end</li>
+        <li>Modern front-end technology has a much larger pool of developers — faster to build, cheaper to maintain</li>
+        <li>SAP itself officially recommends this approach for companies in our position</li>
+        <li>The SAP licence is retained — only the front-end changes</li>
+      </ul>
+      <div class="price">Cost: <strong>€200,000–320,000</strong> for a new front-end over 12–18 months. SAP licence stays. Lower long-term maintenance cost.</div>
+    </div>
+  </div>
+
+  <div class="recommendation">
+    <p class="rec-label">Conclusion</p>
+    <p class="rec-title">Fix the critical issues this week. Plan a new front-end for 2027.</p>
+    <p class="rec-text">
+      The website has three fundamental problems that together cost us significant revenue every day: <strong>Google cannot read our pages</strong> (so we barely exist in search), <strong>visitors hit a form before they see anything</strong> (so first impressions are bad), and <strong>the site is slow and uncached</strong> (so people leave before they've even browsed). These are not cosmetic issues — they are structural.<br><br>
+      <strong>The right move is two tracks at once.</strong> Fix the P0 and P1 issues immediately — cost €40,000–75,000, real return within 3–6 months. At the same time, begin planning a new website front-end for a 2027 launch, built on modern technology that makes all the big fixes — Google visibility, speed, mobile, configurator — far easier and cheaper to achieve.<br><br>
+      <strong>Do not spend €250,000 patching the current front-end.</strong> The structural problems are too deep and the technology too limiting. The SAP back-end is worth keeping. The website the world sees is not.<br><br>
+      The total upside of doing this right: <strong>an estimated +€2–4.5 million in additional revenue per year</strong>. At a total investment of around €300,000, the return pays back within 9 to 18 months.
+    </p>
+  </div>
+</section>
+
+</div>
+</div>
+
+<div class="closing">
+  <p class="closing-statement">This is the starting point.<br>Not the destination.</p>
+  <p class="closing-note">Everything above is documented, evidenced, and costed. The P0 items can start this week — no strategic decision required. The bigger choices about the website's future can be made on the timeline set at the kick-off meeting.</p>
+</div>
+
+<footer>
+  <span>Ethnicraft — Website Audit 2026</span>
+  <span>For internal use — Katrien Maes / Monday.com</span>
+  <span>Robin Prinzie — Art Direction</span>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('.section[id], .invest-section[id], .conclusion[id]');
+  const links = document.querySelectorAll('.sidebar a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin:'-40% 0px -55% 0px' });
+  sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
