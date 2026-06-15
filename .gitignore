@@ -1,23 +1,23 @@
-# Large assets not needed for web
-*.pdf
-*.pptx
-*.py
-pptx_images/
-chair_images/
-monday-pm-agent/
+# Source/working files — not part of the website
+Novelties 2025/
+catalogue/
+ethnicraft-academy/
+sofa-configurator/
+studio/
+swatchbox/
+unitedclosets/
+solva/
+discodaddy/
+website_revamp/
 
-# OS
+# Large source video
+portfolio/ethnicraft/video/Ethnicraft_2025_09_Exposed.mp4
+
+# macOS
 .DS_Store
 
-# Other project files not part of the academy
-discodaddy.html
-eda-campaign*.html
-eda-campaign*.pdf
-eda-concept*.html
-eda-print.html
-ethnicraft-compatibility.html
-ethnicraft-eda*.pdf
-ethnicraft-novelties*.pdf
-generate_*.py
-product_sheet_*.pdf
-product_wf_*.jpg
+# Design source files
+*.psd
+*.indd
+*.aep
+*.xd
