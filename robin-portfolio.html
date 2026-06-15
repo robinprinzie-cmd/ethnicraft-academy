@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robin Prinzie — Art Director</title>
+  <script>(function(){ document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark'; })();</script>
+  <style>
+    @font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Light.woff2') format('woff2'),url('./fonts/Suisse-Light.ttf') format('truetype'); font-weight:300; }
+    @font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Book.woff2') format('woff2'),url('./fonts/Suisse-Book.ttf') format('truetype'); font-weight:400; }
+    @font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Regular.woff2') format('woff2'),url('./fonts/Suisse-Regular.ttf') format('truetype'); font-weight:450; }
+    @font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Medium.woff2') format('woff2'),url('./fonts/Suisse-Medium.ttf') format('truetype'); font-weight:500; }
+    @font-face { font-family:'Suisse'; src:url('./fonts/Suisse-Bold.woff2') format('woff2'),url('./fonts/Suisse-Bold.ttf') format('truetype'); font-weight:700; }
+
+    :root {
+      --bg:        #0b0b0a;
+      --bg-hover:  rgba(255,255,255,0.03);
+      --text:      #e6e1d8;
+      --muted:     #5a5854;
+      --border:    rgba(230,225,216,0.1);
+    }
+    [data-theme="light"] {
+      --bg:        #f4f2ed;
+      --bg-hover:  rgba(0,0,0,0.03);
+      --text:      #0b0b0a;
+      --muted:     #8a8880;
+      --border:    rgba(11,11,10,0.1);
+    }
+
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'Suisse','Helvetica Neue',Helvetica,Arial,sans-serif;
+      background:var(--bg); color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition:background 0.45s ease, color 0.45s ease;
+      overflow-x:hidden; cursor:none;
+    }
+
+    /* cursor */
+    .cursor { position:fixed; width:7px; height:7px; background:var(--text); border-radius:50%; pointer-events:none; z-index:10000; top:0; left:0; will-change:transform; transition:background 0.45s, opacity 0.15s, transform 0.15s; }
+    .cursor.hide { opacity:0; transform:translate(-50%,-50%) scale(0); }
+
+    /* cursor preview */
+    .c-preview { position:fixed; width:300px; height:378px; pointer-events:none; z-index:9999; top:0; left:0; will-change:transform; }
+    .c-inner { width:100%; height:100%; opacity:0; transform:scale(0.88) rotate(-1.5deg); transition:opacity 0.35s cubic-bezier(.16,1,.3,1), transform 0.5s cubic-bezier(.16,1,.3,1); }
+    .c-preview.on .c-inner { opacity:1; transform:scale(1) rotate(0deg); }
+    .c-inner img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* nav */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:500;
+      padding:22px 40px; display:flex; align-items:center; justify-content:space-between;
+      opacity:0; animation:fadeIn 0.7s ease 0.2s forwards;
+    }
+    .nav-logo { font-size:13px; font-weight:400; letter-spacing:-0.01em; color:var(--text); text-decoration:none; cursor:none; }
+    .nav-r { display:flex; align-items:center; gap:28px; }
+    .nav-a { font-size:12.5px; font-weight:400; letter-spacing:-0.005em; color:var(--muted); text-decoration:none; transition:color 0.2s; cursor:none; }
+    .nav-a:hover { color:var(--text); }
+    .t-btn { background:none; border:1px solid var(--border); color:var(--muted); cursor:none; padding:5px 13px; font-size:11px; font-family:'Suisse',sans-serif; font-weight:400; letter-spacing:0.04em; border-radius:999px; transition:color 0.2s, border-color 0.2s; }
+    .t-btn:hover { color:var(--text); border-color:var(--text); }
+
+    /* hero */
+    .hero { min-height:100svh; display:flex; flex-direction:column; justify-content:flex-end; padding:0 40px 52px; }
+    .hero-name { line-height:0.87; overflow:hidden; }
+    .hero-name-line {
+      display:block;
+      font-size:clamp(80px, 12.5vw, 220px);
+      font-weight:300;
+      letter-spacing:-0.04em;
+      color:var(--text);
+      transform:translateY(110%);
+      animation:lineUp 1s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    .hero-name-line:nth-child(2) { animation-delay:0.07s; }
+
+    .hero-bar {
+      margin-top:36px; padding-top:20px; border-top:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center;
+      opacity:0; animation:fadeUp 0.7s ease 0.55s forwards;
+    }
+    .hero-bar-item { font-size:12.5px; font-weight:400; letter-spacing:-0.005em; color:var(--muted); }
+    .hero-bar-item strong { color:var(--text); font-weight:400; }
+    .hero-scroll { font-size:12px; font-weight:400; color:var(--muted); letter-spacing:-0.005em; display:flex; align-items:center; gap:10px; }
+    .hero-scroll::before { content:''; display:block; width:24px; height:1px; background:var(--muted); }
+
+    @keyframes lineUp { to { transform:translateY(0); } }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { to { opacity:1; } }
+
+    /* work */
+    #work { padding-top:120px; }
+    .work-top { padding:0 40px 14px; display:grid; grid-template-columns:52px 1fr auto 72px; gap:0 32px; border-bottom:1px solid var(--border); }
+    .work-top span { font-size:12px; font-weight:400; letter-spacing:-0.005em; color:var(--muted); }
+    .work-top span:last-child { text-align:right; }
+
+    .case {
+      display:grid; grid-template-columns:52px 1fr auto 72px; gap:0 32px; align-items:center;
+      padding:26px 40px; border-bottom:1px solid var(--border);
+      cursor:none; text-decoration:none; color:var(--text);
+      background:transparent; transition:background 0.3s ease;
+      opacity:0; transform:translateY(20px);
+    }
+    .case.reveal { animation:rowIn 0.75s cubic-bezier(.16,1,.3,1) forwards; }
+    .case:hover { background:var(--bg-hover); }
+
+    .case-num { font-size:12px; font-weight:400; color:var(--muted); }
+    .case-title { font-size:clamp(28px,4.2vw,62px); font-weight:300; letter-spacing:-0.03em; line-height:1; transition:transform 0.45s cubic-bezier(.16,1,.3,1); }
+    .case:hover .case-title { transform:translateX(10px); }
+    .case-tags { display:flex; flex-direction:column; gap:3px; text-align:right; }
+    .case-tag { font-size:12px; font-weight:400; letter-spacing:-0.005em; color:var(--muted); }
+    .case-year { font-size:12.5px; font-weight:400; color:var(--muted); text-align:right; }
+
+    @keyframes rowIn { to { opacity:1; transform:translateY(0); } }
+
+    /* about */
+    #about { margin-top:160px; padding:60px 40px 120px; border-top:1px solid var(--border); display:grid; grid-template-columns:1fr 1fr; gap:80px; }
+    .about-label { font-size:12px; font-weight:400; color:var(--muted); letter-spacing:-0.005em; margin-bottom:64px; }
+    .about-headline { font-size:clamp(36px,4.5vw,72px); font-weight:300; letter-spacing:-0.03em; line-height:1.07; }
+    .about-r { padding-top:80px; }
+    .about-lines { list-style:none; }
+    .about-line { font-size:clamp(15px,1.5vw,20px); font-weight:300; line-height:1.55; letter-spacing:-0.01em; padding:20px 0; border-bottom:1px solid var(--border); opacity:0; transform:translateY(16px); }
+    .about-line:last-child { border-bottom:none; }
+    .about-line.reveal { animation:rowIn 0.7s cubic-bezier(.16,1,.3,1) forwards; }
+
+    /* career */
+    #career { padding:120px 40px 80px; border-top:1px solid var(--border); }
+    .career-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:72px; }
+    .section-head { font-size:clamp(36px,4.5vw,72px); font-weight:300; letter-spacing:-0.03em; line-height:1; }
+    .career-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
+    .c-cell { background:var(--bg); padding:44px 0; transition:background 0.45s; }
+    .c-cell:nth-child(odd) { padding-right:48px; }
+    .c-cell:nth-child(even) { padding-left:48px; }
+    .cell-period { font-size:12px; font-weight:400; letter-spacing:-0.005em; color:var(--muted); margin-bottom:16px; }
+    .cell-role { font-size:22px; font-weight:500; letter-spacing:-0.02em; margin-bottom:4px; }
+    .cell-co { font-size:13px; font-weight:400; color:var(--muted); margin-bottom:22px; }
+    .cell-desc { font-size:14px; font-weight:300; line-height:1.68; color:var(--muted); letter-spacing:-0.005em; }
+
+    /* education */
+    .edu-strip { margin-top:72px; padding-top:56px; border-top:1px solid var(--border); display:grid; grid-template-columns:repeat(3,1fr); gap:40px; }
+    .edu-period { font-size:12px; font-weight:400; color:var(--muted); margin-bottom:12px; }
+    .edu-degree { font-size:15px; font-weight:500; letter-spacing:-0.01em; line-height:1.3; margin-bottom:6px; }
+    .edu-school { font-size:13px; font-weight:400; color:var(--muted); }
+
+    /* contact */
+    #contact { padding:120px 40px 100px; border-top:1px solid var(--border); }
+    .contact-label { font-size:12px; font-weight:400; color:var(--muted); margin-bottom:64px; }
+    .contact-head { font-size:clamp(52px,8.5vw,140px); font-weight:300; letter-spacing:-0.045em; line-height:0.88; margin-bottom:64px; }
+    .contact-row { display:flex; align-items:flex-end; justify-content:space-between; padding-top:28px; border-top:1px solid var(--border); }
+    .contact-email { font-size:clamp(15px,1.5vw,21px); font-weight:400; letter-spacing:-0.01em; color:var(--text); text-decoration:none; cursor:none; position:relative; }
+    .contact-email::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--text); transform:scaleX(0); transform-origin:left; transition:transform 0.4s cubic-bezier(.16,1,.3,1); }
+    .contact-email:hover::after { transform:scaleX(1); }
+    .contact-loc { font-size:13px; font-weight:400; color:var(--muted); }
+
+    /* footer */
+    footer { padding:28px 40px; border-top:1px solid var(--border); display:flex; justify-content:space-between; }
+    footer span { font-size:11px; font-weight:400; color:var(--muted); letter-spacing:0.01em; }
+
+    /* responsive */
+    @media (max-width:860px) {
+      nav,footer { padding:18px 24px; }
+      .hero { padding:0 24px 40px; }
+      .work-top,.case { grid-template-columns:40px 1fr; padding-left:24px; padding-right:24px; }
+      .work-top span:nth-child(3),.work-top span:nth-child(4),.case-tags,.case-year { display:none; }
+      #about { grid-template-columns:1fr; gap:40px; padding:40px 24px 80px; }
+      .about-r { padding-top:0; }
+      #career { padding:80px 24px 60px; }
+      .career-grid { grid-template-columns:1fr; gap:0; }
+      .c-cell:nth-child(odd),.c-cell:nth-child(even) { padding:36px 0; }
+      .edu-strip { grid-template-columns:1fr; gap:28px; }
+      #contact { padding:80px 24px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <div class="c-preview" id="cPreview">
+    <div class="c-inner" id="cInner">
+      <img src="" alt="" id="cImg">
+    </div>
+  </div>
+
+  <nav>
+    <a href="#" class="nav-logo">Robin Prinzie</a>
+    <div class="nav-r">
+      <a href="#work"    class="nav-a">Work</a>
+      <a href="#about"   class="nav-a">About</a>
+      <a href="#contact" class="nav-a">Contact</a>
+      <button class="t-btn" id="tBtn">Light</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1 class="hero-name">
+      <span class="hero-name-line">Robin</span>
+      <span class="hero-name-line">Prinzie</span>
+    </h1>
+    <div class="hero-bar">
+      <span class="hero-bar-item"><strong>Art Director</strong></span>
+      <span class="hero-bar-item">Antwerp — Belgium</span>
+      <span class="hero-scroll">Scroll</span>
+    </div>
+  </section>
+
+  <section id="work">
+    <p style="padding:0 40px; margin-bottom:24px; font-size:12px; font-weight:400; color:var(--muted);">Selected work</p>
+    <div class="work-top">
+      <span>#</span>
+      <span>Project</span>
+      <span>Discipline</span>
+      <span style="text-align:right">Year</span>
+    </div>
+
+    <a class="case" href="case-protexxion.html" data-img="./portfolio/Protexxion1.png">
+      <span class="case-num">01</span>
+      <span class="case-title">Protexxion</span>
+      <div class="case-tags">
+        <span class="case-tag">Brand Identity</span>
+        <span class="case-tag">Art Direction</span>
+        <span class="case-tag">Editorial</span>
+      </div>
+      <span class="case-year">2025</span>
+    </a>
+
+    <a class="case" href="case-discodaddy.html" data-img="./portfolio/Discodaddy1.png">
+      <span class="case-num">02</span>
+      <span class="case-title">Discodaddy</span>
+      <div class="case-tags">
+        <span class="case-tag">Brand Identity</span>
+        <span class="case-tag">Packaging</span>
+        <span class="case-tag">Hospitality</span>
+      </div>
+      <span class="case-year">2025</span>
+    </a>
+
+    <a class="case" href="case-morpho.html" data-img="./portfolio/Morpho2.png">
+      <span class="case-num">03</span>
+      <span class="case-title">Morpho</span>
+      <div class="case-tags">
+        <span class="case-tag">Art Direction</span>
+        <span class="case-tag">Photography</span>
+        <span class="case-tag">Furniture</span>
+      </div>
+      <span class="case-year">2026</span>
+    </a>
+
+    <a class="case" href="case-solva.html" data-img="./portfolio/Solva1.png">
+      <span class="case-num">04</span>
+      <span class="case-title">Solva</span>
+      <div class="case-tags">
+        <span class="case-tag">Brand Identity</span>
+        <span class="case-tag">Photography</span>
+        <span class="case-tag">Lifestyle</span>
+      </div>
+      <span class="case-year">2025</span>
+    </a>
+
+    <a class="case" href="case-ethnicraft.html" data-img="./portfolio/ethnicraft/seizeyourmoment/Ethnicraft-Outdoor-LVH-27.jpg">
+      <span class="case-num">05</span>
+      <span class="case-title">Ethnicraft</span>
+      <div class="case-tags">
+        <span class="case-tag">Art Direction</span>
+        <span class="case-tag">Campaign</span>
+        <span class="case-tag">Brand</span>
+      </div>
+      <span class="case-year">2022–</span>
+    </a>
+  </section>
+
+  <section id="about">
+    <div class="about-l">
+      <p class="about-label">About</p>
+      <h2 class="about-headline">A strategist<br>at heart<br>with an eye<br>for aesthetics.</h2>
+    </div>
+    <div class="about-r">
+      <ul class="about-lines">
+        <li class="about-line">A creative individual with a commercial twist.</li>
+        <li class="about-line">Sets the bar high for others but always starts by raising it for himself.</li>
+        <li class="about-line">A mentor to younger individuals, eager to learn and grow.</li>
+        <li class="about-line">A dedicated gym addict known for eating a lot of chicken.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="career">
+    <div class="career-top">
+      <h2 class="section-head">Career</h2>
+      <p style="font-size:12px; font-weight:400; color:var(--muted);">Experience</p>
+    </div>
+    <div class="career-grid">
+      <div class="c-cell">
+        <p class="cell-period">2022 — Present</p>
+        <p class="cell-role">Art Director</p>
+        <p class="cell-co">Ethnicraft</p>
+        <p class="cell-desc">Shaping the creative vision of the company. Leading a dynamic team across digital and print, ensuring a strong and relevant visual identity. Curating campaigns, directing videographers, stylists, and freelancers. Pioneering the mix of high-end lifestyle photography and AI-generated imagery.</p>
+      </div>
+      <div class="c-cell">
+        <p class="cell-period">2019 — 2022</p>
+        <p class="cell-role">Graphic Designer — Art Director</p>
+        <p class="cell-co">Bureau Blanc</p>
+        <p class="cell-desc">Specialized in print and graphic design for high-end lifestyle brands. Directed creative strategies for branding and photoshoots. Managed set production, styling, and book design. Created engaging content across social media platforms.</p>
+      </div>
+    </div>
+    <div class="edu-strip">
+      <div>
+        <p class="edu-period">2018</p>
+        <p class="edu-degree">Branding &amp; Packaging Design</p>
+        <p class="edu-school">Seneca College — York Toronto, Canada</p>
+      </div>
+      <div>
+        <p class="edu-period">2016 — 2018</p>
+        <p class="edu-degree">Cross Media Design</p>
+        <p class="edu-school">Artevelde College — Ghent</p>
+      </div>
+      <div>
+        <p class="edu-period">2013 — 2016</p>
+        <p class="edu-degree">Human Resource Management</p>
+        <p class="edu-school">Hogeschool Ghent</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <p class="contact-label">Get in touch</p>
+    <h2 class="contact-head">Let's<br>work<br>together.</h2>
+    <div class="contact-row">
+      <a href="mailto:prinzierobin@gmail.com" class="contact-email">prinzierobin@gmail.com</a>
+      <span class="contact-loc">Antwerp — Belgium</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>Robin Prinzie © 2026</span>
+    <span>Art Director</span>
+  </footer>
+
+  <script>
+    // theme
+    const tBtn = document.getElementById('tBtn');
+    const html = document.documentElement;
+    tBtn.textContent = html.dataset.theme === 'dark' ? 'Light' : 'Dark';
+    tBtn.addEventListener('click', () => {
+      const dark = html.dataset.theme === 'dark';
+      html.dataset.theme = dark ? 'light' : 'dark';
+      tBtn.textContent = dark ? 'Dark' : 'Light';
+      localStorage.setItem('theme', dark ? 'light' : 'dark');
+    });
+
+    // cursor dot
+    const cursor = document.getElementById('cursor');
+    let cx = 0, cy = 0, ccx = 0, ccy = 0;
+    document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+    (function tickCursor() {
+      ccx += (cx - ccx) * 0.22; ccy += (cy - ccy) * 0.22;
+      cursor.style.transform = `translate(calc(${ccx}px - 50%), calc(${ccy}px - 50%))`;
+      requestAnimationFrame(tickCursor);
+    })();
+
+    // cursor preview
+    const preview = document.getElementById('cPreview');
+    const img = document.getElementById('cImg');
+    let mx = 0, my = 0, px = 0, py = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function tickPreview() {
+      px += (mx - px) * 0.09; py += (my - py) * 0.09;
+      preview.style.transform = `translate(${px + 20}px, ${py - 189}px)`;
+      requestAnimationFrame(tickPreview);
+    })();
+
+    document.querySelectorAll('.case').forEach(row => {
+      row.addEventListener('mouseenter', () => {
+        img.src = row.dataset.img;
+        preview.classList.add('on');
+        cursor.classList.add('hide');
+      });
+      row.addEventListener('mouseleave', () => {
+        preview.classList.remove('on');
+        cursor.classList.remove('hide');
+      });
+    });
+
+    // scroll reveals
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        setTimeout(() => el.classList.add('reveal'), +(el.dataset.delay || 0));
+        io.unobserve(el);
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.case').forEach((el, i) => { el.dataset.delay = i * 90; io.observe(el); });
+    document.querySelectorAll('.about-line').forEach((el, i) => { el.dataset.delay = i * 65; io.observe(el); });
+  </script>
+</body>
+</html>
